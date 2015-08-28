@@ -35,6 +35,12 @@ ADD_EXECUTABLE(g2o_simulator2d_application
 TARGET_LINK_LIBRARIES(g2o_simulator2d_application g2o_simulator_library types_slam2d_addons types_slam2d core)
 SET_TARGET_PROPERTIES(g2o_simulator2d_application PROPERTIES OUTPUT_NAME g2o_simulator2d${EXE_POSTFIX})
 
+ADD_EXECUTABLE(g2o_simulator2d_noise_application
+  test_simulator2d_noise.cpp
+)
+TARGET_LINK_LIBRARIES(g2o_simulator2d_noise_application g2o_simulator_library types_slam2d_addons types_slam2d core)
+SET_TARGET_PROPERTIES(g2o_simulator2d_noise_application PROPERTIES OUTPUT_NAME g2o_simulator2d_noise${EXE_POSTFIX})
+
 ADD_EXECUTABLE(convertSegmentLine_application convertSegmentLine.cpp)
 
 TARGET_LINK_LIBRARIES(convertSegmentLine_application g2o_simulator_library types_slam2d_addons types_slam3d types_slam2d core)
