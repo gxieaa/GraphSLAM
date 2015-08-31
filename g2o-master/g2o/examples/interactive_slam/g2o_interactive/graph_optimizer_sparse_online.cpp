@@ -247,7 +247,7 @@ void SparseOptimizerOnline::gnuplotVisualization()
 #endif
       if (_gnuplot == 0)
         return;
-      fprintf(_gnuplot, "set terminal X11 noraise\n");
+      fprintf(_gnuplot, "set terminal\n");
       fprintf(_gnuplot, "set size ratio -1\n");
     }
     fprintf(_gnuplot, "plot \"-\" w l\n");
@@ -269,7 +269,7 @@ void SparseOptimizerOnline::gnuplotVisualization()
 #endif
       if (_gnuplot == 0)
         return;
-      fprintf(_gnuplot, "set terminal X11 noraise\n");
+      fprintf(_gnuplot, "set terminal\n");
     }
     fprintf(_gnuplot, "splot \"-\" w l\n");
     for (EdgeSet::iterator it = edges().begin(); it != edges().end(); ++it) {

@@ -1,0 +1,23 @@
+Usage: g2o_simulator2d [options] [graph-output]
+
+General options:
+-------------------------------------------
+-help / -h           Displays this help.
+
+Program Options:
+-------------------------------------------
+-hasCompass                  the robot has a compass
+-hasGPS                      the robot has a GPS
+-hasOdom                     the robot has an odometry
+-hasPointBearingSensor       the robot has a point bearing sensor
+-hasPointSensor              the robot has a point sensor
+-hasPoseSensor               the robot has a pose sensor
+-hasSegmentSensor            the robot has a segment sensor
+-maxSegmentLenght <double>   maximal lenght of a segment in the world (default: 3)
+-minSegmentLenght <double>   minimal lenght of a segment in the world (default: 0.5)
+-nSegments <int>             number of segments (default: 1000)
+-nlandmarks <int>            number of landmarks in the map (default: 100)
+-segmentGridSize <int>       number of cells of the grid where to align the segments (default: 50)
+-simSteps <int>              number of simulation steps (default: 100)
+-worldSize <double>          size of the world (default: 25)
+
