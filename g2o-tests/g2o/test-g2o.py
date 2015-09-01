@@ -15,7 +15,7 @@ def main():
     "-i", "10", 
     "-guessOdometry",
     #"-listRobustKernels", "-listSolvers", "-listTypes", 
-    "-v", "-printSolverProperties", 
+    #"-v", "-printSolverProperties", 
     #"-summary", summaryPath, "-gnudump", gnudumpPath, "-stats", statsPath,
     #"-inc", 
     "-o", resPath, dataPath])
