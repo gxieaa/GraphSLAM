@@ -49,4 +49,4 @@ def makeSubplot(ax, gtData, slamData, title, useLegend):
     ax.grid(True)
     ax.set_title(title)
     if useLegend:
-        ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+        ax.legend([robPlt, lanPlt, gtRobPlt, gtLanPlt], bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
