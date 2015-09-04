@@ -20,23 +20,24 @@ def main():
     infoPointSen = [1000, 500, 100, 50, 10]
     n = len(infoOdomPos)
     
-    for i in range(n):
-        runG2O(g2oIterations, nlandmarks, simSteps, infoOdomPos[i], infoOdomAng[i], infoPointSen[i])
+    # directory generator
+    dirNames = ['sim_out', 'guess_in', 'guess_out', 'opt_out', 'figs']
+    makeDirs(dirNames)
     
-def runG2O(g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen):
+    for i in range(n):
+        runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos[i], infoOdomAng[i], infoPointSen[i])
+    
+def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen):
     
     # paths and filenames
+    parameters = [g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen]
+    paramNames = ["i", "s", "l", "p", "a", "ps"] 
     binPath = "../../g2o-master/bin/"
-    simFilename = genFilename("sim_out/sim_out", g2oIterations, simSteps, nlandmarks, 
-                              infoOdomPos, infoOdomAng, infoPointSen,".g2o")
-    guessInFilename = genFilename("guess_in/guess_in", g2oIterations, simSteps, nlandmarks, 
-                                  infoOdomPos, infoOdomAng, infoPointSen,".g2o")
-    guessOutFilename = genFilename("guess_out/guess_out", g2oIterations, simSteps, nlandmarks, 
-                                    infoOdomPos, infoOdomAng, infoPointSen,".g2o")
-    optFilename = genFilename("opt_out/opt_out", g2oIterations, simSteps, nlandmarks, 
-                              infoOdomPos, infoOdomAng, infoPointSen,".g2o")
-    figFilename = genFilename("figs/res", g2oIterations, simSteps, nlandmarks, 
-                              infoOdomPos, infoOdomAng, infoPointSen,"")
+    simFilename = genFilename(dirNames[0]+"/sim_out", paramNames, parameters,".g2o")
+    guessInFilename = genFilename(dirNames[1]+"/guess_in", paramNames, parameters,".g2o")
+    guessOutFilename = genFilename(dirNames[2]+"/guess_out", paramNames, parameters,".g2o")
+    optFilename = genFilename(dirNames[3]+"/opt_out", paramNames, parameters,".g2o")
+    figFilename = genFilename(dirNames[4]+"/res", paramNames, parameters,"")
 
     # get simulation data
     subprocess.call([binPath+"./g2o_simulator2d_noise", "-hasOdom", "-hasPointSensor",

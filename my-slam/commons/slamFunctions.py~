@@ -1,11 +1,23 @@
 # imports
 from slamData import slamData
 import matplotlib.pyplot as plt
+import os
+import errno
 
 # functions
-def genFilename(prefix, i, s, l, p, a, ps, sufix):
-    return prefix + "_i_" + str(i) + "_s_" + str(s) + "_l_" + str(l) + "_p_" +\
-    str(p) + "_a_" + str(a) + "_ps_" + str(ps) + sufix
+def makeDirs(dirNames):
+    for dirName in dirNames:
+        try:
+            os.makedirs(dirName)
+        except OSError as exception:
+            if exception.errno != errno.EEXIST:
+                raise   
+
+def genFilename(prefix, paramNames, params, sufix):
+    s = prefix
+    for i in range(len(params)):
+        s + "_" + str(paramNames[i]) + "_" + str(params[i])
+    return s + sufix
      
 def fixNode(filename, node):
     f = open(filename, 'a')
@@ -49,4 +61,4 @@ def makeSubplot(ax, gtData, slamData, title, useLegend):
     ax.grid(True)
     ax.set_title(title)
     if useLegend:
-        ax.legend([robPlt, lanPlt, gtRobPlt, gtLanPlt], bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+        ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
