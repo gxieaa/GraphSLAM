@@ -9,11 +9,13 @@
 #include "g2o/core/factory.h"
 //#include "g2o/types/slam3d/types_slam3d.h"
 //#include "g2o/types/slam2d/types_slam2d.h"
-#include "g2o/types/slam2d/vertex_se2.h"
+//#include "g2o/types/slam2d/vertex_se2.h"
 
 #include "g2o/stuff/command_args.h"
 
 #include <Eigen/Core>
+
+#include <typeinfo>
 
 using namespace std;
 using namespace g2o;
@@ -64,10 +66,15 @@ int main(int argc, char** argv)
   optimizer.optimize(maxIterations);
   
   // print uncertainty
-  BaseVertexSE2* testPose = dynamic_cast<BaseVertexSE2*>(optimizer.vertex(1)); 
-  Matrix<double,3,3> uncertainty = testPose->uncertainty();
-
-  std::cout << testPose;
+  std::vector<g2o::OptimizableGraph::Edge*> ec = optimizer.activeEdges();
+  std::cout << typeid(ec).name() << '\n';
+  for (int i=1; i<100; i++){   
+    //std::cout << ec[i] << '\n';
+    //std::cout << (*ec[i]).informationData() << '\n';
+    //std::cout << *(*ec[i]).informationData() << '\n';
+    //std::cout << *(*ec[i]).errorData() << '\n';
+    std::cout << Eigen::Map<Eigen::Matrix<double, 10, 10, Eigen::ColMajor>>((*ec[i]).informationData()) << '\n'<<'\n';
+  }
 
   if (outputFilename.size() > 0) {
     if (outputFilename == "-") {
