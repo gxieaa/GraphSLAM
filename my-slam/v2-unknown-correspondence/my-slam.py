@@ -33,6 +33,8 @@ def runG2O(g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPo
                                   infoOdomPos, infoOdomAng, infoPointSen,".g2o")
     guessOutFilename = genFilename("guess_out/guess_out", g2oIterations, simSteps, nlandmarks, 
                                     infoOdomPos, infoOdomAng, infoPointSen,".g2o")
+    anonOutFilename = genFilename("anon_out/anon_out", g2oIterations, simSteps, nlandmarks, 
+                                    infoOdomPos, infoOdomAng, infoPointSen,".g2o")
     optFilename = genFilename("opt_out/opt_out", g2oIterations, simSteps, nlandmarks, 
                               infoOdomPos, infoOdomAng, infoPointSen,".g2o")
     figFilename = genFilename("figs/res", g2oIterations, simSteps, nlandmarks, 
@@ -50,6 +52,10 @@ def runG2O(g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPo
     subprocess.call([binPath+"./g2o", "-i", "0", "-guessOdometry",
                      "-o", guessOutFilename, guessInFilename])
 
+    # anonymize landmarks
+    subprocess.call([binPath+"./g2o_anonymize_observations", 
+                     "-o", anonOutFilename, guessInFilename]) 
+    
     # make g2o optimization
     subprocess.call([binPath+"./g2o", "-i", str(g2oIterations), "-guessOdometry",
                      "-i", "5",
@@ -57,10 +63,10 @@ def runG2O(g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPo
                      #"-robustKernel",
                      #"-robustKernelWidth",
                      #"-solver",
-                     "-o", optFilename, guessInFilename])
+                     "-o", optFilename, anonOutFilename])
                      
     # plot results
-    plotResults(simFilename, guessOutFilename, optFilename, figFilename, [-15, 20], [-20, 20])
+    plotResults(simFilename, guessOutFilename, anonOutFilename, figFilename, [-15, 20], [-20, 20])
     
 if __name__ == '__main__':
     main()
