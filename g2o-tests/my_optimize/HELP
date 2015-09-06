@@ -1,0 +1,11 @@
+Usage: ./my_optimize [options] graph-input
+
+General options:
+-------------------------------------------
+-help / -h           Displays this help.
+
+Program Options:
+-------------------------------------------
+-i <int>      perform n iterations, if negative consider the gain (default: 10)
+-o <string>   output final version of the graph
+

@@ -1,0 +1,10 @@
+Usage: g2o_anonymize_observations [options] [graph-output]
+
+General options:
+-------------------------------------------
+-help / -h           Displays this help.
+
+Program Options:
+-------------------------------------------
+-o <string>   output file (default: anon.g2o)
+
