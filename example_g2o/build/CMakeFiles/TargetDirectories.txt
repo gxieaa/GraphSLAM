@@ -1,1 +1,0 @@
-/home/francocurotto/Workspace/GraphSLAM/example_g2o/build/CMakeFiles/simple_optimize.dir
