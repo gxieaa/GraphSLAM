@@ -42,11 +42,11 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
                      
     # get initial guess
     getInitialGuess(simFilename, guessInFilename)
-    subprocess.call([binPath+"./my_optimize", "-i", "0", 
+    subprocess.call([binPath+"./simple_optimize", "-i", "0", 
                      "-o", guessOutFilename, guessInFilename])
 
     # make g2o optimization
-    subprocess.call([binPath+"./my_optimize", "-i", str(g2oIterations), 
+    subprocess.call([binPath+"./simple_optimize", "-i", str(g2oIterations), 
                      "-o", optFilename, guessInFilename])
                      
     # plot results
