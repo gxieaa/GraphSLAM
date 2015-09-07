@@ -9,7 +9,7 @@ def main():
     
     subprocess.call([binPath+"./g2o_simulator2d", 
     "-hasOdom", "-hasPointSensor",
-    "-nlandmarks", "30", "-simSteps", "2",
+    "-nlandmarks", "20", "-simSteps", "1",
     resPath])
 
 if __name__ == '__main__':

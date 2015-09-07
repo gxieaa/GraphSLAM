@@ -66,14 +66,15 @@ int main(int argc, char** argv)
   optimizer.optimize(maxIterations);
   
   // print uncertainty
-  std::vector<g2o::OptimizableGraph::Edge*> ec = optimizer.activeEdges();
-  std::cout << typeid(ec).name() << '\n';
-  for (int i=1; i<100; i++){   
-    //std::cout << ec[i] << '\n';
-    //std::cout << (*ec[i]).informationData() << '\n';
-    //std::cout << *(*ec[i]).informationData() << '\n';
-    //std::cout << *(*ec[i]).errorData() << '\n';
-    std::cout << Eigen::Map<Eigen::Matrix<double, 10, 10, Eigen::ColMajor>>((*ec[i]).informationData()) << '\n'<<'\n';
+  std::vector<g2o::OptimizableGraph::Edge*> ec3 = optimizer.activeEdges();
+  for (int i=0; i<20; i++){   
+    int D = (*ec3[i]).dimension();
+    if (D == 2){
+      std::cout << Eigen::Map<Eigen::Matrix<double, 2, 2, Eigen::ColMajor>>((*ec3[i]).informationData()) << '\n'<<'\n';
+    }
+    if (D == 3){
+      std::cout << Eigen::Map<Eigen::Matrix<double, 3, 3, Eigen::ColMajor>>((*ec3[i]).informationData()) << '\n'<<'\n';
+    }
   }
 
   if (outputFilename.size() > 0) {
