@@ -66,14 +66,14 @@ int main(int argc, char** argv)
   optimizer.optimize(maxIterations);
   
   // print uncertainty
-  std::vector<g2o::OptimizableGraph::Vertex*> av = optimizer.activeVertices();
-  for (int i=0; i<10; i++){   
-    int D = (*av[i]).dimension();
+  for (OptimizableGraph::VertexContainer::const_iterator it=optimizer.activeVertices().begin(); it!=optimizer.activeVertices().end(); ++it) {
+    OptimizableGraph::Vertex* v= *it;
+    int D = (*v).dimension();
     if (D == 2){
-      std::cout << Eigen::Map<Eigen::Matrix<double, 2, 2, Eigen::ColMajor>>((*av[i]).hessianData()) << '\n'<<'\n';
+      std::cout << Eigen::Map<Eigen::Matrix<double, 2, 2, Eigen::ColMajor>>((*v).hessianData()) << '\n'<<'\n';
     }
     if (D == 3){
-      std::cout << Eigen::Map<Eigen::Matrix<double, 3, 3, Eigen::ColMajor>>((*av[i]).hessianData()) << '\n'<<'\n';
+      std::cout << Eigen::Map<Eigen::Matrix<double, 3, 3, Eigen::ColMajor>>((*v).hessianData()) << '\n'<<'\n';
     }
   }
 
