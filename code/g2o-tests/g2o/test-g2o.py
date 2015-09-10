@@ -14,7 +14,11 @@ def main():
     # run script
     subprocess.call([binPath+"./g2o", 
     "-i", "10", 
+<<<<<<< HEAD
     "-guessOdometry",
+=======
+    #"-guessOdometry",
+>>>>>>> 174ad804067c4767f9bec1647e32a28211afbc45
     "-computeMarginals",
     #"-listRobustKernels", "-listSolvers", "-listTypes", 
     #"-v", "-printSolverProperties", 

@@ -66,6 +66,15 @@ int main(int argc, char** argv)
   optimizer.optimize(maxIterations);
   
   // print uncertainty
+<<<<<<< HEAD
+  for (OptimizableGraph::VertexContainer::const_iterator it=optimizer.activeVertices().begin(); it!=optimizer.activeVertices().end(); ++it) {
+    OptimizableGraph::Vertex* v= *it;
+    int D = (*v).dimension();
+    if (D == 2){
+      std::cout << Eigen::Map<Eigen::Matrix<double, 2, 2, Eigen::ColMajor>>((*v).hessianData()) << '\n'<<'\n';
+    }
+    if (D == 3){
+=======
   OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
   
   for (OptimizableGraph::VertexContainer::const_iterator it=vc.begin(); it!=vc.end(); ++it) {
@@ -74,6 +83,7 @@ int main(int argc, char** argv)
       std::cout << Eigen::Map<Eigen::Matrix<double, 2, 2, Eigen::ColMajor>>((*v).hessianData()) << '\n'<<'\n';
     }
     else if (v->dimension() == 3){
+>>>>>>> 174ad804067c4767f9bec1647e32a28211afbc45
       std::cout << Eigen::Map<Eigen::Matrix<double, 3, 3, Eigen::ColMajor>>((*v).hessianData()) << '\n'<<'\n';
     }
     
