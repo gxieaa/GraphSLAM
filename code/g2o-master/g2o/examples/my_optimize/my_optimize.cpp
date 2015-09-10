@@ -66,16 +66,34 @@ int main(int argc, char** argv)
   optimizer.optimize(maxIterations);
   
   // print uncertainty
-  std::vector<g2o::OptimizableGraph::Vertex*> av = optimizer.activeVertices();
-  for (int i=0; i<10; i++){   
-    int D = (*av[i]).dimension();
-    if (D == 2){
-      std::cout << Eigen::Map<Eigen::Matrix<double, 2, 2, Eigen::ColMajor>>((*av[i]).hessianData()) << '\n'<<'\n';
+  OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
+  
+  for (OptimizableGraph::VertexContainer::const_iterator it=vc.begin(); it!=vc.end(); ++it) {
+    OptimizableGraph::Vertex* v= *it;
+    if (v->dimension() == 2){
+      std::cout << Eigen::Map<Eigen::Matrix<double, 2, 2, Eigen::ColMajor>>((*v).hessianData()) << '\n'<<'\n';
     }
-    if (D == 3){
-      std::cout << Eigen::Map<Eigen::Matrix<double, 3, 3, Eigen::ColMajor>>((*av[i]).hessianData()) << '\n'<<'\n';
+    else if (v->dimension() == 3){
+      std::cout << Eigen::Map<Eigen::Matrix<double, 3, 3, Eigen::ColMajor>>((*v).hessianData()) << '\n'<<'\n';
     }
+    
+  //  cerr << "Vertex id:" << v->id() << endl;
+  //  if (v->hessianIndex()>=0){
+  //    cerr << "inv block :" << v->hessianIndex() << ", " << v->hessianIndex()<< endl;
+  //    cerr << *(spinv.block(v->hessianIndex(), v->hessianIndex()));
+  //    cerr << endl;
+  //  }
+  //  if (v->hessianIndex()>0){
+  //    cerr << "inv block :" << v->hessianIndex()-1 << ", " << v->hessianIndex()<< endl;
+  //    cerr << *(spinv.block(v->hessianIndex()-1, v->hessianIndex()));
+  //    cerr << endl;
+  //  }
   }
+  
+  SparseBlockMatrix<MatrixXd> spinv;
+  optimizer.computeMarginals(spinv, vc);
+  cerr << spinv;
+  
 
   if (outputFilename.size() > 0) {
     if (outputFilename == "-") {
