@@ -102,8 +102,8 @@ int main(int argc, char** argv)
           cout << "Marginal Covariance Matrix (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
           cout << marginMat << endl;
           EigenSolver<MatrixXd> es(marginMat);
-          cout << "Eigenvalues:" << endl << es.eigenvalues() << endl;
-          cout << "Eigenvectors:" << endl << es.eigenvectors() << endl;
+          //cout << "Eigenvalues:" << endl << es.eigenvalues() << endl;
+          //cout << "Eigenvectors:" << endl << es.eigenvectors() << endl;
           //std::cout << spinv << std::endl;
           //std::cout << *(spinv.block(v1->hessianIndex(), v1->hessianIndex())) << ", " << *(spinv.block(v1->hessianIndex(), v2->hessianIndex())) << ", " << *(spinv.block(v2->hessianIndex(), v1->hessianIndex())) << ", " << *(spinv.block(v2->hessianIndex(), v2->hessianIndex())) << "." << std::endl;
           
