@@ -82,15 +82,18 @@ int main(int argc, char** argv)
           blockIndices.push_back(make_pair(v2->hessianIndex(), v2->hessianIndex()));
           SparseBlockMatrix<MatrixXd> spinv;
           optimizer.computeMarginals(spinv, blockIndices);
-          // get marginal covariance matrix between pair of landmarks
-          Matrix4d marginMat;
-          marginMat.setZero();
-          marginMat.topLeftCorner(2, 2) = *(spinv.block(v1->hessianIndex(), v1->hessianIndex()));
-          marginMat.topRightCorner(2, 2) = *(spinv.block(v1->hessianIndex(), v2->hessianIndex()));
-          marginMat.bottomLeftCorner(2, 2) = *(spinv.block(v2->hessianIndex(), v1->hessianIndex()));
-          marginMat.bottomRightCorner(2, 2) = *(spinv.block(v2->hessianIndex(), v2->hessianIndex()));
+          // get marginal covariance and information matrix between pair of landmarks
+          Matrix4d marginCovMat;
+          marginCovMat.setZero();
+          marginCovMat.topLeftCorner(2, 2) = *(spinv.block(v1->hessianIndex(), v1->hessianIndex()));
+          marginCovMat.topRightCorner(2, 2) = *(spinv.block(v1->hessianIndex(), v2->hessianIndex()));
+          marginCovMat.bottomLeftCorner(2, 2) = *(spinv.block(v2->hessianIndex(), v1->hessianIndex()));
+          marginCovMat.bottomRightCorner(2, 2) = *(spinv.block(v2->hessianIndex(), v2->hessianIndex()));
           //cout << "Marginal Covariance Matrix (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
-          //cout << marginMat << endl;
+          //cout << marginCovMat << endl;
+          Matrix4d marginInfoMat = marginCovMat.inverse();
+          cout << "Marginal Information Matrix (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+          cout << marginInfoMat << endl;
           // get landmark estimate vectors
           std::vector<double> v1EstVec;
           v1->getEstimateData(v1EstVec);
@@ -100,17 +103,16 @@ int main(int argc, char** argv)
           Vector2d v2Est(v2EstVec.data());
           Vector4d vEst;
           vEst << v1Est, v2Est;
-          //cout << "estData (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
-          //cout << vEst << endl;
+          cout << "estData (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+          cout << vEst << endl;
           // get information vector
-          Vector4d infoVec = marginMat * vEst;
-          //cout << "infoVec (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
-          //cout << infoVec << endl;
+          Vector4d infoVec = marginInfoMat * vEst;
+          cout << "infoVec (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+          cout << infoVec << endl;
           // get landmark difference information matrix
           Matrix<double, 4, 2> diffMat;
           diffMat << Matrix2d::Identity(2,2), -1*Matrix2d::Identity(2,2);
-          //cout << diffMat << endl;
-          Matrix2d diffInfoMat = diffMat.transpose() * marginMat * diffMat;
+          Matrix2d diffInfoMat = diffMat.transpose() * marginInfoMat * diffMat;
           //cout << "diffInfoMat (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
           //cout << diffInfoMat << endl;
           // get landmark difference information vector
@@ -119,13 +121,13 @@ int main(int argc, char** argv)
           //cout << diffInfoVec << endl;
           // get landmark difference estimation vector
           Vector2d diffEstVec = diffInfoMat.inverse() * diffInfoVec;
-          //cout << "diffEstVec (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
-          //cout << diffEstVec << endl;
+          cout << "diffEstVec (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+          cout << diffEstVec << endl;
           // get likelihood
           double likelihood;
-          likelihood = pow((2*M_PI * diffInfoMat.inverse()).determinant(), -0.5) * exp(-0.5 * diffEstVec.transpose() * diffInfoMat * diffEstVec);
-          cout << "likelihood (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
-          cout << likelihood << endl;
+          likelihood = pow((2*M_PI * diffInfoMat.inverse()).determinant(), -0.5) * exp(-0.5 * diffEstVec.transpose() * diffInfoMat.inverse() * diffEstVec);
+          //cout << "likelihood (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+          //cout << likelihood << endl;
         }
       }
     }
