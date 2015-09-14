@@ -66,19 +66,9 @@ int main(int argc, char** argv)
   optimizer.initializeOptimization();
   optimizer.optimize(maxIterations);
   
-  // print uncertainty
+  // data association
   OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
-  
-  //for (OptimizableGraph::VertexContainer::const_iterator it=vc.begin(); it!=vc.end(); ++it) {
-  //  OptimizableGraph::Vertex* v= *it;
-  //  if (v->dimension() == 2){
-  //    std::cout << Eigen::Map<Eigen::Matrix<double, 2, 2, Eigen::ColMajor>>((*v).hessianData()) << '\n'<<'\n';
-  //  }
-  //  else if (v->dimension() == 3){
-  //    std::cout << Eigen::Map<Eigen::Matrix<double, 3, 3, Eigen::ColMajor>>((*v).hessianData()) << '\n'<<'\n';
-  //  }
-  //}
-  
+  // iterate through landmarks
   for (size_t i=0; i<vc.size(); ++i) {
     OptimizableGraph::Vertex* v1 = vc[i];
     if (v1->dimension() == 2) { // check if vertex is landmark
@@ -92,54 +82,54 @@ int main(int argc, char** argv)
           blockIndices.push_back(make_pair(v2->hessianIndex(), v2->hessianIndex()));
           SparseBlockMatrix<MatrixXd> spinv;
           optimizer.computeMarginals(spinv, blockIndices);
-          // correspondence test
+          // get marginal covariance matrix between pair of landmarks
           Matrix4d marginMat;
           marginMat.setZero();
           marginMat.topLeftCorner(2, 2) = *(spinv.block(v1->hessianIndex(), v1->hessianIndex()));
           marginMat.topRightCorner(2, 2) = *(spinv.block(v1->hessianIndex(), v2->hessianIndex()));
           marginMat.bottomLeftCorner(2, 2) = *(spinv.block(v2->hessianIndex(), v1->hessianIndex()));
           marginMat.bottomRightCorner(2, 2) = *(spinv.block(v2->hessianIndex(), v2->hessianIndex()));
-          cout << "Marginal Covariance Matrix (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
-          cout << marginMat << endl;
-          EigenSolver<MatrixXd> es(marginMat);
-          //cout << "Eigenvalues:" << endl << es.eigenvalues() << endl;
-          //cout << "Eigenvectors:" << endl << es.eigenvectors() << endl;
-          //std::cout << spinv << std::endl;
-          //std::cout << *(spinv.block(v1->hessianIndex(), v1->hessianIndex())) << ", " << *(spinv.block(v1->hessianIndex(), v2->hessianIndex())) << ", " << *(spinv.block(v2->hessianIndex(), v1->hessianIndex())) << ", " << *(spinv.block(v2->hessianIndex(), v2->hessianIndex())) << "." << std::endl;
-          
+          //cout << "Marginal Covariance Matrix (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+          //cout << marginMat << endl;
+          // get landmark estimate vectors
+          std::vector<double> v1EstVec;
+          v1->getEstimateData(v1EstVec);
+          Vector2d v1Est(v1EstVec.data());
+          std::vector<double> v2EstVec;
+          v2->getEstimateData(v2EstVec);
+          Vector2d v2Est(v2EstVec.data());
+          Vector4d vEst;
+          vEst << v1Est, v2Est;
+          //cout << "estData (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+          //cout << vEst << endl;
+          // get information vector
+          Vector4d infoVec = marginMat * vEst;
+          //cout << "infoVec (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+          //cout << infoVec << endl;
+          // get landmark difference information matrix
+          Matrix<double, 4, 2> diffMat;
+          diffMat << Matrix2d::Identity(2,2), -1*Matrix2d::Identity(2,2);
+          //cout << diffMat << endl;
+          Matrix2d diffInfoMat = diffMat.transpose() * marginMat * diffMat;
+          //cout << "diffInfoMat (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+          //cout << diffInfoMat << endl;
+          // get landmark difference information vector
+          Vector2d diffInfoVec = diffMat.transpose() * infoVec;
+          //cout << "diffInfovec (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+          //cout << diffInfoVec << endl;
+          // get landmark difference estimation vector
+          Vector2d diffEstVec = diffInfoMat.inverse() * diffInfoVec;
+          //cout << "diffEstVec (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+          //cout << diffEstVec << endl;
+          // get likelihood
+          double likelihood;
+          likelihood = pow((2*M_PI * diffInfoMat.inverse()).determinant(), -0.5) * exp(-0.5 * diffEstVec.transpose() * diffInfoMat * diffEstVec);
+          cout << "likelihood (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+          cout << likelihood << endl;
         }
       }
     }
   }
-  
-  //OptimizableGraph::VertexContainer pairVertex;
-  //pairVertex.push_back(vc[1]);
-  //pairVertex.push_back(vc[6]);
-  //SparseBlockMatrix<MatrixXd> spinv;
-  //optimizer.computeMarginals(spinv, pairVertex);
-  //std::cout << spinv << std::endl;
-  //for (size_t i=0; i<vc.size()-5; ++i) {
-  //  for (size_t j=0; j<vc.size()-5; ++j) {
-  //    cout << "Block " << i << ", " << j << ":" << endl;
-  //    cout << *(spinv.block(vc[i]->hessianIndex(), vc[j]->hessianIndex())) << endl;
-  //  }
-  //}
-  //cout << "Block " << 5 << ", " << 5 << ":" << endl;
-  //    cout << *(spinv.block(vc[5]->hessianIndex(), vc[5]->hessianIndex())) << endl;
-  
-  
- //for (size_t i=0; i<vc.size(); ++i) {
- //   OptimizableGraph::Vertex* v1 = vc[i];
- //   OptimizableGraph::VertexContainer allVertex;
- //   allVertex.push_back(v1);
- //   SparseBlockMatrix<MatrixXd> spinv;
- //   optimizer.computeMarginals(spinv, allVertex);
- //   std::cout << spinv << std::endl;
- //} 
-  
-  //SparseBlockMatrix<MatrixXd> spinv;
-  //optimizer.computeMarginals(spinv, vc);
-  //std::cout << spinv << std::endl;
   
   if (outputFilename.size() > 0) {
     if (outputFilename == "-") {
