@@ -14,6 +14,7 @@
 #include "g2o/stuff/command_args.h"
 
 #include <Eigen/Core>
+#include <Eigen/Eigenvalues>
 
 #include <typeinfo>
 
@@ -84,21 +85,60 @@ int main(int argc, char** argv)
       for (size_t j=i+1; j<vc.size(); ++j){
         OptimizableGraph::Vertex* v2 = vc[j];
         if (v2->dimension() == 2) { // check if vertex is landmark
-          OptimizableGraph::VertexContainer pairVertex;
-          pairVertex.push_back(v1);
-          pairVertex.push_back(v2);
-          //cout << "pair of vertex: " << pairVertex[0]->id() << ", " << pairVertex[1]->id() << "." << endl;
+          std::vector<std::pair<int, int> > blockIndices;
+          blockIndices.push_back(make_pair(v1->hessianIndex(), v1->hessianIndex()));
+          blockIndices.push_back(make_pair(v1->hessianIndex(), v2->hessianIndex()));
+          blockIndices.push_back(make_pair(v2->hessianIndex(), v1->hessianIndex()));
+          blockIndices.push_back(make_pair(v2->hessianIndex(), v2->hessianIndex()));
           SparseBlockMatrix<MatrixXd> spinv;
-          optimizer.computeMarginals(spinv, pairVertex);
+          optimizer.computeMarginals(spinv, blockIndices);
+          // correspondence test
+          Matrix4d marginMat;
+          marginMat.setZero();
+          marginMat.topLeftCorner(2, 2) = *(spinv.block(v1->hessianIndex(), v1->hessianIndex()));
+          marginMat.topRightCorner(2, 2) = *(spinv.block(v1->hessianIndex(), v2->hessianIndex()));
+          marginMat.bottomLeftCorner(2, 2) = *(spinv.block(v2->hessianIndex(), v1->hessianIndex()));
+          marginMat.bottomRightCorner(2, 2) = *(spinv.block(v2->hessianIndex(), v2->hessianIndex()));
+          cout << "Marginal Covariance Matrix (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+          cout << marginMat << endl;
+          EigenSolver<MatrixXd> es(marginMat);
+          //cout << "Eigenvalues:" << endl << es.eigenvalues() << endl;
+          //cout << "Eigenvectors:" << endl << es.eigenvectors() << endl;
           //std::cout << spinv << std::endl;
-          std::cout << *(spinv.block(v1->hessianIndex(), v1->hessianIndex())) << ", " << *(spinv.block(v1->hessianIndex(), v2->hessianIndex())) << ", " << *(spinv.block(v2->hessianIndex(), v1->hessianIndex())) << ", " << *(spinv.block(v2->hessianIndex(), v2->hessianIndex())) << "." << std::endl;
+          //std::cout << *(spinv.block(v1->hessianIndex(), v1->hessianIndex())) << ", " << *(spinv.block(v1->hessianIndex(), v2->hessianIndex())) << ", " << *(spinv.block(v2->hessianIndex(), v1->hessianIndex())) << ", " << *(spinv.block(v2->hessianIndex(), v2->hessianIndex())) << "." << std::endl;
+          
         }
       }
     }
   }
   
+  //OptimizableGraph::VertexContainer pairVertex;
+  //pairVertex.push_back(vc[1]);
+  //pairVertex.push_back(vc[6]);
   //SparseBlockMatrix<MatrixXd> spinv;
-  //optimizer.computeMarginals(spinv, v);
+  //optimizer.computeMarginals(spinv, pairVertex);
+  //std::cout << spinv << std::endl;
+  //for (size_t i=0; i<vc.size()-5; ++i) {
+  //  for (size_t j=0; j<vc.size()-5; ++j) {
+  //    cout << "Block " << i << ", " << j << ":" << endl;
+  //    cout << *(spinv.block(vc[i]->hessianIndex(), vc[j]->hessianIndex())) << endl;
+  //  }
+  //}
+  //cout << "Block " << 5 << ", " << 5 << ":" << endl;
+  //    cout << *(spinv.block(vc[5]->hessianIndex(), vc[5]->hessianIndex())) << endl;
+  
+  
+ //for (size_t i=0; i<vc.size(); ++i) {
+ //   OptimizableGraph::Vertex* v1 = vc[i];
+ //   OptimizableGraph::VertexContainer allVertex;
+ //   allVertex.push_back(v1);
+ //   SparseBlockMatrix<MatrixXd> spinv;
+ //   optimizer.computeMarginals(spinv, allVertex);
+ //   std::cout << spinv << std::endl;
+ //} 
+  
+  //SparseBlockMatrix<MatrixXd> spinv;
+  //optimizer.computeMarginals(spinv, vc);
   //std::cout << spinv << std::endl;
   
   if (outputFilename.size() > 0) {
