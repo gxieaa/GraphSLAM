@@ -113,12 +113,12 @@ int main(int argc, char** argv)
           Matrix<double, 4, 2> diffMat;
           diffMat << Matrix2d::Identity(2,2), -1*Matrix2d::Identity(2,2);
           Matrix2d diffInfoMat = diffMat.transpose() * marginInfoMat * diffMat;
-          //cout << "diffInfoMat (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
-          //cout << diffInfoMat << endl;
+          cout << "diffInfoMat (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+          cout << diffInfoMat << endl;
           // get landmark difference information vector
           Vector2d diffInfoVec = diffMat.transpose() * infoVec;
-          //cout << "diffInfovec (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
-          //cout << diffInfoVec << endl;
+          cout << "diffInfovec (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+          cout << diffInfoVec << endl;
           // get landmark difference estimation vector
           Vector2d diffEstVec = diffInfoMat.inverse() * diffInfoVec;
           cout << "diffEstVec (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
@@ -126,8 +126,8 @@ int main(int argc, char** argv)
           // get likelihood
           double likelihood;
           likelihood = pow((2*M_PI * diffInfoMat.inverse()).determinant(), -0.5) * exp(-0.5 * diffEstVec.transpose() * diffInfoMat.inverse() * diffEstVec);
-          //cout << "likelihood (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
-          //cout << likelihood << endl;
+          cout << "likelihood (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+          cout << likelihood << endl;
         }
       }
     }
