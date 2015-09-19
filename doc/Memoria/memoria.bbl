@@ -1,8 +1,63 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
-\bibitem{KAR00}
-Ioannis Karatzas. and Steven~E. Shreve.
-\newblock {\em Brownian Motion and Stochastic Calculus}.
-\newblock Springer, Berlin, 2nd edition, 2000.
+\bibitem{sqrtsam}
+Frank Dellaert and Michael Kaess.
+\newblock Square root sam: Simultaneous localization and mapping via square
+  root information smoothing.
+\newblock {\em The International Journal of Robotics Research},
+  25(12):1181--1203, 2006.
+
+\bibitem{tutorial}
+Hugh Durrant-Whyte and Tim Bailey.
+\newblock Simultaneous localization and mapping: part i.
+\newblock {\em Robotics \& Automation Magazine, IEEE}, 13(2):99--110, 2006.
+
+\bibitem{isam2}
+Michael Kaess, Hordur Johannsson, Richard Roberts, Viorela Ila, John~J Leonard,
+  and Frank Dellaert.
+\newblock isam2: Incremental smoothing and mapping using the bayes tree.
+\newblock {\em The International Journal of Robotics Research}, page
+  0278364911430419, 2011.
+
+\bibitem{isam}
+Michael Kaess, Ananth Ranganathan, and Frank Dellaert.
+\newblock isam: Incremental smoothing and mapping.
+\newblock {\em Robotics, IEEE Transactions on}, 24(6):1365--1378, 2008.
+
+\bibitem{g2o}
+Rainer K{\"u}mmerle, Giorgio Grisetti, Hauke Strasdat, Kurt Konolige, and
+  Wolfram Burgard.
+\newblock g$^2$o: A general framework for graph optimization.
+\newblock In {\em Robotics and Automation (ICRA), 2011 IEEE International
+  Conference on}, pages 3607--3613. IEEE, 2011.
+
+\bibitem{robustloop}
+Yasir Latif, C{\'e}sar Cadena, and Jos{\'e} Neira.
+\newblock Robust loop closing over time for pose graph slam.
+\newblock {\em The International Journal of Robotics Research}, page
+  0278364913498910, 2013.
+
+\bibitem{firstgraph}
+Feng Lu and Evangelos Milios.
+\newblock Globally consistent range scan alignment for environment mapping.
+\newblock {\em Autonomous robots}, 4(4):333--349, 1997.
+
+\bibitem{ekfslam}
+Randall~C Smith and Peter Cheeseman.
+\newblock On the representation and estimation of spatial uncertainty.
+\newblock {\em The international journal of Robotics Research}, 5(4):56--68,
+  1986.
+
+\bibitem{probabilistic}
+Sebastian Thrun, Wolfram Burgard, and Dieter Fox.
+\newblock {\em Probabilistic robotics}.
+\newblock MIT press, 2005.
+
+\bibitem{graphslam}
+Sebastian Thrun and Michael Montemerlo.
+\newblock The graph slam algorithm with applications to large-scale mapping of
+  urban structures.
+\newblock {\em The International Journal of Robotics Research},
+  25(5-6):403--429, 2006.
 
 \end{thebibliography}
