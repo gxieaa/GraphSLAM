@@ -51,11 +51,13 @@ int main(int argc, char** argv)
   optimizer.setVerbose(true);
   optimizer.setAlgorithm(optimizationAlgorithm);
 
-  ifstream ifs(inputFilename.c_str());
+  ifstream ifs;
+  ifs.open(inputFilename.c_str());
   if (! ifs) {
     cerr << "unable to open " << inputFilename << endl;
     return 1;
   }
+  
   optimizer.load(ifs); 
   ifs.close();
   optimizer.initializeOptimization();
@@ -79,28 +81,26 @@ int main(int argc, char** argv)
   }
   
   // second iteration
-  SparseOptimizer optimizer2;
-  optimizer2.setVerbose(true);
-  optimizer2.setAlgorithm(optimizationAlgorithm);
-  
-  ifstream ifs2(outputFilename.c_str());
-  if (! ifs2) {
+  ifs.open(outputFilename.c_str());
+  if (! ifs) {
     cerr << "unable to open " << outputFilename << endl;
     return 1;
   }
-  optimizer2.load(ifs2); 
-  ifs2.close();
-  optimizer2.initializeOptimization();
-  optimizer2.optimize(maxIterations);
+  
+  optimizer.clear();
+  optimizer.load(ifs); 
+  ifs.close();
+  optimizer.initializeOptimization();
+  optimizer.optimize(maxIterations);
   
   outputFilename = "res2.g2o";
   if (outputFilename.size() > 0) {
     if (outputFilename == "-") {
       cerr << "saving to stdout";
-      optimizer2.save(cout);
+      optimizer.save(cout);
     } else {
       cerr << "saving " << outputFilename << " ... ";
-      optimizer2.save(outputFilename.c_str());
+      optimizer.save(outputFilename.c_str());
     }
     cerr << "done." << endl;
   }

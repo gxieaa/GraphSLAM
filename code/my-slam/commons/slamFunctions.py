@@ -54,10 +54,11 @@ def plotResults(gtFilename, guessFilename, optFilename, figFilename, xlim, ylim)
     
 def makeSubplot(ax, gtData, slamData, title, useLegend):
     lw = 1
-    gtLanPlt, = ax.plot(gtData.landmarkX, gtData.landmarkY, '.', color = '#ff8e8e', linewidth = lw, label='GT landmarks')
-    gtRobPlt, = ax.plot(gtData.poseX, gtData.poseY, '.-', color = '#bbbbf9', linewidth = lw, label='GT robot path')
-    lanPlt, = ax.plot(slamData.landmarkX, slamData.landmarkY, 'r.', linewidth = lw, label='landmarks')
-    robPlt, = ax.plot(slamData.poseX, slamData.poseY, 'b.-', linewidth = lw, label='robot path')
+    ms = 4
+    gtLanPlt, = ax.plot(gtData.landmarkX, gtData.landmarkY, '.', color = '#800000', linewidth = lw, markersize = ms, label='GT landmarks')
+    gtRobPlt, = ax.plot(gtData.poseX, gtData.poseY, '.-', color = '#bbbbf9', linewidth = lw, markersize = ms, label='GT robot path')
+    lanPlt, = ax.plot(slamData.landmarkX, slamData.landmarkY, 'r.', linewidth = lw, markersize = ms, label='landmarks')
+    robPlt, = ax.plot(slamData.poseX, slamData.poseY, 'b.-', linewidth = lw, markersize = ms, label='robot path')
     ax.grid(True)
     ax.set_title(title)
     if useLegend:
