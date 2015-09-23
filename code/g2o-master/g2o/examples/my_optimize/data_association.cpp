@@ -1,5 +1,9 @@
 #include "data_association.h"
 
+using namespace std;
+using namespace g2o;
+using namespace Eigen;
+
 const double xi = 10;
 
 void data_association (SparseOptimizer& optimizer) {
@@ -10,7 +14,8 @@ void data_association (SparseOptimizer& optimizer) {
             for (size_t j=i+1; j<vc.size(); ++j){
                 OptimizableGraph::Vertex* v2 = vc[j];
                 if (v2->dimension() == 2) { // check if vertex is landmark
-                    if (correspondence_test(optimizer, &v1, &v2) > xi) {
+                    //cout << "testing association between (v" << v1->id() << ", " << "v" << v2->id() << ") ... " << endl;
+                    if (correspondence_test(optimizer, v1, v2)) {
                         // succesful association
                         make_association(v1, v2);
                     }
@@ -58,12 +63,13 @@ bool correspondence_test (SparseOptimizer& optimizer, OptimizableGraph::Vertex* 
     // get likelihood
     double likelihood;
     likelihood = pow((2*M_PI * diffInfoMat.inverse()).determinant(), -0.5) * exp(-0.5 * diffEstVec.transpose() * diffInfoMat * diffEstVec);
-    //cout << "likelihood (v" << v1->id() << ", " << "v" << v2->id() << "):" << endl;
+    //cout << "likelihood (v" << v1->id() << ", " << "v" << v2->id() << "): ";
     //cout << likelihood << endl;
     return likelihood > xi;
 }
 
 void make_association(OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2){
-    cout << "Association found between (v" << v1->id() << ", " << "v" << v2->id() << ") with likelhood:" << endl;
-    cout << likelihood << endl;
+    cout << "Association found between (v" << v1->id() << ", " << "v" << v2->id() << ")" << endl;
+    v2->setId(v1->id());
+    //cout << likelihood << endl;
 }

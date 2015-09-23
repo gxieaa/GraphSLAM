@@ -13,17 +13,9 @@
 
 #include "g2o/stuff/command_args.h"
 
-#include <Eigen/Core>
-//#include <Eigen/Eigenvalues>
-
 #include <typeinfo>
 
 #include "data_association.h"
-
-using namespace std;
-using namespace g2o;
-using namespace Eigen;
-
 
 // we use the 2D and 3D SLAM types here
 G2O_USE_TYPE_GROUP(slam2d);
@@ -64,12 +56,16 @@ int main(int argc, char** argv)
     cerr << "unable to open " << inputFilename << endl;
     return 1;
   }
-  optimizer.load(ifs);
+  optimizer.load(ifs); 
+  ifs.close();
   optimizer.initializeOptimization();
   optimizer.optimize(maxIterations);
   
   // data association
-  data_association(&optimizer);
+  data_association(optimizer);
+  
+  //optimizer.initializeOptimization();
+  //optimizer.optimize(maxIterations);
   
   if (outputFilename.size() > 0) {
     if (outputFilename == "-") {
@@ -81,5 +77,33 @@ int main(int argc, char** argv)
     }
     cerr << "done." << endl;
   }
+  
+  // second iteration
+  SparseOptimizer optimizer2;
+  optimizer2.setVerbose(true);
+  optimizer2.setAlgorithm(optimizationAlgorithm);
+  
+  ifstream ifs2(outputFilename.c_str());
+  if (! ifs2) {
+    cerr << "unable to open " << outputFilename << endl;
+    return 1;
+  }
+  optimizer2.load(ifs2); 
+  ifs2.close();
+  optimizer2.initializeOptimization();
+  optimizer2.optimize(maxIterations);
+  
+  outputFilename = "res2.g2o";
+  if (outputFilename.size() > 0) {
+    if (outputFilename == "-") {
+      cerr << "saving to stdout";
+      optimizer2.save(cout);
+    } else {
+      cerr << "saving " << outputFilename << " ... ";
+      optimizer2.save(outputFilename.c_str());
+    }
+    cerr << "done." << endl;
+  }
+  
   return 0;
 }
