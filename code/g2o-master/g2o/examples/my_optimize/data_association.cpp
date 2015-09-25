@@ -6,23 +6,26 @@ using namespace Eigen;
 
 const double xi = 10;
 
-void data_association (SparseOptimizer& optimizer) {
+bool data_association (SparseOptimizer& optimizer) {
+    bool no_association = true;
     OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
     for (size_t i=0; i<vc.size(); ++i) {
         OptimizableGraph::Vertex* v1 = vc[i];
         if (v1->dimension() == 2) { // check if vertex is landmark
             for (size_t j=i+1; j<vc.size(); ++j){
                 OptimizableGraph::Vertex* v2 = vc[j];
-                if (v2->dimension() == 2) { // check if vertex is landmark
-                    //cout << "testing association between (v" << v1->id() << ", " << "v" << v2->id() << ") ... " << endl;
+                if (v2->dimension() == 2) { // check if vertex is landmark and if the come from different poses
+                    cout << "testing association between (v" << v1->id() << ", " << "v" << v2->id() << ") ... " << endl;
                     if (correspondence_test(optimizer, v1, v2)) {
                         // succesful association
+                        no_association = false;
                         make_association(v1, v2);
                     }
                 }
             }
         }
     }
+    return no_association;
 }
 
 bool correspondence_test (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2) {
@@ -66,6 +69,33 @@ bool correspondence_test (SparseOptimizer& optimizer, OptimizableGraph::Vertex* 
     //cout << "likelihood (v" << v1->id() << ", " << "v" << v2->id() << "): ";
     //cout << likelihood << endl;
     return likelihood > xi;
+}
+
+bool share_pose(OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2) {
+    //cout << "test share pose between (v" << v1->id() << ", " << "v" << v2->id() << ")";
+    set<HyperGraph::Edge*> edgeSetV1 = v1->edges();
+    set<HyperGraph::Edge*> edgeSetV2 = v2->edges();
+    for (set<HyperGraph::Edge*>::iterator it1 = edgeSetV1.begin(); it1 != edgeSetV1.end(); ++it1) {
+        HyperGraph::Vertex* v1Pose = extract_other_vertex (*it1, v1);
+        for (set<HyperGraph::Edge*>::iterator it2 = edgeSetV2.begin(); it2 != edgeSetV2.end(); ++it2) {
+            HyperGraph::Vertex* v2Pose = extract_other_vertex (*it2, v2);
+            if (v1Pose->id() == v2Pose->id()) {
+                cout << "(v" << v1->id() << ", " << "v" << v2->id() << ") share pose" << endl;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+HyperGraph::Vertex* extract_other_vertex (HyperGraph::Edge* edge, OptimizableGraph::Vertex* vertex){
+    HyperGraph::VertexContainer vc = edge->vertices();
+    // assumes two side edges
+    for (size_t i=0; i<vc.size(); ++i) {
+        if (vc[i]->id() != vertex->id()) return vc[i];
+    }
+    cout << "extract other vertex error" << endl;
+    return nullptr;
 }
 
 void make_association(OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2){

@@ -63,38 +63,46 @@ int main(int argc, char** argv)
   optimizer.initializeOptimization();
   optimizer.optimize(maxIterations);
   
-  while(true) {
-      // data association
-      bool no_more_association  = data_association(optimizer);
-      
-      // output file
-      if (outputFilename.size() > 0) {
-        if (outputFilename == "-") {
-          cerr << "saving to stdout";
-          optimizer.save(cout);
-        } else {
-          cerr << "saving " << outputFilename << " ... ";
-          optimizer.save(outputFilename.c_str());
-        }
-        cerr << "done." << endl;
-      }
-      
-      // finished test
-      if (no_more_association) break;
-      
-      // open data file
-      ifs.open(outputFilename.c_str());
-      if (! ifs) {
-        cerr << "unable to open " << outputFilename << endl;
-        return 1;
-      }
-      
-      // optimize
-      optimizer.clear();
-      optimizer.load(ifs); 
-      ifs.close();
-      optimizer.initializeOptimization();
-      optimizer.optimize(maxIterations);
+  // data association
+  data_association(optimizer);
+  
+  //optimizer.initializeOptimization();
+  //optimizer.optimize(maxIterations);
+  
+  if (outputFilename.size() > 0) {
+    if (outputFilename == "-") {
+      cerr << "saving to stdout";
+      optimizer.save(cout);
+    } else {
+      cerr << "saving " << outputFilename << " ... ";
+      optimizer.save(outputFilename.c_str());
+    }
+    cerr << "done." << endl;
+  }
+  
+  // second iteration
+  ifs.open(outputFilename.c_str());
+  if (! ifs) {
+    cerr << "unable to open " << outputFilename << endl;
+    return 1;
+  }
+  
+  optimizer.clear();
+  optimizer.load(ifs); 
+  ifs.close();
+  optimizer.initializeOptimization();
+  optimizer.optimize(maxIterations);
+  
+  outputFilename = "res2.g2o";
+  if (outputFilename.size() > 0) {
+    if (outputFilename == "-") {
+      cerr << "saving to stdout";
+      optimizer.save(cout);
+    } else {
+      cerr << "saving " << outputFilename << " ... ";
+      optimizer.save(outputFilename.c_str());
+    }
+    cerr << "done." << endl;
   }
   
   return 0;
