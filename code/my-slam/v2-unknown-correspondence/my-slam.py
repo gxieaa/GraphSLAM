@@ -3,18 +3,13 @@ import subprocess
 import sys
 sys.path.append('../commons')
 from slamFunctions import *
+from associationFunctions import *
 
 def main():
     # variables
-    #g2oIterations = 10
-    #nlandmarks = 100
-    #simSteps = 100
-    #infoOdomPos = 500
-    #infoOdomAng = 5000
-    #infoPointSen = 1000
-    g2oIterations = 10
-    nlandmarks = 300
-    simSteps = 300
+    g2oIterations = 5
+    nlandmarks = 100
+    simSteps = 100
     infoOdomPos = [500, 100, 50, 10, 5]
     infoOdomAng = [5000, 1000, 500, 100, 50]
     infoPointSen = [1000, 500, 100, 50, 10]
@@ -53,20 +48,25 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
                      "-o", guessOutFilename, guessInFilename])
 
     # anonymize landmarks
-    subprocess.call([binPath+"./g2o_anonymize_observations", 
-                     "-o", anonOutFilename, guessInFilename]) 
+    anonymizeLandmarks(guessInFilename, anonOutFilename)
+    #subprocess.call([binPath+"./g2o_anonymize_observations", 
+    #                 "-o", anonOutFilename, guessInFilename]) 
     
     # make g2o optimization
-    subprocess.call([binPath+"./g2o", "-i", str(g2oIterations), "-guessOdometry",
-                     "-i", "5",
+    #subprocess.call([binPath+"./g2o", "-i", str(g2oIterations), "-guessOdometry",
+                     #"-i", "5",
                      #"-inc",
                      #"-robustKernel",
                      #"-robustKernelWidth",
                      #"-solver",
-                     "-o", optFilename, anonOutFilename])
+    #                 "-o", optFilename, anonOutFilename])
+    subprocess.call([binPath+"./my_optimize", 
+                    "-i", str(g2oIterations), 
+                    "-t", str(1),
+                    "-o", optFilename, anonOutFilename])
                      
     # plot results
-    plotResults(simFilename, guessOutFilename, anonOutFilename, figFilename, [-15, 20], [-20, 20])
+    plotResults(simFilename, guessOutFilename, optFilename, figFilename, [-15, 20], [-20, 20])
     
 if __name__ == '__main__':
     main()

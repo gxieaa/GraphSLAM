@@ -6,7 +6,7 @@ from slamFunctions import *
 
 def main():
     # variables
-    g2oIterations = 10
+    g2oIterations = 5
     nlandmarks = 300
     simSteps = 300
     infoOdomPos = [500, 100, 50, 10, 5]
@@ -47,7 +47,6 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
 
     # make g2o optimization
     subprocess.call([binPath+"./g2o", "-i", str(g2oIterations), "-guessOdometry",
-                     "-i", "5",
                      #"-inc",
                      #"-robustKernel",
                      #"-robustKernelWidth",

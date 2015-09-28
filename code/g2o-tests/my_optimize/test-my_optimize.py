@@ -16,7 +16,7 @@ def main():
     subprocess.call(["make", "-C", buildPath]) 
     # run script
     subprocess.call([binPath+"./my_optimize", 
-    "-i", "10", 
+    "-i", "10",
     "-o", resPath, dataPath])
 
 if __name__ == '__main__':

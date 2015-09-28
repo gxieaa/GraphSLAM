@@ -27,9 +27,11 @@ int main(int argc, char** argv)
   int maxIterations;
   string outputFilename;
   string inputFilename;
+  double xi;
   CommandArgs arg;
   arg.param("i", maxIterations, 10, "perform n iterations, if negative consider the gain");
   arg.param("o", outputFilename, "", "output final version of the graph");
+  arg.param("t", xi, 10.0, "threshold for data association");
   arg.paramLeftOver("graph-input", inputFilename, "", "graph file which will be processed");
   arg.parseArgs(argc, argv);
 
@@ -65,7 +67,7 @@ int main(int argc, char** argv)
   
   while(true) {
       // data association
-      bool no_more_association  = data_association(optimizer);
+      bool no_more_association  = data_association(optimizer, xi);
       
       // output file
       if (outputFilename.size() > 0) {

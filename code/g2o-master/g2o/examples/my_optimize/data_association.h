@@ -21,12 +21,14 @@ using namespace std;
 using namespace g2o;
 using namespace Eigen;
 
-bool data_association (SparseOptimizer& optimizer);
+bool data_association (SparseOptimizer& optimizer, double xi);
 
-bool correspondence_test (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2);
+bool correspondence_test (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double xi);
 
 bool share_pose (OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2);
 
 HyperGraph::Vertex* extract_other_vertex (HyperGraph::Edge* edge, OptimizableGraph::Vertex* vertex);
+
+bool distant_test (OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2);
 
 void make_association (OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2);
