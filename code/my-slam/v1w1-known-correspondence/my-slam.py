@@ -6,12 +6,6 @@ from slamFunctions import *
 
 def main():
     # variables
-    #g2oIterations = 10
-    #nlandmarks = 100
-    #simSteps = 100
-    #infoOdomPos = 500
-    #infoOdomAng = 5000
-    #infoPointSen = 1000
     g2oIterations = 10
     nlandmarks = 300
     simSteps = 300

@@ -14,7 +14,7 @@ bool data_association (SparseOptimizer& optimizer) {
         if (v1->dimension() == 2) { // check if vertex is landmark
             for (size_t j=i+1; j<vc.size(); ++j){
                 OptimizableGraph::Vertex* v2 = vc[j];
-                if (v2->dimension() == 2) { // check if vertex is landmark and if the come from different poses
+                if (v2->dimension() == 2 && !share_pose(v1, v2)) { // check if vertex is landmark and if the come from different poses
                     cout << "testing association between (v" << v1->id() << ", " << "v" << v2->id() << ") ... " << endl;
                     if (correspondence_test(optimizer, v1, v2)) {
                         // succesful association
@@ -80,7 +80,7 @@ bool share_pose(OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2) {
         for (set<HyperGraph::Edge*>::iterator it2 = edgeSetV2.begin(); it2 != edgeSetV2.end(); ++it2) {
             HyperGraph::Vertex* v2Pose = extract_other_vertex (*it2, v2);
             if (v1Pose->id() == v2Pose->id()) {
-                cout << "(v" << v1->id() << ", " << "v" << v2->id() << ") share pose" << endl;
+                //cout << "(v" << v1->id() << ", " << "v" << v2->id() << ") share pose" << endl;
                 return true;
             }
         }

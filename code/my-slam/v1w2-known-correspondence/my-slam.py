@@ -6,12 +6,6 @@ from slamFunctions import *
 
 def main():
     # variables
-    #g2oIterations = 10
-    #nlandmarks = 100
-    #simSteps = 100
-    #infoOdomPos = 500
-    #infoOdomAng = 5000
-    #infoPointSen = 1000
     g2oIterations = 10
     nlandmarks = 300
     simSteps = 300
@@ -47,7 +41,6 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
     fixNode(simFilename, 1000+simSteps)
                      
     # get initial guess
-    #getInitialGuess(simFilename, guessInFilename)
     subprocess.call([binPath+"./g2o", "-i", "0", "-guessOdometry",
                      "-o", guessOutFilename, guessInFilename])
     
