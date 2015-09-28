@@ -41,6 +41,7 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
     fixNode(simFilename, 1000+simSteps)
                      
     # get initial guess
+    getInitialGuess(simFilename, guessInFilename)
     subprocess.call([binPath+"./g2o", "-i", "0", "-guessOdometry",
                      "-o", guessOutFilename, guessInFilename])
     
