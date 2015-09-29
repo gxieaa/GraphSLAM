@@ -1,0 +1,207 @@
+Determining if the function sgemm_ exists failed with the following output:
+
+
+Determining if files pthread.h exist failed with the following output:
+
+Source:
+/* */
+#include <pthread.h>
+
+
+int main(){return 0;}
+
+Determining if the function XOpenDisplay exists in the /usr/lib/x86_64-linux-gnu/libX11.so;/usr/lib/x86_64-linux-gnu/libXext.so failed with the following output:
+Change Dir: /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3020659467/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3020659467.dir/build.make CMakeFiles/cmTryCompileExec3020659467.dir/build
+make[1]: Entering directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o -c /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTryCompileExec3020659467
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3020659467.dir/link.txt --verbose=1
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o  -o cmTryCompileExec3020659467 -rdynamic 
+make[1]: Leaving directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function dnet_ntoa exists in the dnet failed with the following output:
+Change Dir: /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3020659467/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3020659467.dir/build.make CMakeFiles/cmTryCompileExec3020659467.dir/build
+make[1]: Entering directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o -c /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTryCompileExec3020659467
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3020659467.dir/link.txt --verbose=1
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o  -o cmTryCompileExec3020659467 -rdynamic 
+make[1]: Leaving directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function dnet_ntoa exists in the dnet_stub failed with the following output:
+Change Dir: /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3020659467/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3020659467.dir/build.make CMakeFiles/cmTryCompileExec3020659467.dir/build
+make[1]: Entering directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o -c /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTryCompileExec3020659467
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3020659467.dir/link.txt --verbose=1
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o  -o cmTryCompileExec3020659467 -rdynamic 
+make[1]: Leaving directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function gethostbyname exists failed with the following output:
+Change Dir: /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3020659467/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3020659467.dir/build.make CMakeFiles/cmTryCompileExec3020659467.dir/build
+make[1]: Entering directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o -c /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTryCompileExec3020659467
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3020659467.dir/link.txt --verbose=1
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o  -o cmTryCompileExec3020659467 -rdynamic 
+make[1]: Leaving directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function gethostbyname exists in the nsl failed with the following output:
+Change Dir: /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3020659467/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3020659467.dir/build.make CMakeFiles/cmTryCompileExec3020659467.dir/build
+make[1]: Entering directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o -c /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTryCompileExec3020659467
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3020659467.dir/link.txt --verbose=1
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o  -o cmTryCompileExec3020659467 -rdynamic 
+make[1]: Leaving directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function gethostbyname exists in the bsd failed with the following output:
+Change Dir: /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3020659467/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3020659467.dir/build.make CMakeFiles/cmTryCompileExec3020659467.dir/build
+make[1]: Entering directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o -c /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTryCompileExec3020659467
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3020659467.dir/link.txt --verbose=1
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o  -o cmTryCompileExec3020659467 -rdynamic 
+make[1]: Leaving directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function connect exists failed with the following output:
+Change Dir: /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3020659467/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3020659467.dir/build.make CMakeFiles/cmTryCompileExec3020659467.dir/build
+make[1]: Entering directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o -c /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTryCompileExec3020659467
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3020659467.dir/link.txt --verbose=1
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o  -o cmTryCompileExec3020659467 -rdynamic 
+make[1]: Leaving directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function connect exists in the socket failed with the following output:
+Change Dir: /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3020659467/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3020659467.dir/build.make CMakeFiles/cmTryCompileExec3020659467.dir/build
+make[1]: Entering directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o -c /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTryCompileExec3020659467
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3020659467.dir/link.txt --verbose=1
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o  -o cmTryCompileExec3020659467 -rdynamic 
+make[1]: Leaving directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function remove exists failed with the following output:
+Change Dir: /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3020659467/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3020659467.dir/build.make CMakeFiles/cmTryCompileExec3020659467.dir/build
+make[1]: Entering directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o -c /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTryCompileExec3020659467
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3020659467.dir/link.txt --verbose=1
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o  -o cmTryCompileExec3020659467 -rdynamic 
+make[1]: Leaving directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function remove exists in the posix failed with the following output:
+Change Dir: /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3020659467/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3020659467.dir/build.make CMakeFiles/cmTryCompileExec3020659467.dir/build
+make[1]: Entering directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o -c /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTryCompileExec3020659467
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3020659467.dir/link.txt --verbose=1
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o  -o cmTryCompileExec3020659467 -rdynamic 
+make[1]: Leaving directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function shmat exists failed with the following output:
+Change Dir: /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3020659467/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3020659467.dir/build.make CMakeFiles/cmTryCompileExec3020659467.dir/build
+make[1]: Entering directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o -c /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTryCompileExec3020659467
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3020659467.dir/link.txt --verbose=1
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o  -o cmTryCompileExec3020659467 -rdynamic 
+make[1]: Leaving directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function shmat exists in the ipc failed with the following output:
+Change Dir: /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3020659467/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3020659467.dir/build.make CMakeFiles/cmTryCompileExec3020659467.dir/build
+make[1]: Entering directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o -c /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTryCompileExec3020659467
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3020659467.dir/link.txt --verbose=1
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o  -o cmTryCompileExec3020659467 -rdynamic 
+make[1]: Leaving directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+
+
+Determining if the function IceConnectionNumber exists in the ICE failed with the following output:
+Change Dir: /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3020659467/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3020659467.dir/build.make CMakeFiles/cmTryCompileExec3020659467.dir/build
+make[1]: Entering directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp   -o CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o -c /home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTryCompileExec3020659467
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3020659467.dir/link.txt --verbose=1
+/usr/bin/c++    -DOpenMP_FLAG_DETECTED -fopenmp    CMakeFiles/cmTryCompileExec3020659467.dir/src.cxx.o  -o cmTryCompileExec3020659467 -rdynamic 
+make[1]: Leaving directory '/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam/build/CMakeFiles/CMakeTmp'
+
+

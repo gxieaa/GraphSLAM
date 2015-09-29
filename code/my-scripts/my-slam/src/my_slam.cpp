@@ -63,19 +63,19 @@ int main(int argc, char** argv) {
     cerr << "unable to open " << inputFilename << endl;
     return 1;
   }
-  
+
   // initial guess
   cout << "Initial guess" << endl;
-  optimizer.load(ifs); 
+  optimizer.load(ifs);
   ifs.close();
   optimizer.initializeOptimization();
   optimizer.optimize(maxIterations);
-  
+
   while(true) {
       // data association
       cout << "Testing associations..." << endl;
       bool no_more_association  = data_association(optimizer, xi);
-      
+
       // output file
       if (outputFilename.size() > 0) {
         if (outputFilename == "-") {
@@ -87,10 +87,10 @@ int main(int argc, char** argv) {
         }
         cerr << "done." << endl;
       }
-      
+
       // finished test
       if (no_more_association) break;
-      
+
       // open data file
       cout << "\n### iteration " << ++iteration << " ###\n" << endl;
       ifs.open(outputFilename.c_str());
@@ -98,19 +98,19 @@ int main(int argc, char** argv) {
         cerr << "unable to open " << outputFilename << endl;
         return 1;
       }
-      
+
       // optimize
       optimizer.clear();
-      optimizer.load(ifs); 
+      optimizer.load(ifs);
       ifs.close();
       optimizer.initializeOptimization();
       optimizer.optimize(maxIterations);
   }
-  
+
   // compute time
   clock_t end = clock();
   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
   cout << "Elapsed time: " << elapsed_secs << " [s]" << endl;
-  
+
   return 0;
 }

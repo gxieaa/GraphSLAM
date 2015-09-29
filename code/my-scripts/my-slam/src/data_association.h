@@ -7,9 +7,6 @@
 #include "g2o/solvers/csparse/linear_solver_csparse.h"
 
 #include "g2o/core/factory.h"
-//#include "g2o/types/slam3d/types_slam3d.h"
-//#include "g2o/types/slam2d/types_slam2d.h"
-//#include "g2o/types/slam2d/vertex_se2.h"
 
 #include "g2o/stuff/command_args.h"
 
