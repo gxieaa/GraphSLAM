@@ -1,11 +1,13 @@
 # imports
 import subprocess
 import sys
+import time
 sys.path.append('../commons')
 from slamFunctions import *
 from associationFunctions import *
 
 def main():
+    start_time = time.time()
     # variables
     g2oIterations = 5
     nlandmarks = 100
@@ -15,12 +17,19 @@ def main():
     infoPointSen = [1000, 500, 100, 50, 10]
     n = len(infoOdomPos)
     
+    # compile
+    buildPath = "../../g2o-master/build/"
+    subprocess.call(["make", "-C", buildPath]) 
+    
     # directory generator
     dirNames = ['sim_out', 'guess_in', 'guess_out', 'opt_out', 'figs', 'anon_out']
     makeDirs(dirNames)
     
     for i in range(n):
         runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos[i], infoOdomAng[i], infoPointSen[i])
+        
+    elapsed_time = time.time() - start_time
+    print "Total time os tests: " + str(elapsed_time) + " [s]" 
     
 def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen):
     

@@ -1,4 +1,3 @@
 - this (duh!)
 - g2o/apps/test_simulator2d_noise.cpp
-- g2o/apps/g2o_anonimize_observations2.cpp
 - g2o/examples/my_optimize/*
