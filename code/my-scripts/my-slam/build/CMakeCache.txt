@@ -276,7 +276,7 @@ My_SLAM_BINARY_DIR:STATIC=/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scri
 My_SLAM_SOURCE_DIR:STATIC=/home/frank/Workspace/Solo-Work/GraphSLAM/code/my-scripts/my-slam
 
 //Dependencies for the target
-my_slam_lib_LIB_DEPENDS:STATIC=general;core;general;solver_csparse;general;types_slam2d;general;types_slam3d;
+my_slam_lib_LIB_DEPENDS:STATIC=general;g2o_cli;general;g2o_ext_freeglut_minimal;general;g2o_simulator;general;g2o_solver_slam2d_linear;general;g2o_types_icp;general;g2o_types_slam2d;general;g2o_core;general;g2o_interface;general;g2o_solver_csparse;general;g2o_solver_structure_only;general;g2o_types_sba;general;g2o_types_slam3d;general;g2o_csparse_extension;general;g2o_opengl_helper;general;g2o_solver_dense;general;g2o_stuff;general;g2o_types_sclam2d;general;g2o_viewer;general;g2o_parser;general;g2o_solver_pcg;general;g2o_types_data;general;g2o_types_sim3;general;cxsparse;
 
 
 ########################
