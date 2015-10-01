@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/francocurotto/Workspace/GraphSLAM/code/example_g2o/src/simple_optimize.cpp
+iostream
+-
+g2o/core/sparse_optimizer.h
+/home/francocurotto/Workspace/GraphSLAM/code/example_g2o/src/g2o/core/sparse_optimizer.h
+g2o/core/block_solver.h
+/home/francocurotto/Workspace/GraphSLAM/code/example_g2o/src/g2o/core/block_solver.h
+g2o/core/optimization_algorithm_gauss_newton.h
+/home/francocurotto/Workspace/GraphSLAM/code/example_g2o/src/g2o/core/optimization_algorithm_gauss_newton.h
+g2o/core/optimization_algorithm_levenberg.h
+/home/francocurotto/Workspace/GraphSLAM/code/example_g2o/src/g2o/core/optimization_algorithm_levenberg.h
+g2o/solvers/csparse/linear_solver_csparse.h
+/home/francocurotto/Workspace/GraphSLAM/code/example_g2o/src/g2o/solvers/csparse/linear_solver_csparse.h
+g2o/core/factory.h
+/home/francocurotto/Workspace/GraphSLAM/code/example_g2o/src/g2o/core/factory.h
+g2o/stuff/command_args.h
+/home/francocurotto/Workspace/GraphSLAM/code/example_g2o/src/g2o/stuff/command_args.h
+
