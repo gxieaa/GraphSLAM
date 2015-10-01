@@ -18,8 +18,8 @@ def main():
     n = len(infoOdomPos)
     
     # compile
-    buildPath = "../../g2o-master/build/"
-    subprocess.call(["make", "-C", buildPath]) 
+    #buildPath = "../../g2o-master/build/"
+    #subprocess.call(["make", "-C", buildPath]) 
     
     # directory generator
     dirNames = ['sim_out', 'guess_in', 'guess_out', 'opt_out', 'figs', 'anon_out']
@@ -29,7 +29,7 @@ def main():
         runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos[i], infoOdomAng[i], infoPointSen[i])
         
     elapsed_time = time.time() - start_time
-    print "Total time os tests: " + str(elapsed_time) + " [s]" 
+    print "Total time tests: " + str(elapsed_time) + " [s]" 
     
 def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen):
     
@@ -69,7 +69,7 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
                      #"-robustKernelWidth",
                      #"-solver",
     #                 "-o", optFilename, anonOutFilename])
-    subprocess.call([binPath+"./my_optimize", 
+    subprocess.call(["../../my-scripts/my-slam/bin/./my_slam", 
                     "-i", str(g2oIterations), 
                     "-t", str(1),
                     "-o", optFilename, anonOutFilename])

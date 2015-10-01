@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(My_SLAM CXX)
 
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
+
 # C++11 support
 IF(NOT MSVC)
   include(CheckCXXCompilerFlag)
@@ -25,28 +27,27 @@ INCLUDE_DIRECTORIES(${G2O_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${EIGEN3_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${CSPARSE_INCLUDE_DIR})
 
+SET(G2O_LIBS g2o_cli g2o_ext_freeglut_minimal g2o_simulator g2o_solver_slam2d_linear g2o_types_icp g2o_types_slam2d g2o_core g2o_interface g2o_solver_csparse g2o_solver_structure_only g2o_types_sba g2o_types_slam3d g2o_csparse_extension g2o_opengl_helper g2o_solver_dense g2o_stuff g2o_types_sclam2d g2o_viewer g2o_parser g2o_solver_pcg g2o_types_data g2o_types_sim3 cxsparse )
+
 ADD_LIBRARY(my_slam_lib ${G2O_LIB_TYPE}
   src/data_association.h src/data_association.cpp
 )
 
 SET_TARGET_PROPERTIES(my_slam_lib PROPERTIES OUTPUT_NAME ${LIB_PREFIX}my_slam)
 
-target_link_libraries(my_slam_lib
-   ${G2O_LIBRARIES} 
-)
-TARGET_LINK_LIBRARIES(my_slam_lib core solver_csparse)
-TARGET_LINK_LIBRARIES(my_slam_lib types_slam2d)
-TARGET_LINK_LIBRARIES(my_slam_lib types_slam3d)
+target_link_libraries(my_slam_lib ${G2O_LIBS})
+
+#TARGET_LINK_LIBRARIES(my_slam_lib core solver_csparse)
+#TARGET_LINK_LIBRARIES(my_slam_lib types_slam2d)
+#TARGET_LINK_LIBRARIES(my_slam_lib types_slam3d)
 
 ADD_EXECUTABLE(my_slam src/my_slam.cpp)
 
 SET_TARGET_PROPERTIES(my_slam PROPERTIES OUTPUT_NAME my_slam${EXE_POSTFIX})
 
-target_link_libraries(my_slam
-   ${G2O_LIBRARIES} 
-)
+#target_link_libraries(my_slam ${G2O_LIBS})
 
-TARGET_LINK_LIBRARIES(my_slam core solver_csparse)
-TARGET_LINK_LIBRARIES(my_slam types_slam2d)
-TARGET_LINK_LIBRARIES(my_slam types_slam3d)
+#TARGET_LINK_LIBRARIES(my_slam core solver_csparse)
+#TARGET_LINK_LIBRARIES(my_slam types_slam2d)
+#TARGET_LINK_LIBRARIES(my_slam types_slam3d)
 TARGET_LINK_LIBRARIES(my_slam my_slam_lib)
