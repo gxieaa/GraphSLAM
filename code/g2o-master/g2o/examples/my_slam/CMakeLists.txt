@@ -10,13 +10,13 @@ TARGET_LINK_LIBRARIES(my_optimize_lib core solver_csparse)
 TARGET_LINK_LIBRARIES(my_optimize_lib types_slam2d)
 TARGET_LINK_LIBRARIES(my_optimize_lib types_slam3d)
 
-ADD_EXECUTABLE(my_optimize
-  my_optimize.cpp
+ADD_EXECUTABLE(my_slam
+  my_slam.cpp
 )
 
-SET_TARGET_PROPERTIES(my_optimize PROPERTIES OUTPUT_NAME my_optimize${EXE_POSTFIX})
+SET_TARGET_PROPERTIES(my_slam PROPERTIES OUTPUT_NAME my_slam${EXE_POSTFIX})
 
-TARGET_LINK_LIBRARIES(my_optimize core solver_csparse)
-TARGET_LINK_LIBRARIES(my_optimize types_slam2d)
-TARGET_LINK_LIBRARIES(my_optimize types_slam3d)
-TARGET_LINK_LIBRARIES(my_optimize my_optimize_lib)
+TARGET_LINK_LIBRARIES(my_slam core solver_csparse)
+TARGET_LINK_LIBRARIES(my_slam types_slam2d)
+TARGET_LINK_LIBRARIES(my_slam types_slam3d)
+TARGET_LINK_LIBRARIES(my_slam my_optimize_lib)

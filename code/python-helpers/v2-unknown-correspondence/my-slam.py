@@ -10,8 +10,8 @@ def main():
     start_time = time.time()
     # variables
     g2oIterations = 5
-    nlandmarks = 100
-    simSteps = 100
+    nlandmarks = 50
+    simSteps = 50
     infoOdomPos = [500, 100, 50, 10, 5]
     infoOdomAng = [5000, 1000, 500, 100, 50]
     infoPointSen = [1000, 500, 100, 50, 10]
@@ -34,9 +34,11 @@ def main():
 def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen):
     
     # paths and filenames
+    binSimPath = "../../my-scripts/my-simulator/build/"
+    #binOptPath = "../../g2o-master/bin/"
+    binOptPath = "../../my-scripts/my-slam/build/"
     parameters = [g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen]
     paramNames = ["i", "s", "l", "p", "a", "ps"] 
-    binPath = "../../g2o-master/bin/"
     simFilename = genFilename(dirNames[0]+"/sim_out", paramNames, parameters,".g2o")
     guessInFilename = genFilename(dirNames[1]+"/guess_in", paramNames, parameters,".g2o")
     guessOutFilename = genFilename(dirNames[2]+"/guess_out", paramNames, parameters,".g2o")
@@ -45,7 +47,7 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
     anonOutFilename = genFilename(dirNames[5]+"/anon_out", paramNames, parameters,".g2o")
 
     # get simulation data
-    subprocess.call([binPath+"./g2o_simulator2d_noise", "-hasOdom", "-hasPointSensor",
+    subprocess.call([binSimPath+"./my_simulator", "-hasOdom", "-hasPointSensor",
                      "-nlandmarks", str(nlandmarks), "-simSteps", str(simSteps),
                      "-infoOdomPos", str(infoOdomPos), "-infoOdomAng", str(infoOdomAng),
                      "-infoPointSen", str(infoPointSen), simFilename])
@@ -53,23 +55,13 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
                      
     # get initial guess
     getInitialGuess(simFilename, guessInFilename)
-    subprocess.call([binPath+"./g2o", "-i", "0", "-guessOdometry",
+    subprocess.call(["g2o", "-i", "0", "-guessOdometry",
                      "-o", guessOutFilename, guessInFilename])
 
     # anonymize landmarks
     anonymizeLandmarks(guessInFilename, anonOutFilename)
-    #subprocess.call([binPath+"./g2o_anonymize_observations", 
-    #                 "-o", anonOutFilename, guessInFilename]) 
     
-    # make g2o optimization
-    #subprocess.call([binPath+"./g2o", "-i", str(g2oIterations), "-guessOdometry",
-                     #"-i", "5",
-                     #"-inc",
-                     #"-robustKernel",
-                     #"-robustKernelWidth",
-                     #"-solver",
-    #                 "-o", optFilename, anonOutFilename])
-    subprocess.call(["../../my-scripts/my-slam/bin/./my_slam", 
+    subprocess.call([binOptPath+"./my_slam", 
                     "-i", str(g2oIterations), 
                     "-t", str(1),
                     "-o", optFilename, anonOutFilename])

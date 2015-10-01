@@ -3,8 +3,8 @@ import subprocess
 
 def main():
     # variables
-    buildPath = "../../g2o-master/build/"
-    binPath = "../../g2o-master/bin/"
+    #buildPath = "../../g2o-master/build/"
+    binPath = "../../my-scripts/my-slam/build/"
     dataPath = "../data/simple_corr2_noise.g2o"
     #dataPath = "../data/simple_sim.g2o"
     #dataPath = "../data/simple_odom.g2o"
@@ -13,9 +13,9 @@ def main():
     resPath = "res.g2o"
     
     # compile
-    subprocess.call(["make", "-C", buildPath]) 
+    #subprocess.call(["make", "-C", buildPath]) 
     # run script
-    subprocess.call([binPath+"./my_optimize", 
+    subprocess.call([binPath+"./my_slam", 
     "-i", "10",
     "-o", resPath, dataPath])
 
