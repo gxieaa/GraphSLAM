@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(My_SLAM CXX)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
 
 # C++11 support
 IF(NOT MSVC)
@@ -35,9 +35,7 @@ ADD_LIBRARY(my_slam_lib ${G2O_LIB_TYPE}
 
 SET_TARGET_PROPERTIES(my_slam_lib PROPERTIES OUTPUT_NAME ${LIB_PREFIX}my_slam)
 
-target_link_libraries(my_slam_lib
-   ${G2O_LIBS}
-)
+target_link_libraries(my_slam_lib ${G2O_LIBS})
 
 #TARGET_LINK_LIBRARIES(my_slam_lib core solver_csparse)
 #TARGET_LINK_LIBRARIES(my_slam_lib types_slam2d)
@@ -47,9 +45,7 @@ ADD_EXECUTABLE(my_slam src/my_slam.cpp)
 
 SET_TARGET_PROPERTIES(my_slam PROPERTIES OUTPUT_NAME my_slam${EXE_POSTFIX})
 
-target_link_libraries(my_slam
-   ${G2O_LIBS}
-)
+#target_link_libraries(my_slam ${G2O_LIBS})
 
 #TARGET_LINK_LIBRARIES(my_slam core solver_csparse)
 #TARGET_LINK_LIBRARIES(my_slam types_slam2d)

@@ -18,7 +18,7 @@ def main():
     n = len(infoOdomPos)
     
     # compile
-    buildPath = "../../g2o-master/build/"
+    #buildPath = "../../g2o-master/build/"
     #subprocess.call(["make", "-C", buildPath]) 
     
     # directory generator
@@ -29,7 +29,7 @@ def main():
         runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos[i], infoOdomAng[i], infoPointSen[i])
         
     elapsed_time = time.time() - start_time
-    print "Total time os tests: " + str(elapsed_time) + " [s]" 
+    print "Total time tests: " + str(elapsed_time) + " [s]" 
     
 def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen):
     
