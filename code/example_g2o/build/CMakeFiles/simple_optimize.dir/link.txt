@@ -1,1 +1,0 @@
-/usr/bin/c++       CMakeFiles/simple_optimize.dir/src/simple_optimize.cpp.o  -o simple_optimize -rdynamic 
