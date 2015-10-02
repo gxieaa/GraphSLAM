@@ -91,7 +91,7 @@ HyperGraph::Vertex* extract_other_vertex (HyperGraph::Edge* edge, OptimizableGra
     HyperGraph::VertexContainer vc = edge->vertices();
     // assumes two side edges
     for (size_t i=0; i<vc.size(); ++i) {
-        if (vc[i]->id() != vertex->id()) return vc[i];
+        if (vc[i]->id() != vertex->id()){cout << "v land index edge:" << i << endl; return vc[i];}
     }
     cout << "extract other vertex error" << endl;
     return nullptr;
