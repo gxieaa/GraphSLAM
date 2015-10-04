@@ -75,9 +75,10 @@ bool share_pose(OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2) {
     set<HyperGraph::Edge*> edgeSetV1 = v1->edges();
     set<HyperGraph::Edge*> edgeSetV2 = v2->edges();
     for (set<HyperGraph::Edge*>::iterator it1 = edgeSetV1.begin(); it1 != edgeSetV1.end(); ++it1) {
-        HyperGraph::Vertex* v1Pose = extract_other_vertex (*it1, v1);
+        // Assume poses are first vertex in vertexContainer
+        HyperGraph::Vertex* v1Pose = (*it1)->vertices()[0];
         for (set<HyperGraph::Edge*>::iterator it2 = edgeSetV2.begin(); it2 != edgeSetV2.end(); ++it2) {
-            HyperGraph::Vertex* v2Pose = extract_other_vertex (*it2, v2);
+            HyperGraph::Vertex* v2Pose = (*it2)->vertices()[0];
             if (v1Pose->id() == v2Pose->id()) {
                 //cout << "(v" << v1->id() << ", " << "v" << v2->id() << ") share pose" << endl;
                 return true;
@@ -91,7 +92,10 @@ HyperGraph::Vertex* extract_other_vertex (HyperGraph::Edge* edge, OptimizableGra
     HyperGraph::VertexContainer vc = edge->vertices();
     // assumes two side edges
     for (size_t i=0; i<vc.size(); ++i) {
-        if (vc[i]->id() != vertex->id()){cout << "v land index edge:" << i << endl; return vc[i];}
+        if (vc[i]->id() != vertex->id()){
+            //cout << "v pose index edge:" << i << endl;
+            return vc[i];
+        }
     }
     cout << "extract other vertex error" << endl;
     return nullptr;
