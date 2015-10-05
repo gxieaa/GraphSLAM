@@ -20,6 +20,8 @@ using namespace Eigen;
 
 bool data_association (SparseOptimizer& optimizer, double xi);
 
+double get_max_var (OptimizableGraph::VertexContainer &vc);
+
 bool correspondence_test (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double xi);
 
 bool share_pose (OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2);

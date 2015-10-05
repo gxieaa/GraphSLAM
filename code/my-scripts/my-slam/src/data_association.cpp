@@ -5,8 +5,12 @@ using namespace g2o;
 using namespace Eigen;
 
 bool data_association (SparseOptimizer& optimizer, double xi) {
+    // parameters
     bool no_association = true;
     OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
+    double varDistance = get_max_var(&vc);
+    
+    // loop through all pair of landmark poses
     for (size_t i=0; i<vc.size(); ++i) {
         OptimizableGraph::Vertex* v1 = vc[i];
         if (v1->dimension() == 2) { // check if vertex is landmark
@@ -25,6 +29,30 @@ bool data_association (SparseOptimizer& optimizer, double xi) {
         }
     }
     return no_association;
+}
+
+double get_max_var(OptimizableGraph::VertexContainer &vc){
+    double maxVar = 100; // a large number
+    for (size_t i=0; i<vc.size(); ++i) {
+        OptimizableGraph::Vertex* v1 = vc[i];
+        if (v1->dimension() == 2) { // check if vertex is landmark
+            for (size_t j=i+1; j<vc.size(); ++j){
+                OptimizableGraph::Vertex* v2 = vc[j];
+                if (v2->dimension() == 2) { // check if vertex is landmark
+                    // computer marginal values from optimizer
+                    std::vector<std::pair<int, int> > blockIndices;
+                    blockIndices.push_back(make_pair(v1->hessianIndex(), v1->hessianIndex()));
+                    blockIndices.push_back(make_pair(v1->hessianIndex(), v2->hessianIndex()));
+                    blockIndices.push_back(make_pair(v2->hessianIndex(), v1->hessianIndex()));
+                    blockIndices.push_back(make_pair(v2->hessianIndex(), v2->hessianIndex()));
+                    SparseBlockMatrix<MatrixXd> spinv;
+                    optimizer.computeMarginals(spinv, blockIndices);
+                    cout << *(spinv.block(v1->hessianIndex(), v1->hessianIndex())); << endl;
+                }
+            }
+        }
+    }
+    return maxVar;
 }
 
 bool correspondence_test (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double xi) {
