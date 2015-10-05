@@ -10,8 +10,8 @@ def main():
     start_time = time.time()
     # variables
     g2oIterations = 5
-    nlandmarks = 100
-    simSteps = 100
+    nlandmarks = 50
+    simSteps = 50
     infoOdomPos = [500, 100, 50, 10, 5]
     infoOdomAng = [5000, 1000, 500, 100, 50]
     infoPointSen = [1000, 500, 100, 50, 10]
