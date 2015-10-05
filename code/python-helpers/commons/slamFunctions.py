@@ -3,6 +3,7 @@ from slamData import slamData
 import matplotlib.pyplot as plt
 import os
 import errno
+import math
 
 # functions
 def makeDirs(dirNames):
@@ -46,11 +47,15 @@ def plotResults(gtFilename, guessFilename, optFilename, figFilename, xlim, ylim)
     makeSubplot(ax1, gtData, guessData, "Initial Guess", False)
     makeSubplot(ax2, gtData, optData, "After Solver", True)
     #plt.show()
+    
     # print figure
     plt.xlim(xlim)
     plt.ylim(ylim)
     plt.savefig(figFilename + ".png", bbox_inches='tight')
     plt.savefig(figFilename + ".pdf", bbox_inches='tight')
+    
+    # plot path error
+    pathPlot(gtData, optData, figFilename)
     
 def makeSubplot(ax, gtData, slamData, title, useLegend):
     lw = 1
@@ -63,3 +68,28 @@ def makeSubplot(ax, gtData, slamData, title, useLegend):
     ax.set_title(title)
     if useLegend:
         ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+        
+def pathPlot(gtData, optData, figFilename):
+    pathError = []
+    firstError = math.sqrt((gtData.poseX[0] - optData.poseX[0])**2 + 
+    (gtData.poseY[0] - optData.poseY[0])**2)
+    pathError.append(firstError)
+    
+    for i in range(1, len(gtData.poseX)):
+        error = math.sqrt((gtData.poseX[i] - optData.poseX[i])**2 + 
+        (gtData.poseY[i] - optData.poseY[i])**2)
+        pathError.append(error + pathError[i-1]);
+    
+    for i in range(len(pathError)):
+        pathError[i] = pathError[i] / (i+1);
+    
+    f = plt.figure();
+    plt.plot(range(1,len(pathError)+1), pathError, linewidth = 2)
+    plt.grid(True)
+    f.suptitle("Path Error")
+    plt.xlabel("Timestep")
+    plt.ylabel("Normalized error")
+    plt.xlim([1, len(pathError)+1])
+    plt.ylim([0, max(pathError)])
+    plt.savefig(figFilename + "_path.png", bbox_inches='tight')
+    plt.savefig(figFilename + "_path.pdf", bbox_inches='tight')
