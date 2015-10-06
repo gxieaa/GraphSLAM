@@ -1,12 +1,23 @@
-# GraphSLAM
+GraphSLAM
+=========
 A GraphSLAM implementation using g2o framework
+
+
+
+# Requirements
+
+g2o framework [link](https://github.com/RainerKuemmerle/g2o) installed is required to compile the C++ scripts. Read theirs README to check g2o requirements. After that you can safely compile each script individually by usual:
+
+- `mkdir build`
+- `cd build`
+- `cmake ../`
+- `make` 
 
 Directories:
 - code:
-    - exmple_g2o: C++ scripts that call g2o
-    - g2o-master: g2o framework files. I edited/created some files for the project.
+    - my-scripts: C++ scripts that performs SLAM magic
+    - python-helpers: Python scripts that make easy to make GraphSLAM test
     - g2o-tests: Various g2o tests
-    - my-slam: python scripts for easy running g2o programs
 - doc:
-    - Memoria: Memoria (tesis) document explaning the work
+    - Memoria: Memoria (tesis) document explaining the work
     - memoria guide: just some documents explaning how to write a Memoria 
