@@ -7,24 +7,25 @@ from slamFunctions import *
 from associationFunctions import *
 
 def main():
-    start_time = time.time()
     # variables
     g2oIterations = 5
-    nlandmarks = 100
-    simSteps = 100
+    nlandmarks = 50
+    simSteps = 50
     infoOdomPos = [500, 100, 50, 10, 5]
     infoOdomAng = [5000, 1000, 500, 100, 50]
     infoPointSen = [1000, 500, 100, 50, 10]
     n = len(infoOdomPos)
     
     # compile
-    #buildPath = "../../g2o-master/build/"
-    #subprocess.call(["make", "-C", buildPath]) 
+    buildPath = "../../my-scripts/my-slam/build/"
+    subprocess.call(["make", "-C", buildPath]) 
     
     # directory generator
     dirNames = ['sim_out', 'guess_in', 'guess_out', 'opt_out', 'figs', 'anon_out']
     makeDirs(dirNames)
     
+    # run g2o tests
+    start_time = time.time()
     for i in range(n):
         runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos[i], infoOdomAng[i], infoPointSen[i])
         
@@ -35,7 +36,6 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
     
     # paths and filenames
     binSimPath = "../../my-scripts/my-simulator/build/"
-    #binOptPath = "../../g2o-master/bin/"
     binOptPath = "../../my-scripts/my-slam/build/"
     parameters = [g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen]
     paramNames = ["i", "s", "l", "p", "a", "ps"] 
@@ -61,9 +61,12 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
     # anonymize landmarks
     anonymizeLandmarks(guessInFilename, anonOutFilename)
     
+    # make optimization
     subprocess.call([binOptPath+"./my_slam", 
                     "-i", str(g2oIterations), 
                     "-t", str(1),
+                    "-robustKernel", "Huber",
+                    "-robustKernelWidth", str(1),
                     "-o", optFilename, anonOutFilename])
                      
     # plot results

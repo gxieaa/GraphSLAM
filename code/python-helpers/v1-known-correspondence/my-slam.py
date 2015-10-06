@@ -25,7 +25,6 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
     
     # paths and filenames
     binSimPath = "../../my-scripts/my-simulator/build/"
-    #binSimPath = "../../g2o-master/bin/"
     parameters = [g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen]
     paramNames = ["i", "s", "l", "p", "a", "ps"] 
     simFilename = genFilename(dirNames[0]+"/sim_out", paramNames, parameters,".g2o")
@@ -36,7 +35,6 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
 
     # get simulation data
     subprocess.call([binSimPath+"./my_simulator",
-    #subprocess.call(["../../g2o-master/bin/./g2o_simulator2d_noise",
                      "-hasOdom", "-hasPointSensor",
                      "-nlandmarks", str(nlandmarks), "-simSteps", str(simSteps),
                      "-infoOdomPos", str(infoOdomPos), "-infoOdomAng", str(infoOdomAng),
@@ -48,11 +46,11 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
     subprocess.call(["g2o", "-i", "0", "-guessOdometry",
                      "-o", guessOutFilename, guessInFilename])
 
-    # make g2o optimization
+    # make optimization
     subprocess.call(["g2o", "-i", str(g2oIterations), "-guessOdometry",
                      #"-inc",
-                     #"-robustKernel",
-                     #"-robustKernelWidth",
+                     "-robustKernel", "Huber",
+                    "-robustKernelWidth", str(1),
                      #"-solver",
                      "-o", optFilename, guessInFilename])
                      

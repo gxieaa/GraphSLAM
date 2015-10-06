@@ -9,18 +9,19 @@ bool data_association (SparseOptimizer& optimizer, double xi) {
     bool no_association = true;
     OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
     //double varDistance = get_max_var(optimizer, vc);
-    //double varDistance = 10;
+    //double varDistance = 5;
     bool associated[vc.size()];
     fill_n(associated, vc.size(), false);
     
     // loop through all pair of landmark poses
     for (size_t i=0; i<vc.size(); ++i) {
         OptimizableGraph::Vertex* v1 = vc[i];
-        if (v1->dimension() == 2) { // check if vertex is landmark
+        // check if vertex is landmark
+        if (v1->dimension() == 2 && !associated[i]) {
             for (size_t j=i+1; j<vc.size(); ++j){
                 OptimizableGraph::Vertex* v2 = vc[j];
                 // check if vertex is landmark
-                if (v2->dimension() == 2 && !share_pose(v1, v2)) { 
+                if (v2->dimension() == 2 && !share_pose(v1,v2) && !associated[j]) { 
                     //cout << "testing association between (v" << v1->id() << ", " << "v" << v2->id() << ") ... " << endl;
                     if (correspondence_test(optimizer, v1, v2, xi)) {
                         // succesful association

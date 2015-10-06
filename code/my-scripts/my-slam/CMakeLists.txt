@@ -39,6 +39,7 @@ SET(G2O_LIBS g2o_cli g2o_ext_freeglut_minimal g2o_simulator g2o_solver_slam2d_li
 ADD_LIBRARY(my_slam_lib ${G2O_LIB_TYPE}
   src/data_association.h src/data_association.cpp
   src/util_functs.h src/util_functs.cpp
+  src/slam_functs.h src/slam_functs.cpp
 )
 
 SET_TARGET_PROPERTIES(my_slam_lib PROPERTIES OUTPUT_NAME ${LIB_PREFIX}my_slam)

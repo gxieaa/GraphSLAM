@@ -5,6 +5,8 @@
 #include "g2o/core/optimization_algorithm_gauss_newton.h"
 #include "g2o/core/optimization_algorithm_levenberg.h"
 #include "g2o/solvers/csparse/linear_solver_csparse.h"
+#include "g2o/core/robust_kernel.h"
+#include "g2o/core/robust_kernel_factory.h"
 
 #include "g2o/core/factory.h"
 //#include "g2o/types/slam3d/types_slam3d.h"
@@ -18,6 +20,7 @@
 #include <ctime>
 
 #include "data_association.h"
+#include "slam_functs.h"
 
 // we use the 2D and 3D SLAM types here
 G2O_USE_TYPE_GROUP(slam2d);
@@ -25,21 +28,33 @@ G2O_USE_TYPE_GROUP(slam3d);
 
 int main(int argc, char** argv) {
   
-    // clock for time mneasurement
+    // clock for time measurement
     clock_t begin = clock();
   
     // Command line parsing
     int iteration = 0;
     int maxIterations;
+    double xi;
+    string robustKernel;
+    double huberWidth;
+    bool listKernelsBool;
+    bool nonSequential;
     string outputFilename;
     string inputFilename;
-    double xi;
     CommandArgs arg;
+    
     arg.param("i", maxIterations, 10, "perform n iterations, if negative consider the gain");
-    arg.param("o", outputFilename, "", "output final version of the graph");
     arg.param("t", xi, 10.0, "threshold for data association");
+    arg.param("robustKernel", robustKernel, "", "use this robust error function");
+    arg.param("robustKernelWidth", huberWidth, -1., "width for the robust Kernel (only if robustKernel)");
+    arg.param("listRobustKernels", listKernelsBool, false, "list the registered robust kernels");
+    arg.param("nonSequential", nonSequential, false, "apply the robust kernel only on loop closures and not odometries");
+    arg.param("o", outputFilename, "", "output final version of the graph");
     arg.paramLeftOver("graph-input", inputFilename, "", "graph file which will be processed");
     arg.parseArgs(argc, argv);
+    
+    // list robust kernel
+    listRobustKernels (listKernelsBool);
 
     // create the linear solver
     BlockSolverX::LinearSolverType * linearSolver = new LinearSolverCSparse<BlockSolverX::PoseMatrixType>();
@@ -67,48 +82,105 @@ int main(int argc, char** argv) {
         cerr << "unable to open " << inputFilename << endl;
         return 1;
     }
-
-    // initial guess
-    cout << "Initial guess" << endl;
+    
+    // Data Loading
+    cout << "Data loading" << endl;
     optimizer.load(ifs);
     ifs.close();
+    
+    if (robustKernel.size() > 0) {
+        AbstractRobustKernelCreator* creator = RobustKernelFactory::instance()->creator(robustKernel);
+        cerr << "# Preparing robust error function ... ";
+        if (creator) {
+            if (nonSequential) {
+                for (SparseOptimizer::EdgeSet::iterator it = optimizer.edges().begin(); it != optimizer.edges().end(); ++it) {
+                    SparseOptimizer::Edge* e = dynamic_cast<SparseOptimizer::Edge*>(*it);
+                    if (e->vertices().size() >= 2 && std::abs(e->vertex(0)->id() - e->vertex(1)->id()) != 1) {
+                        e->setRobustKernel(creator->construct());
+                        if (huberWidth > 0)
+                            e->robustKernel()->setDelta(huberWidth);
+                    }
+                }
+            } else {
+                for (SparseOptimizer::EdgeSet::iterator it = optimizer.edges().begin(); it != optimizer.edges().end(); ++it) {
+                    SparseOptimizer::Edge* e = dynamic_cast<SparseOptimizer::Edge*>(*it);
+                    e->setRobustKernel(creator->construct());
+                    if (huberWidth > 0)
+                        e->robustKernel()->setDelta(huberWidth);
+                }
+            }
+            cerr << "done." << endl;
+        } else {
+            cerr << "Unknown Robust Kernel: " << robustKernel << endl;
+        }
+    }
+
+    // Initial guess
     optimizer.initializeOptimization();
     optimizer.optimize(maxIterations);
 
     // optimization loop
     while(true) {
       
-      // data association
-      cout << "Testing associations..." << endl;
-      bool no_more_association  = data_association(optimizer, xi);
+        // data association
+        cout << "Testing associations..." << endl;
+        bool no_more_association  = data_association(optimizer, xi);
 
-      // write output file
-      if (outputFilename.size() > 0) {
-        if (outputFilename == "-") {
-          cerr << "saving to stdout";
-          optimizer.save(cout);
-        } else {
-          cerr << "saving " << outputFilename << " ... ";
-          optimizer.save(outputFilename.c_str());
+        // write output file
+        if (outputFilename.size() > 0) {
+            if (outputFilename == "-") {
+                cerr << "saving to stdout";
+                optimizer.save(cout);
+            } else {
+                cerr << "saving " << outputFilename << " ... ";
+                optimizer.save(outputFilename.c_str());
+            }
+            cerr << "done." << endl;
         }
-        cerr << "done." << endl;
-      }
 
-      // finish test
-      if (no_more_association) break;
+        // finish test
+        if (no_more_association) break;
 
-      // read data file
-      cout << "\n### iteration " << ++iteration << " ###\n" << endl;
-      ifs.open(outputFilename.c_str());
-      if (! ifs) {
-        cerr << "unable to open " << outputFilename << endl;
-        return 1;
-      }
+        // read data file
+        cout << "\n### iteration " << ++iteration << " ###\n" << endl;
+        ifs.open(outputFilename.c_str());
+        if (! ifs) {
+            cerr << "unable to open " << outputFilename << endl;
+            return 1;
+        }
 
-      // optimize
-      optimizer.clear();
-      optimizer.load(ifs);
-      ifs.close();
+        // optimize
+        optimizer.clear();
+        optimizer.load(ifs);
+        ifs.close();
+      
+        if (robustKernel.size() > 0) {
+        AbstractRobustKernelCreator* creator = RobustKernelFactory::instance()->creator(robustKernel);
+            cerr << "# Preparing robust error function ... ";
+            if (creator) {
+                if (nonSequential) {
+                    for (SparseOptimizer::EdgeSet::iterator it = optimizer.edges().begin(); it != optimizer.edges().end(); ++it) {
+                        SparseOptimizer::Edge* e = dynamic_cast<SparseOptimizer::Edge*>(*it);
+                        if (e->vertices().size() >= 2 && std::abs(e->vertex(0)->id() - e->vertex(1)->id()) != 1) {
+                            e->setRobustKernel(creator->construct());
+                            if (huberWidth > 0)
+                                e->robustKernel()->setDelta(huberWidth);
+                        }
+                    }
+                } else {
+                    for (SparseOptimizer::EdgeSet::iterator it = optimizer.edges().begin(); it != optimizer.edges().end(); ++it) {
+                        SparseOptimizer::Edge* e = dynamic_cast<SparseOptimizer::Edge*>(*it);
+                        e->setRobustKernel(creator->construct());
+                        if (huberWidth > 0)
+                            e->robustKernel()->setDelta(huberWidth);
+                    }
+                }
+                cerr << "done." << endl;
+            } else {
+                cerr << "Unknown Robust Kernel: " << robustKernel << endl;
+            }
+        }
+      
       optimizer.initializeOptimization();
       optimizer.optimize(maxIterations);
   }
