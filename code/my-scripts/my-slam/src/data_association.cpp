@@ -25,8 +25,8 @@ bool data_association (SparseOptimizer& optimizer, double xi) {
                     //cout << "testing association between (v" << v1->id() << ", " << "v" << v2->id() << ") ... " << endl;
                     if (correspondence_test(optimizer, v1, v2, xi)) {
                         // succesful association
-                        no_association = false;
                         make_association(v1, v2);
+                        no_association = false;
                         associated[i] = true;
                         associated[j] = true;
                     }

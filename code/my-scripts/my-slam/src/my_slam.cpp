@@ -86,9 +86,10 @@ int main(int argc, char** argv) {
     while(true) {
 
         // data association
-        cout << "Testing associations..." << endl;
+        cerr << "Testing associations ...";
         bool no_more_association  = data_association(optimizer, xi);
-
+        cerr << " done." << endl;
+        
         // write output file
         writeDataFile (outputFilename, optimizer);
 
