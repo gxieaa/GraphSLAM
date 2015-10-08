@@ -8,7 +8,7 @@ bool data_association (SparseOptimizer& optimizer, double xi) {
     // parameters
     bool no_association = true;
     OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
-    //double varDistance = get_max_var(optimizer, vc);
+    double varDistance = get_max_var(optimizer, vc);
     //double varDistance = 5;
     bool associated[vc.size()];
     fill_n(associated, vc.size(), false);
@@ -21,7 +21,7 @@ bool data_association (SparseOptimizer& optimizer, double xi) {
             for (size_t j=i+1; j<vc.size(); ++j){
                 OptimizableGraph::Vertex* v2 = vc[j];
                 // check if vertex is landmark
-                if (v2->dimension() == 2 && !share_pose(v1,v2) && !associated[j]) { 
+                if (v2->dimension() == 2 && !share_pose(v1,v2) && !associated[j] && distant_test(v1, v2, varDistance)) { 
                     //cout << "testing association between (v" << v1->id() << ", " << "v" << v2->id() << ") ... " << endl;
                     if (correspondence_test(optimizer, v1, v2, xi)) {
                         // succesful association
@@ -42,33 +42,21 @@ double get_max_var(SparseOptimizer& optimizer, OptimizableGraph::VertexContainer
     for (size_t i=0; i<vc.size(); ++i) {
         OptimizableGraph::Vertex* v1 = vc[i];
         if (v1->dimension() == 2) { // check if vertex is landmark
-            for (size_t j=i+1; j<vc.size(); ++j){
-                OptimizableGraph::Vertex* v2 = vc[j];
-                if (v2->dimension() == 2) { // check if vertex is landmark
-                    // computer marginal values from optimizer
-                    std::vector<std::pair<int, int> > blockIndices;
-                    blockIndices.push_back(make_pair(v1->hessianIndex(), v1->hessianIndex()));
-                    blockIndices.push_back(make_pair(v1->hessianIndex(), v2->hessianIndex()));
-                    blockIndices.push_back(make_pair(v2->hessianIndex(), v1->hessianIndex()));
-                    blockIndices.push_back(make_pair(v2->hessianIndex(), v2->hessianIndex()));
-                    SparseBlockMatrix<MatrixXd> spinv;
-                    optimizer.computeMarginals(spinv, blockIndices);
-                    double maxCov = max_from_four ((*(spinv.block(v1->hessianIndex(), v1->hessianIndex())))(0,0),
-                        (*(spinv.block(v1->hessianIndex(), v1->hessianIndex())))(1,1),
-                        (*(spinv.block(v2->hessianIndex(), v2->hessianIndex())))(0,0),
-                        (*(spinv.block(v2->hessianIndex(), v2->hessianIndex())))(1,1));
-                    // replace if max variance found
-                    //cout << "vertices of max var: ";
-                    //cout << "(v" << v1->id() << ", " << "v" << v2->id() << ")" << endl;
-                    //cout << "max var: " << maxCov << endl;
-                    if (maxCov > maxVar) {
-                        maxVar = maxCov;  
-                    }
-                }
+            // computer marginal values
+            std::vector<std::pair<int, int> > blockIndices;
+            blockIndices.push_back(make_pair(v1->hessianIndex(), v1->hessianIndex()));
+            SparseBlockMatrix<MatrixXd> spinv;
+            optimizer.computeMarginals(spinv, blockIndices);
+            double maxCov = fmax((*(spinv.block(v1->hessianIndex(), v1->hessianIndex())))(0,0),
+                (*(spinv.block(v1->hessianIndex(), v1->hessianIndex())))(1,1));
+            // replace if max variance found
+            if (maxCov > maxVar) {
+                maxVar = maxCov;  
             }
+            
         }
     }
-    //cout << "Max var: " << maxVar << endl;
+    cout << " (Max var: " << maxVar << ") ... ";
     return maxVar;
 }
 

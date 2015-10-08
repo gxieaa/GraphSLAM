@@ -13,6 +13,8 @@
 #include <typeinfo>
 #include <ctime>
 
+#include <gperftools/profiler.h>
+
 #include "data_association.h"
 #include "slam_functs.h"
 
@@ -23,6 +25,7 @@ G2O_USE_TYPE_GROUP(slam3d);
 int main(int argc, char** argv) {
 
     // clock for time measurement
+    ProfilerStart("my_slam");
     clock_t begin = clock();
 
     // Command line parsing
@@ -115,6 +118,7 @@ int main(int argc, char** argv) {
   clock_t end = clock();
   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
   cout << "Elapsed time: " << elapsed_secs << " [s]" << endl;
+  ProfilerStop();
 
   return 0;
 }
