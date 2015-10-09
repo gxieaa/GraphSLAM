@@ -9,8 +9,8 @@ from associationFunctions import *
 def main():
     # variables
     g2oIterations = 5
-    nlandmarks = 200
-    simSteps = 200
+    nlandmarks = 300
+    simSteps = 300
     #infoOdomPos = [500, 100, 50, 10, 5]
     #infoOdomAng = [5000, 1000, 500, 100, 50]
     #infoPointSen = [1000, 500, 100, 50, 10]
@@ -42,6 +42,10 @@ def main():
                      #"/home/francocurotto/pprof/my_slam_prof.prof", ">", "ls.callgrind"])
     #subprocess.call(["kcachegrind", "ls.callgrind"])
     
+    # pprof --callgrind ../../my-scripts/my-slam/build/my_slam /home/francocurotto/pprof/my_slam_prof.prof > ls.callgrind
+    # kcachegrind ls.callgrind
+    # ../../../../gprof2dot/./gprof2dot.py --format=callgrind --output=out.dot ls.callgrind
+    # dot -Tpng out.dot -o graph.png
 def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen):
     
     # paths and filenames
