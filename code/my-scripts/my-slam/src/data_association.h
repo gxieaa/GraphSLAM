@@ -3,8 +3,6 @@
 
 #include "g2o/core/sparse_optimizer.h"
 
-#include "util_functs.h"
-
 using namespace std;
 using namespace g2o;
 using namespace Eigen;

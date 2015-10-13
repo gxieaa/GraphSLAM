@@ -52,7 +52,7 @@ def plotResults(gtFilename, guessFilename, optFilename, figFilename, xlim, ylim)
     plt.xlim(xlim)
     plt.ylim(ylim)
     plt.savefig(figFilename + ".png", bbox_inches='tight')
-    plt.savefig(figFilename + ".pdf", bbox_inches='tight')
+    #plt.savefig(figFilename + ".pdf", bbox_inches='tight')
     
     # plot path error
     pathPlot(gtData, optData, figFilename)
@@ -92,4 +92,4 @@ def pathPlot(gtData, optData, figFilename):
     plt.xlim([1, len(pathError)+1])
     plt.ylim([0, max(pathError)])
     plt.savefig(figFilename + "_path.png", bbox_inches='tight')
-    plt.savefig(figFilename + "_path.pdf", bbox_inches='tight')
+    #plt.savefig(figFilename + "_path.pdf", bbox_inches='tight')

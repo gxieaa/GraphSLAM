@@ -1,0 +1,333 @@
+events: Hits
+
+fl=(1) /build/buildd/eglibc-2.19/csu/libc-start.c
+fn=(1) __libc_start_main
+cfl=??
+cfn=(2) main
+calls=13 0
+287 13
+
+fl=(2) /build/buildd/eglibc-2.19/string/../sysdeps/x86_64/multiarch/memcpy-sse2-unaligned.S
+fn=(3) __memcpy_sse2_unaligned
+36 1
+
+fl=(3) /home/francocurotto/Workspace/gperftools/src/linked_list.h
+fn=(4) SLL_PopRange[inline]
+75 1
+
+fl=(4) /home/francocurotto/Workspace/gperftools/src/tcmalloc.cc
+fn=(5) do_malloc_small[inline]
+cfl=(5) /home/francocurotto/Workspace/gperftools/src/thread_cache.h
+cfn=(6) tcmalloc::ThreadCache::Allocate[inline]
+calls=1 357
+1179 1
+
+fl=(4)
+fn=(7) do_malloc[inline]
+cfl=(4)
+cfn=(5)
+calls=1 1179
+1186 1
+
+fl=(4)
+fn=(8) do_free_helper[inline]
+cfl=(5)
+cfn=(9) tcmalloc::ThreadCache::Deallocate[inline]
+calls=1 363
+1276 1
+
+fl=(4)
+fn=(8)
+cfl=(5)
+cfn=(9)
+calls=1 379
+1276 1
+
+fl=(4)
+fn=(10) do_free_with_callback[inline]
+cfl=(4)
+cfn=(8)
+calls=2 1276
+1307 2
+
+fl=(4)
+fn=(11) do_free[inline]
+cfl=(4)
+cfn=(10)
+calls=2 1307
+1316 2
+
+fl=(4)
+fn=(12) cpp_alloc[inline]
+cfl=(4)
+cfn=(7)
+calls=1 1186
+1514 1
+
+fl=(4)
+fn=(13) tc_new
+cfl=(4)
+cfn=(12)
+calls=1 1514
+1608 1
+
+fl=(4)
+fn=(14) tc_delete
+cfl=(4)
+cfn=(11)
+calls=2 1316
+1626 2
+
+fl=(6) /home/francocurotto/Workspace/gperftools/src/thread_cache.cc
+fn=(15) tcmalloc::ThreadCache::ListTooLong
+cfl=(6)
+cfn=(16) tcmalloc::ThreadCache::ReleaseToCentralCache
+calls=1 195
+157 1
+
+fl=(6)
+fn=(16)
+cfl=(5)
+cfn=(17) tcmalloc::ThreadCache::FreeList::PopRange[inline]
+calls=1 218
+195 1
+
+fl=(5)
+fn=(18) tcmalloc::ThreadCache::FreeList::Pop[inline]
+203 1
+
+fl=(5)
+fn=(17)
+cfl=(3)
+cfn=(4)
+calls=1 75
+218 1
+
+fl=(5)
+fn=(6)
+cfl=(5)
+cfn=(18)
+calls=1 203
+357 1
+
+fl=(5)
+fn=(9)
+363 1
+
+fl=(5)
+fn=(9)
+cfl=(6)
+cfn=(15)
+calls=1 157
+379 1
+
+fl=??
+fn=(19) g2o::MarginalCovarianceCholesky::computeEntry
+cfl=??
+cfn=(19)
+calls=93 0
+0 93
+
+fl=??
+fn=(20) g2o::LinearSolverCSparse::solvePattern
+cfl=??
+cfn=(21) g2o::csparse_extension::cs_chol_workspace
+calls=8 0
+0 8
+
+fl=??
+fn=(22) g2o::MarginalCovarianceCholesky::~MarginalCovarianceCholesky
+cfl=(4)
+cfn=(14)
+calls=1 1626
+0 1
+
+fl=??
+fn=(21)
+cfl=??
+cfn=(23) cs_di_symperm
+calls=2 0
+0 2
+
+fl=??
+fn=(24) g2o::OptimizableGraph::load
+cfl=??
+cfn=(25) __dynamic_cast
+calls=1 0
+0 1
+
+fl=??
+fn=(20)
+cfl=??
+cfn=(22)
+calls=2 0
+0 2
+
+fl=??
+fn=(25)
+cfl=??
+cfn=(26) __cxxabiv1::__si_class_type_info::__do_dyncast
+calls=1 0
+0 1
+
+fl=??
+fn=(27) get_max_var
+cfl=??
+cfn=(28) g2o::BlockSolver::computeMarginals
+calls=4 0
+0 4
+
+fl=??
+fn=(29) cs_di_ereach
+0 3
+
+fl=??
+fn=(30) data_association
+cfl=??
+cfn=(31) correspondence_test
+calls=8 0
+0 8
+
+fl=??
+fn=(23)
+0 2
+
+fl=??
+fn=(28)
+cfl=??
+cfn=(20)
+calls=12 0
+0 12
+
+fl=??
+fn=(32) std::_Rb_tree::_M_copy
+cfl=??
+cfn=(32)
+calls=2 0
+0 2
+
+fl=??
+fn=(26)
+0 1
+
+fl=??
+fn=(2)
+cfl=??
+cfn=(30)
+calls=12 0
+0 12
+
+fl=??
+fn=(33) g2o::LinearSolverCSparse::fillCSparse
+cfl=(2)
+cfn=(3)
+calls=1 36
+0 1
+
+fl=??
+fn=(34) g2o::MarginalCovarianceCholesky::computeCovariance
+cfl=??
+cfn=(19)
+calls=2 0
+0 2
+
+fl=??
+fn=(35) std::_Hashtable::_M_insert_unique_node
+0 1
+
+fl=??
+fn=(2)
+cfl=??
+cfn=(24)
+calls=1 0
+0 1
+
+fl=??
+fn=(22)
+0 1
+
+fl=??
+fn=(36) std::num_get::do_get
+cfl=(4)
+cfn=(14)
+calls=1 1626
+0 1
+
+fl=??
+fn=(32)
+cfl=(4)
+cfn=(13)
+calls=1 1608
+0 1
+
+fl=??
+fn=(20)
+cfl=??
+cfn=(33)
+calls=1 0
+0 1
+
+fl=??
+fn=(19)
+cfl=??
+cfn=(35)
+calls=1 0
+0 1
+
+fl=??
+fn=(37) _start
+cfl=(1)
+cfn=(1)
+calls=13 287
+0 13
+
+fl=??
+fn=(30)
+cfl=??
+cfn=(27)
+calls=4 0
+0 4
+
+fl=??
+fn=(21)
+cfl=??
+cfn=(29)
+calls=3 0
+0 3
+
+fl=??
+fn=(21)
+0 3
+
+fl=??
+fn=(38) g2o::VertexPointXY::read
+cfl=??
+cfn=(39) std::istream::_M_extract
+calls=1 0
+0 1
+
+fl=??
+fn=(20)
+cfl=??
+cfn=(34)
+calls=2 0
+0 2
+
+fl=??
+fn=(39)
+cfl=??
+cfn=(36)
+calls=1 0
+0 1
+
+fl=??
+fn=(19)
+0 2
+
+fl=??
+fn=(31)
+cfl=??
+cfn=(28)
+calls=8 0
+0 8
+

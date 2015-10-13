@@ -9,8 +9,8 @@ from associationFunctions import *
 def main():
     # variables
     g2oIterations = 5
-    nlandmarks = 100
-    simSteps = 100
+    nlandmarks = 300
+    simSteps = 300
     #infoOdomPos = [500, 100, 50, 10, 5]
     #infoOdomAng = [5000, 1000, 500, 100, 50]
     #infoPointSen = [1000, 500, 100, 50, 10]
@@ -34,8 +34,18 @@ def main():
         runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos[i], infoOdomAng[i], infoPointSen[i])
         
     elapsed_time = time.time() - start_time
-    print "Total time tests: " + str(elapsed_time) + " [s]" 
+    print "Total time tests: " + str(elapsed_time) + " [s]"
     
+    # profiler
+    #time.sleep(1);
+    #subprocess.call(["pprof", "--callgrind", "../../my-scripts/my-slam/build/my_slam",
+                     #"/home/francocurotto/pprof/my_slam_prof.prof", ">", "ls.callgrind"])
+    #subprocess.call(["kcachegrind", "ls.callgrind"])
+    
+    # pprof --callgrind ../../my-scripts/my-slam/build/my_slam /home/francocurotto/pprof/my_slam_prof.prof > ls.callgrind
+    # kcachegrind ls.callgrind
+    # ../../../../gprof2dot/./gprof2dot.py --format=callgrind --output=out.dot ls.callgrind
+    # dot -Tpng out.dot -o graph.png
 def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen):
     
     # paths and filenames
@@ -66,7 +76,8 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
     anonymizeLandmarks(guessInFilename, anonOutFilename)
     
     # make optimization
-    subprocess.call([binOptPath+"./my_slam", 
+    subprocess.call(["env", "CPUPROFILE=/home/francocurotto/pprof/my_slam_prof.prof",
+                    binOptPath+"./my_slam", 
                     "-i", str(g2oIterations), 
                     "-t", str(1),
                     "-robustKernel", "Huber",
