@@ -17,11 +17,11 @@ bool data_association (SparseOptimizer& optimizer, double xi) {
     for (size_t i=0; i<vc.size(); ++i) {
         OptimizableGraph::Vertex* v1 = vc[i];
         // check if vertex is landmark
-        if (v1->dimension() == 2) {
+        if (v1->dimension() == 2 && !associated[i]) {
             for (size_t j=i+1; j<vc.size(); ++j){
                 OptimizableGraph::Vertex* v2 = vc[j];
                 // check if vertex is landmark
-                if (v2->dimension() == 2 && !share_pose(v1,v2)) { 
+                if (v2->dimension() == 2 && !share_pose(v1,v2) && !associated[j] && distant_test(v1, v2, varDistance)) { 
                     //cout << "testing association between (v" << v1->id() << ", " << "v" << v2->id() << ") ... " << endl;
                     if (correspondence_test(optimizer, v1, v2, xi)) {
                         // succesful association
@@ -29,13 +29,11 @@ bool data_association (SparseOptimizer& optimizer, double xi) {
                         no_association = false;
                         associated[i] = true;
                         associated[j] = true;
-                        //goto leaveAssociation;
                     }
                 }
             }
         }
     }
-    leaveAssociation:
     return no_association;
 }
 

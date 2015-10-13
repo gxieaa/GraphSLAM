@@ -87,12 +87,7 @@ int main(int argc, char** argv) {
 
     // optimization loop
     while(true) {
-        
-        OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
-        for (size_t i=0; i<vc.size(); ++i) {
-            cout << "v" << vc[i]->id() << endl;
-        }
-        
+
         // data association
         cerr << "Testing associations ...";
         bool no_more_association  = data_association(optimizer, xi);

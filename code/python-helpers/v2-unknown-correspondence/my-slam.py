@@ -9,8 +9,8 @@ from associationFunctions import *
 def main():
     # variables
     g2oIterations = 5
-    nlandmarks = 300
-    simSteps = 300
+    nlandmarks = 50
+    simSteps = 50
     #infoOdomPos = [500, 100, 50, 10, 5]
     #infoOdomAng = [5000, 1000, 500, 100, 50]
     #infoPointSen = [1000, 500, 100, 50, 10]
@@ -37,7 +37,6 @@ def main():
     print "Total time tests: " + str(elapsed_time) + " [s]"
     
     # profiler
-    #time.sleep(1);
     #subprocess.call(["pprof", "--callgrind", "../../my-scripts/my-slam/build/my_slam",
                      #"/home/francocurotto/pprof/my_slam_prof.prof", ">", "ls.callgrind"])
     #subprocess.call(["kcachegrind", "ls.callgrind"])
@@ -66,14 +65,14 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
                      "-infoOdomPos", str(infoOdomPos), "-infoOdomAng", str(infoOdomAng),
                      "-infoPointSen", str(infoPointSen), simFilename])
     fixNode(simFilename, 1000+simSteps)
-                     
+    
     # get initial guess
     getInitialGuess(simFilename, guessInFilename)
-    subprocess.call(["g2o", "-i", "0", "-guessOdometry",
-                     "-o", guessOutFilename, guessInFilename])
-
+    
     # anonymize landmarks
     anonymizeLandmarks(guessInFilename, anonOutFilename)
+    subprocess.call(["g2o", "-i", "0", "-guessOdometry",
+                     "-o", guessOutFilename, anonOutFilename])
     
     # make optimization
     subprocess.call(["env", "CPUPROFILE=/home/francocurotto/pprof/my_slam_prof.prof",
