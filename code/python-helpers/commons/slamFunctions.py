@@ -51,8 +51,8 @@ def plotResults(gtFilename, guessFilename, optFilename, figFilename, xlim, ylim)
     # print figure
     plt.xlim(xlim)
     plt.ylim(ylim)
-    plt.savefig(figFilename + ".png", bbox_inches='tight')
-    #plt.savefig(figFilename + ".pdf", bbox_inches='tight')
+    #plt.savefig(figFilename + ".png", bbox_inches='tight')
+    plt.savefig(figFilename + ".pdf", bbox_inches='tight')
     
     # plot path error
     pathPlot(gtData, optData, figFilename)
@@ -60,10 +60,10 @@ def plotResults(gtFilename, guessFilename, optFilename, figFilename, xlim, ylim)
 def makeSubplot(ax, gtData, slamData, title, useLegend):
     lw = 1
     ms = 4
-    gtLanPlt, = ax.plot(gtData.landmarkX, gtData.landmarkY, '.', color = '#800000', linewidth = lw, markersize = ms, label='GT landmarks')
     gtRobPlt, = ax.plot(gtData.poseX, gtData.poseY, '.-', color = '#bbbbf9', linewidth = lw, markersize = ms, label='GT robot path')
-    lanPlt, = ax.plot(slamData.landmarkX, slamData.landmarkY, 'r.', linewidth = lw, markersize = ms, label='landmarks')
+    lanPlt, = ax.plot(slamData.landmarkX, slamData.landmarkY, 'r+', linewidth = lw, markersize = ms, label='landmarks')
     robPlt, = ax.plot(slamData.poseX, slamData.poseY, 'b.-', linewidth = lw, markersize = ms, label='robot path')
+    gtLanPlt, = ax.plot(gtData.landmarkX, gtData.landmarkY, '.', color = '#800000', linewidth = lw, markersize = ms, label='GT landmarks')
     ax.grid(True)
     ax.set_title(title)
     if useLegend:
@@ -91,5 +91,5 @@ def pathPlot(gtData, optData, figFilename):
     plt.ylabel("Normalized error")
     plt.xlim([1, len(pathError)+1])
     plt.ylim([0, max(pathError)])
-    plt.savefig(figFilename + "_path.png", bbox_inches='tight')
+    #plt.savefig(figFilename + "_path.png", bbox_inches='tight')
     #plt.savefig(figFilename + "_path.pdf", bbox_inches='tight')

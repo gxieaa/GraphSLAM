@@ -1,5 +1,6 @@
 #include <iostream>
 #include <Eigen/Core>
+#include <limits.h>
 
 #include "g2o/core/sparse_optimizer.h"
 
@@ -7,16 +8,18 @@ using namespace std;
 using namespace g2o;
 using namespace Eigen;
 
-bool data_association (SparseOptimizer& optimizer, double xi);
+bool dataAssociation (SparseOptimizer& optimizer, double xi);
 
-double get_max_var (SparseOptimizer& optimizer, OptimizableGraph::VertexContainer &vc);
+bool dataAssociation2 (SparseOptimizer& optimizer, int poseIndex, double xi);
 
-bool correspondence_test (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double xi);
+int getMinId (set<HyperGraph::Edge*> es);
 
-bool share_pose (OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2);
+double getMaxVar (SparseOptimizer& optimizer, OptimizableGraph::VertexContainer &vc);
 
-HyperGraph::Vertex* extract_other_vertex (HyperGraph::Edge* edge, OptimizableGraph::Vertex* vertex);
+bool correspondenceTest (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double xi);
 
-bool distant_test (OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double varDistance);
+bool sharePose (OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2);
 
-void make_association (OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2);
+bool distantTest (OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double varDistance);
+
+void makeAssociation (OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2);

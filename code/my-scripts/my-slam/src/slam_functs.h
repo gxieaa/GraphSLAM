@@ -16,3 +16,5 @@ void readDataFile (ifstream &ifs, string filename);
 void writeDataFile (string outputFilename, SparseOptimizer &optimizer);
 
 void loadRobustKernel (string robustKernel, bool nonSequential, double huberWidth, SparseOptimizer &optimizer);
+
+void getAllPoses (SparseOptimizer &optimizer, OptimizableGraph::VertexContainer &poses);

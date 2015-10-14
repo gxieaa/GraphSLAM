@@ -76,20 +76,12 @@ ADD_LIBRARY(my_slam_lib ${G2O_LIB_TYPE}
 )
 
 SET_TARGET_PROPERTIES(my_slam_lib PROPERTIES OUTPUT_NAME ${LIB_PREFIX}my_slam)
-
 target_link_libraries(my_slam_lib ${G2O_LIBS} ${GPERFTOOLS_LIBRARIES})
 
-#TARGET_LINK_LIBRARIES(my_slam_lib core solver_csparse)
-#TARGET_LINK_LIBRARIES(my_slam_lib types_slam2d)
-#TARGET_LINK_LIBRARIES(my_slam_lib types_slam3d)
-
 ADD_EXECUTABLE(my_slam src/my_slam.cpp)
-
 SET_TARGET_PROPERTIES(my_slam PROPERTIES OUTPUT_NAME my_slam${EXE_POSTFIX})
-
-#target_link_libraries(my_slam ${G2O_LIBS})
-
-#TARGET_LINK_LIBRARIES(my_slam core solver_csparse)
-#TARGET_LINK_LIBRARIES(my_slam types_slam2d)
-#TARGET_LINK_LIBRARIES(my_slam types_slam3d)
 TARGET_LINK_LIBRARIES(my_slam my_slam_lib)
+
+ADD_EXECUTABLE(my_slam2 src/my_slam2.cpp)
+SET_TARGET_PROPERTIES(my_slam2 PROPERTIES OUTPUT_NAME my_slam2${EXE_POSTFIX})
+TARGET_LINK_LIBRARIES(my_slam2 my_slam_lib)

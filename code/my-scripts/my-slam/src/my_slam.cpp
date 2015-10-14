@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
     CommandArgs arg;
 
     arg.param("i", maxIterations, 10, "perform n iterations, if negative consider the gain");
-    arg.param("t", xi, 10.0, "threshold for data association");
+    arg.param("t", xi, 1.0, "threshold for data association");
     arg.param("robustKernel", robustKernel, "", "use this robust error function");
     arg.param("robustKernelWidth", huberWidth, -1., "width for the robust Kernel (only if robustKernel)");
     arg.param("listRobustKernels", listKernelsBool, false, "list the registered robust kernels");
@@ -87,15 +87,10 @@ int main(int argc, char** argv) {
 
     // optimization loop
     while(true) {
-        
-        OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
-        for (size_t i=0; i<vc.size(); ++i) {
-            cout << "v" << vc[i]->id() << endl;
-        }
-        
+
         // data association
         cerr << "Testing associations ...";
-        bool no_more_association  = data_association(optimizer, xi);
+        bool no_more_association  = dataAssociation(optimizer, xi);
         cerr << " done." << endl;
         
         // write output file
@@ -119,11 +114,11 @@ int main(int argc, char** argv) {
         optimizer.optimize(maxIterations);
     }
 
-  // compute time
-  clock_t end = clock();
-  double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-  cout << "Elapsed time: " << elapsed_secs << " [s]" << endl;
-  ProfilerStop();
+    // compute time
+    clock_t end = clock();
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    cout << "Elapsed time: " << elapsed_secs << " [s]" << endl;
+    ProfilerStop();
 
-  return 0;
+    return 0;
 }

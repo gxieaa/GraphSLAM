@@ -8,15 +8,15 @@ from associationFunctions import *
 
 def main():
     # variables
-    g2oIterations = 5
-    nlandmarks = 50
-    simSteps = 50
+    g2oIterations = 10
+    nlandmarks = 100
+    simSteps = 100
     #infoOdomPos = [500, 100, 50, 10, 5]
     #infoOdomAng = [5000, 1000, 500, 100, 50]
     #infoPointSen = [1000, 500, 100, 50, 10]
-    infoOdomPos = [500]
+    infoOdomPos = [5000]
     infoOdomAng = [5000]
-    infoPointSen = [1000]
+    infoPointSen = [5000]
     
     n = len(infoOdomPos)
     
@@ -55,9 +55,11 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
     simFilename = genFilename(dirNames[0]+"/sim_out", paramNames, parameters,".g2o")
     guessInFilename = genFilename(dirNames[1]+"/guess_in", paramNames, parameters,".g2o")
     guessOutFilename = genFilename(dirNames[2]+"/guess_out", paramNames, parameters,".g2o")
-    optFilename = genFilename(dirNames[3]+"/opt_out", paramNames, parameters,".g2o")
-    figFilename = genFilename(dirNames[4]+"/res", paramNames, parameters,"")
     anonOutFilename = genFilename(dirNames[5]+"/anon_out", paramNames, parameters,".g2o")
+    optFilename = genFilename(dirNames[3]+"/opt_out", paramNames, parameters,".g2o")
+    optFilename2 = genFilename(dirNames[3]+"/opt_out2", paramNames, parameters,".g2o")
+    figFilename = genFilename(dirNames[4]+"/res", paramNames, parameters,"")
+    figFilename2 = genFilename(dirNames[4]+"/res2", paramNames, parameters,"")
 
     # get simulation data
     subprocess.call([binSimPath+"./my_simulator", "-hasOdom", "-hasPointSensor",
@@ -74,17 +76,35 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
     subprocess.call(["g2o", "-i", "0", "-guessOdometry",
                      "-o", guessOutFilename, anonOutFilename])
     
+    ### SLAM 2 ## 
     # make optimization
+    
+    subprocess.call(["env", "CPUPROFILE=/home/francocurotto/pprof/my_slam_prof.prof",
+                    binOptPath+"./my_slam2", 
+                    "-i", str(g2oIterations), 
+                    "-t", str(0.1),
+                    #"-robustKernel", "Huber",
+                    #"-robustKernelWidth", str(1),
+                    "-o", optFilename2, anonOutFilename])
+                     
+    # plot results
+    plotResults(simFilename, guessOutFilename, optFilename2, figFilename2, [-15, 20], [-20, 20])
+    
+    
+    ### SLAM 1 ## 
+    # make optimization
+    '''
     subprocess.call(["env", "CPUPROFILE=/home/francocurotto/pprof/my_slam_prof.prof",
                     binOptPath+"./my_slam", 
                     "-i", str(g2oIterations), 
-                    "-t", str(1),
-                    "-robustKernel", "Huber",
-                    "-robustKernelWidth", str(1),
+                    "-t", str(0.1),
+                    #"-robustKernel", "Huber",
+                    #"-robustKernelWidth", str(1),
                     "-o", optFilename, anonOutFilename])
                      
     # plot results
     plotResults(simFilename, guessOutFilename, optFilename, figFilename, [-15, 20], [-20, 20])
+    '''
     
 if __name__ == '__main__':
     main()

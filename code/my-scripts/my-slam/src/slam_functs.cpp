@@ -59,3 +59,13 @@ void loadRobustKernel (string robustKernel, bool nonSequential, double huberWidt
         }
     }
 }
+
+void getAllPoses (SparseOptimizer &optimizer, OptimizableGraph::VertexContainer &poses) {
+    OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
+    for (size_t i=0; i<vc.size(); ++i) {
+        //cout << "v" << vc[i]->id() << endl;
+        if (vc[i]->dimension() == 3) {
+            poses.push_back(vc[i]);
+        }
+    }
+}

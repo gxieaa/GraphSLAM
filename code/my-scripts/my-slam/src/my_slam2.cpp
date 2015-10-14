@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
     CommandArgs arg;
 
     arg.param("i", maxIterations, 10, "perform n iterations, if negative consider the gain");
-    arg.param("t", xi, 10.0, "threshold for data association");
+    arg.param("t", xi, 1.0, "threshold for data association");
     arg.param("robustKernel", robustKernel, "", "use this robust error function");
     arg.param("robustKernelWidth", huberWidth, -1., "width for the robust Kernel (only if robustKernel)");
     arg.param("listRobustKernels", listKernelsBool, false, "list the registered robust kernels");
@@ -72,7 +72,6 @@ int main(int argc, char** argv) {
     optimizer.setAlgorithm(optimizationAlgorithm);
 
     // read data file and load to optimizer
-    cout << "\n### iteration " << iteration << " ###\n" << endl;
     ifstream ifs;
     readDataFile (ifs, inputFilename);
     optimizer.load(ifs);
@@ -84,41 +83,49 @@ int main(int argc, char** argv) {
     // initial guess
     optimizer.initializeOptimization();
     optimizer.optimize(maxIterations);
+    
+    // get pose vertices
+    OptimizableGraph::VertexContainer poses;
+    getAllPoses (optimizer, poses);
+    
+    // poses loop
+    cout << "poses: " << poses.size() << endl; 
+    for (int i=0; i<poses.size(); ++i) {
+        //while(true) {
+            cout << "\n### iteration " << iteration++ << ", pose " << i << " ###" << endl;
+            
+            // data association
+            cerr << "Testing associations ...";
+            bool no_more_association = dataAssociation2(optimizer, i, xi);
+            cerr << " done." << endl;
+            
+            // write output file
+            writeDataFile (outputFilename, optimizer);
+            
+            // finish test
+            //if (no_more_association) break;
+            
+            // read data file and load to optimizer
+            //cout << "\n### iteration " << ++iteration << " ###\n" << endl;
+            readDataFile (ifs, outputFilename);
+            optimizer.clear();
+            optimizer.load(ifs);
+            ifs.close();
+            
+            // load robust kernel
+            loadRobustKernel (robustKernel, nonSequential,  huberWidth, optimizer);
 
-    // optimization loop
-    while(true) {
-
-        // data association
-        cerr << "Testing associations ...";
-        bool no_more_association  = data_association(optimizer, xi);
-        cerr << " done." << endl;
-        
-        // write output file
-        writeDataFile (outputFilename, optimizer);
-
-        // finish test
-        if (no_more_association) break;
-
-        // read data file and load to optimizer
-        cout << "\n### iteration " << ++iteration << " ###\n" << endl;
-        readDataFile (ifs, outputFilename);
-        optimizer.clear();
-        optimizer.load(ifs);
-        ifs.close();
-
-        // load robust kernel
-        loadRobustKernel (robustKernel, nonSequential,  huberWidth, optimizer);
-
-        // optimize
-        optimizer.initializeOptimization();
-        optimizer.optimize(maxIterations);
+            // optimize
+            optimizer.initializeOptimization();
+            optimizer.optimize(maxIterations);
+        //}
     }
 
-  // compute time
-  clock_t end = clock();
-  double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-  cout << "Elapsed time: " << elapsed_secs << " [s]" << endl;
-  ProfilerStop();
+    // compute time
+    clock_t end = clock();
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    cout << "Elapsed time: " << elapsed_secs << " [s]" << endl;
+    ProfilerStop();
 
-  return 0;
+    return 0;
 }
