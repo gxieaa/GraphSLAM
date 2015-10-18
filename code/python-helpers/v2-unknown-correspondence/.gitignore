@@ -4,3 +4,7 @@ guess_out/
 opt_out/
 figs/
 anon_out/
+*.prof
+*.callgrind
+*.dot
+*.png
