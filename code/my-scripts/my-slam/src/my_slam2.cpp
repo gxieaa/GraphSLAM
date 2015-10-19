@@ -91,35 +91,62 @@ int main(int argc, char** argv) {
     // poses loop
     cout << "poses: " << poses.size() << endl; 
     for (int i=0; i<poses.size(); ++i) {
-        //while(true) {
-            cout << "\n### iteration " << iteration++ << ", pose " << i << " ###" << endl;
-            
-            // data association
-            cerr << "Testing associations ...";
-            bool no_more_association = dataAssociation2(optimizer, i, xi);
-            cerr << " done." << endl;
-            
-            // write output file
-            writeDataFile (outputFilename, optimizer);
-            
-            // finish test
-            //if (no_more_association) break;
-            
-            // read data file and load to optimizer
-            //cout << "\n### iteration " << ++iteration << " ###\n" << endl;
-            readDataFile (ifs, outputFilename);
-            optimizer.clear();
-            optimizer.load(ifs);
-            ifs.close();
-            
-            // load robust kernel
-            loadRobustKernel (robustKernel, nonSequential,  huberWidth, optimizer);
+        cout << "\n### iteration " << iteration++ << ", pose " << i << " ###" << endl;
+        
+        // data association
+        cerr << "Testing associations ...";
+        bool no_more_association = dataAssociation2(optimizer, i, xi);
+        cerr << " done." << endl;
+        
+        // write output file
+        writeDataFile (outputFilename, optimizer);
+        
+        // finish test
+        //if (no_more_association) break;
+        
+        // read data file and load to optimizer
+        //cout << "\n### iteration " << ++iteration << " ###\n" << endl;
+        readDataFile (ifs, outputFilename);
+        optimizer.clear();
+        optimizer.load(ifs);
+        ifs.close();
+        
+        // load robust kernel
+        loadRobustKernel (robustKernel, nonSequential,  huberWidth, optimizer);
 
-            // optimize
-            optimizer.initializeOptimization();
-            optimizer.optimize(maxIterations);
-        //}
+        // optimize
+        optimizer.initializeOptimization();
+        optimizer.optimize(maxIterations);
     }
+    
+    // posterior optimization loop
+    /*cout << "\n### Posterior Optimization ###\n" << endl;
+    while(true) {
+        // data association
+        cout << "\n### iteration " << iteration++ << " ###\n" << endl;
+        cerr << "Testing associations ...";
+        bool no_more_association  = dataAssociation(optimizer, xi);
+        cerr << " done." << endl;
+        
+        // write output file
+        writeDataFile (outputFilename, optimizer);
+
+        // finish test
+        if (no_more_association) break;
+
+        // read data file and load to optimizer
+        readDataFile (ifs, outputFilename);
+        optimizer.clear();
+        optimizer.load(ifs);
+        ifs.close();
+
+        // load robust kernel
+        loadRobustKernel (robustKernel, nonSequential,  huberWidth, optimizer);
+
+        // optimize
+        optimizer.initializeOptimization();
+        optimizer.optimize(maxIterations);
+    }*/
 
     // compute time
     clock_t end = clock();

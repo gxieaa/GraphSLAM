@@ -47,7 +47,9 @@ bool dataAssociation2 (SparseOptimizer& optimizer, int poseIndex, double xi) {
     OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
     OptimizableGraph::Vertex* currentPose = vc[poseIndex];
     set<HyperGraph::Edge*> edgeSetCurr = currentPose->edges();
-    int minIdCurrVertex = getMinId(edgeSetCurr);
+    int minIndCurrVertex = getMinInd(edgeSetCurr, vc);
+    bool associated[vc.size()];
+    fill_n(associated, vc.size(), false);
     //cout << "pose id: " << currentPose->id() << endl;
     
     // for all landmarks observed in current pose
@@ -57,46 +59,54 @@ bool dataAssociation2 (SparseOptimizer& optimizer, int poseIndex, double xi) {
         //cout << "current pose masurement id: " << v1->id() << endl; 
         if (v1->dimension() == 2) {
             // for all landmarks of the past
-            int i2 = 0;
+            int i2 = minIndCurrVertex - 1;
             OptimizableGraph::Vertex* v2 = vc[i2];
-            while (v2->id() < minIdCurrVertex) {
-                if (v2->dimension() == 2) {
+            while (v2->dimension() == 2) {
                 //cout << "testing association between (v" << v1->id() << ", " << "v" << v2->id() << ") ... " << endl;
-                    if (correspondenceTest(optimizer, v1, v2, xi)) {
-                        makeAssociation(v1, v2);
-                        noAssociation = false;
-                    }
+                if (!associated[i2]){
+                    //double varDistance = getMaxVarLandmark(optimizer, v2);
+                    //if (distantTest(v1, v2, varDistance)){
+                        if (correspondenceTest(optimizer, v1, v2, xi)) {
+                            makeAssociation(v1, v2);
+                            noAssociation = false;
+                            associated[i2] = true;
+                            break;
+                        }
+                    //}
                 }
-                ++i2; 
+                --i2; 
                 v2 = vc[i2];
+                //break;
             }
         }
     }
     return noAssociation;
 }
 
-int getMinId (set<HyperGraph::Edge*> es) {
-    int minId = INT_MAX;
+int getMinInd (set<HyperGraph::Edge*> &es, OptimizableGraph::VertexContainer &vc) {
+    int minID = INT_MAX;
     for (set<HyperGraph::Edge*>::iterator it1 = es.begin(); it1 != es.end(); ++it1) {
         // Assume landmarks are second vertex in vertexContainer
         OptimizableGraph::Vertex* v1 = static_cast<OptimizableGraph::Vertex*> ((*it1)->vertices()[1]);
-        if (v1->dimension() == 2 && v1->id() < minId) minId = v1->id();
+        if (v1->dimension() == 2 && v1->id() < minID) minID = v1->id();
     }
-    return minId;
+    int minInd = 0;
+    for (int i=0; i<vc.size(); ++i){
+        if (vc[i]->id() == minID) {
+            minInd = i;
+            break;
+        }
+    }
+    return minInd;
 }
 
-double getMaxVar(SparseOptimizer& optimizer, OptimizableGraph::VertexContainer &vc){
+double getMaxVar(SparseOptimizer &optimizer, OptimizableGraph::VertexContainer &vc){
     double maxVar = 0;
     for (size_t i=0; i<vc.size(); ++i) {
         OptimizableGraph::Vertex* v1 = vc[i];
         if (v1->dimension() == 2) { // check if vertex is landmark
             // computer marginal values
-            std::vector<std::pair<int, int> > blockIndices;
-            blockIndices.push_back(make_pair(v1->hessianIndex(), v1->hessianIndex()));
-            SparseBlockMatrix<MatrixXd> spinv;
-            optimizer.computeMarginals(spinv, blockIndices);
-            double maxCov = fmax((*(spinv.block(v1->hessianIndex(), v1->hessianIndex())))(0,0),
-                (*(spinv.block(v1->hessianIndex(), v1->hessianIndex())))(1,1));
+            double maxCov = getMaxVarLandmark(optimizer, v1);
             // replace if max variance found
             if (maxCov > maxVar) {
                 maxVar = maxCov;  
@@ -106,6 +116,17 @@ double getMaxVar(SparseOptimizer& optimizer, OptimizableGraph::VertexContainer &
     }
     cout << " (Max var: " << maxVar << ") ... ";
     return maxVar;
+}
+
+double getMaxVarLandmark (SparseOptimizer &optimizer, OptimizableGraph::Vertex* v1) {
+    // computer marginal values
+    std::vector<std::pair<int, int> > blockIndices;
+    blockIndices.push_back(make_pair(v1->hessianIndex(), v1->hessianIndex()));
+    SparseBlockMatrix<MatrixXd> spinv;
+    optimizer.computeMarginals(spinv, blockIndices);
+    double maxCov = fmax((*(spinv.block(v1->hessianIndex(), v1->hessianIndex())))(0,0),
+        (*(spinv.block(v1->hessianIndex(), v1->hessianIndex())))(1,1));
+    return maxCov;
 }
 
 bool correspondenceTest (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double xi) {

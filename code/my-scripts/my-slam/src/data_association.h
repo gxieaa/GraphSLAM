@@ -12,9 +12,11 @@ bool dataAssociation (SparseOptimizer& optimizer, double xi);
 
 bool dataAssociation2 (SparseOptimizer& optimizer, int poseIndex, double xi);
 
-int getMinId (set<HyperGraph::Edge*> es);
+int getMinInd (set<HyperGraph::Edge*> &es, OptimizableGraph::VertexContainer &vc);
 
 double getMaxVar (SparseOptimizer& optimizer, OptimizableGraph::VertexContainer &vc);
+
+double getMaxVarLandmark (SparseOptimizer &optimizer, OptimizableGraph::Vertex* v1);
 
 bool correspondenceTest (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double xi);
 

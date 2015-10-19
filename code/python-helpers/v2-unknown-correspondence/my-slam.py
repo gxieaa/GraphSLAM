@@ -94,7 +94,7 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
     ### SLAM 1 ## 
     # make optimization
     '''
-    subprocess.call(["env", "CPUPROFILE=./my_slam2_prof.prof",
+    subprocess.call(["env", "CPUPROFILE=./my_slam_prof.prof",
                     binOptPath+"./my_slam", 
                     "-i", str(g2oIterations), 
                     "-t", str(0.1),
