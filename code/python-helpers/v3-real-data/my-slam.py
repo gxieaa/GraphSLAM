@@ -21,8 +21,8 @@ def main():
 def runG2O(g2oIterations):
     
     # paths
-    #dataPath = "data/Parque OHiggins/ohiggins.g2o"
-    dataPath = "data/Victoria Park Felipe/victoria.g2o"
+    dataPath = "data/Parque OHiggins/ohiggins.g2o"
+    #dataPath = "data/Victoria Park Felipe/victoria.g2o"
     dataName = os.path.splitext(os.path.basename(dataPath))[0]
     guessOutPath = "res/guess_out_" + dataName + ".g2o"
     resPath = "res/opt_out_" + dataName + ".g2o"

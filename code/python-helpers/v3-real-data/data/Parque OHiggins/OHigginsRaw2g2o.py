@@ -38,9 +38,12 @@ fdr.seek(0)
 header_line = next(fdr)
 header_line = next(fm)
 #for odomLine in fdr:
-odomLine = fdr.next()
 measLine = fm.next()
-while odomLine:
+odomLine = fdr.next()
+odomWords = shlex.split(odomLine)
+pastPose = [float(odomWords[2]), float(odomWords[3]), float(odomWords[4])]
+odomLine = fdr.next()
+while True:
     # get odometry
     #print odomLine
     odomWords = shlex.split(odomLine)
@@ -54,7 +57,7 @@ while odomLine:
     pastPose = currentPose 
     
     # get measurement time
-    while measLine:
+    while True:
         #print measLine
         measWords = shlex.split(measLine)
         measTime = 1000000000*int(measWords[0]) + int(measWords[1])
