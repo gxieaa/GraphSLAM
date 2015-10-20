@@ -4,11 +4,11 @@ using namespace std;
 using namespace g2o;
 using namespace Eigen;
 
-bool dataAssociation (SparseOptimizer& optimizer, double xi) {
+bool dataAssociation (SparseOptimizer& optimizer, double xi, double maxDistance) {
     // parameters
     bool noAssociation = true;
     OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
-    double varDistance = getMaxVar(optimizer, vc);
+    //double varDistance = getMaxVar(optimizer, vc);
     //double varDistance = 5;
     bool associated[vc.size()];
     fill_n(associated, vc.size(), false);
@@ -22,8 +22,9 @@ bool dataAssociation (SparseOptimizer& optimizer, double xi) {
             for (size_t j=i+1; j<vc.size(); ++j){
                 OptimizableGraph::Vertex* v2 = vc[j];
                 // check if vertex is landmark
-                if (v2->dimension() == 2 && !sharePose(v1,v2)) {
-                //if (v2->dimension() == 2 && !share_pose(v1,v2) && !associated[j] && distantTest(v1, v2, varDistance)) { 
+                //if (v2->dimension() == 2 && !sharePose(v1,v2)) {
+                if (v2->dimension() == 2 && !sharePose(v1,v2) && distantTest(v1, v2, maxDistance)) {                
+                //if (v2->dimension() == 2 && !sharePose(v1,v2) && !associated[j] && distantTest(v1, v2, maxDistance)) { 
                     //cout << "testing association between (v" << v1->id() << ", " << "v" << v2->id() << ") ... " << endl;
                     if (correspondenceTest(optimizer, v1, v2, xi)) {
                         // succesful association
@@ -41,7 +42,7 @@ bool dataAssociation (SparseOptimizer& optimizer, double xi) {
     return noAssociation;
 }
 
-bool dataAssociation2 (SparseOptimizer& optimizer, int poseIndex, double xi) {
+bool dataAssociation2 (SparseOptimizer& optimizer, int poseIndex, double xi, double maxDistance) {
     // parameters
     bool noAssociation = true;
     OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
@@ -65,14 +66,14 @@ bool dataAssociation2 (SparseOptimizer& optimizer, int poseIndex, double xi) {
                 //cout << "testing association between (v" << v1->id() << ", " << "v" << v2->id() << ") ... " << endl;
                 if (!associated[i2]){
                     //double varDistance = getMaxVarLandmark(optimizer, v2);
-                    //if (distantTest(v1, v2, varDistance)){
+                    if (distantTest(v1, v2, maxDistance)){
                         if (correspondenceTest(optimizer, v1, v2, xi)) {
                             makeAssociation(v1, v2);
                             noAssociation = false;
                             associated[i2] = true;
-                            break;
+                            //break;
                         }
-                    //}
+                    }
                 }
                 --i2; 
                 v2 = vc[i2];

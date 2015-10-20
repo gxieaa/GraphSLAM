@@ -84,13 +84,16 @@ int main(int argc, char** argv) {
     // initial guess
     optimizer.initializeOptimization();
     optimizer.optimize(maxIterations);
+    
+     // compute max distance
+    double maxDistance = getMaxDistance (optimizer, xi);
 
     // optimization loop
     while(true) {
 
         // data association
         cerr << "Testing associations ...";
-        bool no_more_association  = dataAssociation(optimizer, xi);
+        bool no_more_association  = dataAssociation(optimizer, xi, maxDistance);
         cerr << " done." << endl;
         
         // write output file

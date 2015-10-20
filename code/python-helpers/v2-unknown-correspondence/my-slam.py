@@ -9,8 +9,8 @@ from associationFunctions import *
 def main():
     # variables
     g2oIterations = 10
-    nlandmarks = 100
-    simSteps = 100
+    nlandmarks = 500
+    simSteps = 500
     #infoOdomPos = [500, 100, 50, 10, 5]
     #infoOdomAng = [5000, 1000, 500, 100, 50]
     #infoPointSen = [1000, 500, 100, 50, 10]
@@ -82,7 +82,7 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
     subprocess.call(["env", "CPUPROFILE=./my_slam2_prof.prof",
                     binOptPath+"./my_slam2", 
                     "-i", str(g2oIterations), 
-                    "-t", str(0.1),
+                    "-t", str(0.001),
                     #"-robustKernel", "Huber",
                     #"-robustKernelWidth", str(1),
                     "-o", optFilename2, anonOutFilename])
@@ -97,7 +97,7 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
     subprocess.call(["env", "CPUPROFILE=./my_slam_prof.prof",
                     binOptPath+"./my_slam", 
                     "-i", str(g2oIterations), 
-                    "-t", str(0.1),
+                    "-t", str(0.001),
                     #"-robustKernel", "Huber",
                     #"-robustKernelWidth", str(1),
                     "-o", optFilename, anonOutFilename])

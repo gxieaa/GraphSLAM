@@ -44,20 +44,20 @@ def plotResults(gtFilename, guessFilename, optFilename, figFilename, xlim, ylim)
     
     # create figure
     f, (ax1, ax2) = plt.subplots(1, 2, sharey=True)
-    makeSubplot(ax1, gtData, guessData, "Initial Guess", False)
-    makeSubplot(ax2, gtData, optData, "After Solver", True)
+    makeSubplot(ax1, gtData, guessData, "Initial Guess", False, xlim, ylim)
+    makeSubplot(ax2, gtData, optData, "After Solver", True, xlim, ylim)
     #plt.show()
     
     # print figure
-    plt.xlim(xlim)
-    plt.ylim(ylim)
+    #plt.xlim(xlim)
+    #plt.ylim(ylim)
     #plt.savefig(figFilename + ".png", bbox_inches='tight')
     plt.savefig(figFilename + ".pdf", bbox_inches='tight')
     
     # plot path error
     pathPlot(gtData, optData, figFilename)
     
-def makeSubplot(ax, gtData, slamData, title, useLegend):
+def makeSubplot(ax, gtData, slamData, title, useLegend, xlim, ylim):
     lw = 1
     ms = 4
     gtRobPlt, = ax.plot(gtData.poseX, gtData.poseY, '.-', color = '#bbbbf9', linewidth = lw, markersize = ms, label='GT robot path')
@@ -66,6 +66,10 @@ def makeSubplot(ax, gtData, slamData, title, useLegend):
     gtLanPlt, = ax.plot(gtData.landmarkX, gtData.landmarkY, '.', color = '#800000', linewidth = lw, markersize = ms, label='GT landmarks')
     ax.grid(True)
     ax.set_title(title)
+    ax.relim()
+    ax.autoscale_view()
+    #ax.set_xlim(xlim)
+    #ax.set_ylim(ylim)
     if useLegend:
         ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
         
@@ -93,3 +97,21 @@ def pathPlot(gtData, optData, figFilename):
     plt.ylim([0, max(pathError)])
     #plt.savefig(figFilename + "_path.png", bbox_inches='tight')
     #plt.savefig(figFilename + "_path.pdf", bbox_inches='tight')
+    
+def makeRealPlots (guessPath):
+    # get data from file
+    guessData = slamData(guessPath)
+    #optData = slamData(optPath)
+    
+    # make figure
+    lw = 1
+    ms = 4
+    f = plt.figure();
+    plt.plot(guessData.poseX, guessData.poseY, '-', color = '#bbbbf9', linewidth = lw, markersize = ms, label='Odometry path')
+    plt.grid(True)
+    ax = plt.gca()
+    ax.relim()
+    ax.autoscale_view()
+    ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    plt.savefig("res.pdf", bbox_inches='tight')
+    

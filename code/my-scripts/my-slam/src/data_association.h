@@ -8,9 +8,9 @@ using namespace std;
 using namespace g2o;
 using namespace Eigen;
 
-bool dataAssociation (SparseOptimizer& optimizer, double xi);
+bool dataAssociation (SparseOptimizer& optimizer, double xi, double maxDistance);
 
-bool dataAssociation2 (SparseOptimizer& optimizer, int poseIndex, double xi);
+bool dataAssociation2 (SparseOptimizer& optimizer, int poseIndex, double xi, double maxDistance);
 
 int getMinInd (set<HyperGraph::Edge*> &es, OptimizableGraph::VertexContainer &vc);
 

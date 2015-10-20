@@ -87,15 +87,18 @@ int main(int argc, char** argv) {
     // get pose vertices
     OptimizableGraph::VertexContainer poses;
     getAllPoses (optimizer, poses);
-    
+   
+    // compute max distance
+    double maxDistance = getMaxDistance (optimizer, xi);
+     
     // poses loop
-    cout << "poses: " << poses.size() << endl; 
+    //cout << "poses: " << poses.size() << endl; 
     for (int i=0; i<poses.size(); ++i) {
         cout << "\n### iteration " << iteration++ << ", pose " << i << " ###" << endl;
         
         // data association
         cerr << "Testing associations ...";
-        bool no_more_association = dataAssociation2(optimizer, i, xi);
+        bool no_more_association = dataAssociation2(optimizer, i, xi, maxDistance);
         cerr << " done." << endl;
         
         // write output file
@@ -120,12 +123,12 @@ int main(int argc, char** argv) {
     }
     
     // posterior optimization loop
-    /*cout << "\n### Posterior Optimization ###\n" << endl;
-    while(true) {
+    cout << "\n### Posterior Optimization ###\n" << endl;
+    /*while(true) {
         // data association
         cout << "\n### iteration " << iteration++ << " ###\n" << endl;
         cerr << "Testing associations ...";
-        bool no_more_association  = dataAssociation(optimizer, xi);
+        bool no_more_association  = dataAssociation(optimizer, xi, maxDistance);
         cerr << " done." << endl;
         
         // write output file

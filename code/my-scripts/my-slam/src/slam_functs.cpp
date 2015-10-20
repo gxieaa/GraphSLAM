@@ -69,3 +69,34 @@ void getAllPoses (SparseOptimizer &optimizer, OptimizableGraph::VertexContainer 
         }
     }
 }
+
+double getMaxDistance (SparseOptimizer &optimizer, double xi) {
+    double measInfo = 0;
+    OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
+    
+    // get measurement information
+    for (size_t i=0; i<vc.size(); ++i) {
+        if (vc[i]->dimension() == 3) {
+            set<HyperGraph::Edge*> edgeSet = vc[i]->edges();
+            for (set<HyperGraph::Edge*>::iterator it1 = edgeSet.begin(); it1 != edgeSet.end(); ++it1) {
+                // Assume landmarks are second vertex in vertexContainer
+                OptimizableGraph::Vertex* v1 = static_cast<OptimizableGraph::Vertex*> ((*it1)->vertices()[1]);
+                if (v1->dimension() == 2) {
+                    OptimizableGraph::Edge* e = dynamic_cast<OptimizableGraph::Edge*> (*it1);
+                    Eigen::Map<MatrixXd> info(e->informationData(), e->dimension(), e->dimension());
+                    //cout << "meas info mat: " << info << endl; 
+                    measInfo = info(0,0);
+                    //cout << "meas info: " << measInfo << endl;
+                    goto endLoops;
+                }
+            }
+        }
+    }
+    endLoops:
+    
+    // get max distance
+    double eta = 1 / ( 2*M_PI*(1/measInfo) );
+    double maxDistance = sqrt(log(xi/eta) / (-measInfo));
+    //cout << "max distance: " << maxDistance << endl;
+    return maxDistance;
+}
