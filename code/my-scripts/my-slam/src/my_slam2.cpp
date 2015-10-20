@@ -124,7 +124,7 @@ int main(int argc, char** argv) {
     
     // posterior optimization loop
     cout << "\n### Posterior Optimization ###\n" << endl;
-    /*while(true) {
+    while(true) {
         // data association
         cout << "\n### iteration " << iteration++ << " ###\n" << endl;
         cerr << "Testing associations ...";
@@ -149,7 +149,7 @@ int main(int argc, char** argv) {
         // optimize
         optimizer.initializeOptimization();
         optimizer.optimize(maxIterations);
-    }*/
+    }
 
     // compute time
     clock_t end = clock();

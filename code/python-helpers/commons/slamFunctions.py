@@ -98,7 +98,7 @@ def pathPlot(gtData, optData, figFilename):
     #plt.savefig(figFilename + "_path.png", bbox_inches='tight')
     #plt.savefig(figFilename + "_path.pdf", bbox_inches='tight')
     
-def makeRealPlots (guessPath):
+def makeRealPlots (guessPath, figPath):
     # get data from file
     guessData = slamData(guessPath)
     #optData = slamData(optPath)
@@ -107,11 +107,12 @@ def makeRealPlots (guessPath):
     lw = 1
     ms = 4
     f = plt.figure();
-    plt.plot(guessData.poseX, guessData.poseY, '-', color = '#bbbbf9', linewidth = lw, markersize = ms, label='Odometry path')
+    plt.plot(guessData.landmarkX, guessData.landmarkY, 'r+', linewidth = lw, markersize = ms, label='Guess landmarks')
+    plt.plot(guessData.poseX, guessData.poseY, 'b-', linewidth = lw, markersize = ms, label='Odometry path')
     plt.grid(True)
     ax = plt.gca()
     ax.relim()
     ax.autoscale_view()
-    ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-    plt.savefig("res.pdf", bbox_inches='tight')
+    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    plt.savefig(figPath+".pdf", bbox_inches='tight')
     

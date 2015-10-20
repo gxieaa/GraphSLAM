@@ -2,6 +2,7 @@
 import subprocess
 import sys
 import time
+import os
 sys.path.append('../commons')
 from slamFunctions import *
 
@@ -20,20 +21,21 @@ def main():
 def runG2O(g2oIterations):
     
     # paths
-    dataPath = "data/Parque OHiggins/parqueOhiggins.g2o"
-    #dataPath = "data/Victoria Park Felipe/victoriaPark.g2o"
-    guessOutPath = "res/guess_out.g2o"
-    resPath = "res/opt_out.g2o"
-    figPath = "res/res"
+    #dataPath = "data/Parque OHiggins/ohiggins.g2o"
+    dataPath = "data/Victoria Park Felipe/victoria.g2o"
+    dataName = os.path.splitext(os.path.basename(dataPath))[0]
+    guessOutPath = "res/guess_out_" + dataName + ".g2o"
+    resPath = "res/opt_out_" + dataName + ".g2o"
+    figPath = "res/res_" + dataName
+    
     
     # get initial guess
-    #subprocess.call(["g2o", "-i", "0", "-guessOdometry",
-    #                 "-o", guessOutPath, dataPath])
+    subprocess.call(["g2o", "-i", "0", "-guessOdometry",
+                     "-o", guessOutPath, dataPath])
                      
     # plot results
-    #plotResults(guessOutPath, guessOutPath, guessOutPath, figPath, [-250, 150], [-200, 100])    
-    #plotResults(dataPath, dataPath, dataPath, figPath, [-250, 150], [-200, 100])
-    makeRealPlots (dataPath) 
+    makeRealPlots(guessOutPath, figPath)
+    #makeRealPlots(dataPath, figPath) 
      
 if __name__ == '__main__':
     main()

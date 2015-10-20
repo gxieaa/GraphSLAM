@@ -9,14 +9,14 @@ from associationFunctions import *
 def main():
     # variables
     g2oIterations = 10
-    nlandmarks = 500
-    simSteps = 500
+    nlandmarks = 400
+    simSteps = 400
     #infoOdomPos = [500, 100, 50, 10, 5]
     #infoOdomAng = [5000, 1000, 500, 100, 50]
     #infoPointSen = [1000, 500, 100, 50, 10]
-    infoOdomPos = [5000]
-    infoOdomAng = [5000]
-    infoPointSen = [5000]
+    infoOdomPos = [50]
+    infoOdomAng = [50]
+    infoPointSen = [50]
     
     n = len(infoOdomPos)
     

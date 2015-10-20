@@ -13,7 +13,7 @@ class slamData():
         self.getDataFromFile(dataFilename)
         
     def getDataFromFile(self, dataFilename):
-        f = open(dataFilename)
+        f = open(dataFilename, 'r')
         # get data loop
         for line in f:
             # split string
