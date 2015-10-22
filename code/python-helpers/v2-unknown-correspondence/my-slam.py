@@ -9,14 +9,15 @@ from associationFunctions import *
 def main():
     # variables
     g2oIterations = 10
-    nlandmarks = 400
-    simSteps = 400
+    nlandmarks = 1000
+    simSteps = 1000
     #infoOdomPos = [500, 100, 50, 10, 5]
     #infoOdomAng = [5000, 1000, 500, 100, 50]
     #infoPointSen = [1000, 500, 100, 50, 10]
-    infoOdomPos = [50]
-    infoOdomAng = [50]
-    infoPointSen = [50]
+    infoOdomPos = [5000]
+    infoOdomAng = [5000]
+    infoPointSen = [5000]
+    xi = 0.0001
     
     n = len(infoOdomPos)
     
@@ -31,21 +32,12 @@ def main():
     # run g2o tests
     start_time = time.time()
     for i in range(n):
-        runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos[i], infoOdomAng[i], infoPointSen[i])
+        runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos[i], infoOdomAng[i], infoPointSen[i], xi)
         
     elapsed_time = time.time() - start_time
     print "Total time tests: " + str(elapsed_time) + " [s]"
     
-    # profiler
-    #subprocess.call(["pprof", "--callgrind", "../../my-scripts/my-slam/build/my_slam",
-                     #"/home/francocurotto/pprof/my_slam_prof.prof", ">", "ls.callgrind"])
-    #subprocess.call(["kcachegrind", "ls.callgrind"])
-    
-    # pprof --callgrind ../../my-scripts/my-slam/build/my_slam /home/francocurotto/pprof/my_slam_prof.prof > ls.callgrind
-    # kcachegrind ls.callgrind
-    # ../../../../gprof2dot/./gprof2dot.py --format=callgrind --output=out.dot ls.callgrind
-    # dot -Tpng out.dot -o graph.png
-def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen):
+def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen, xi):
     
     # paths and filenames
     binSimPath = "../../my-scripts/my-simulator/build/"
@@ -82,7 +74,7 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
     subprocess.call(["env", "CPUPROFILE=./my_slam2_prof.prof",
                     binOptPath+"./my_slam2", 
                     "-i", str(g2oIterations), 
-                    "-t", str(0.001),
+                    "-t", str(xi),
                     #"-robustKernel", "Huber",
                     #"-robustKernelWidth", str(1),
                     "-o", optFilename2, anonOutFilename])

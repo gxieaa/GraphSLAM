@@ -98,7 +98,7 @@ def pathPlot(gtData, optData, figFilename):
     #plt.savefig(figFilename + "_path.png", bbox_inches='tight')
     #plt.savefig(figFilename + "_path.pdf", bbox_inches='tight')
     
-def makeRealPlots (guessPath, figPath):
+def makeRealPlots (guessPath, figPath, sufix):
     # get data from file
     guessData = slamData(guessPath)
     #optData = slamData(optPath)
@@ -114,5 +114,5 @@ def makeRealPlots (guessPath, figPath):
     ax.relim()
     ax.autoscale_view()
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-    plt.savefig(figPath+".pdf", bbox_inches='tight')
+    plt.savefig(figPath + sufix + ".pdf", bbox_inches='tight')
     

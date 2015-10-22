@@ -138,6 +138,7 @@ bool correspondenceTest (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v
     blockIndices.push_back(make_pair(v2->hessianIndex(), v1->hessianIndex()));
     blockIndices.push_back(make_pair(v2->hessianIndex(), v2->hessianIndex()));
     SparseBlockMatrix<MatrixXd> spinv;
+    //cout << "computeMarginals!" << endl;
     optimizer.computeMarginals(spinv, blockIndices);
     
     // get marginal covariance and information matrix between pair of landmarks
