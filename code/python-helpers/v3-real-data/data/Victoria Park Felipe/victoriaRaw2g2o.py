@@ -2,7 +2,7 @@
 import shlex
 import math
 
-def victoriaRaw2g2o(dataInfo, dataDir):
+def victoriaRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir):
     # constants and variables
     poseID = 0
 
@@ -52,7 +52,7 @@ def victoriaRaw2g2o(dataInfo, dataDir):
         dy = -(currentPose[0] - pastPose[0])*math.sin(pastPose[2]) + (currentPose[1] - pastPose[1])*math.cos(pastPose[2])
         dt = ((currentPose[2] - pastPose[2] + math.pi) % (2*math.pi)) - math.pi
         fg2o.write("EDGE_SE2 " + str(poseID) + " " + str(poseID+1) + " " + str(dx) + " " +
-            str(dy) + " " + str(dt) + " " + str(dataInfo) + " 0 0 " + str(dataInfo) + " 0 " + str(dataInfo) + "\n")
+            str(dy) + " " + str(dt) + " " + str(infoOdomPos) + " 0 0 " + str(infoOdomPos) + " 0 " + str(infoOdomAng) + "\n")
         pastPose = currentPose 
         
         # get measurement time
@@ -69,7 +69,7 @@ def victoriaRaw2g2o(dataInfo, dataDir):
                 lx = mr*math.cos(mt) + px
                 ly = mr*math.sin(mt) + py
                 fg2o.write("EDGE_SE2_XY " + str(poseID) + " " + str(landID) + " " + str(lx) +
-                    " " + str(ly) + " " + str(dataInfo) + " 0 " + str(dataInfo) + "\n")
+                    " " + str(ly) + " " + str(infoPointSen) + " 0 " + str(infoPointSen) + "\n")
                 landID = landID + 1
                 try:
                     measLine = fm.next()

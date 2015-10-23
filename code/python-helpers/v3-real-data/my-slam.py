@@ -17,7 +17,9 @@ def main():
     g2oIterations = 10
     xi = 0.0001
     kernelWidth = 1
-    dataInfo = 100
+    infoOdomPos = 100
+    infoOdomAng = 1000
+    infoPointSen = 100
     
     # compile
     buildPath = "../../my-scripts/my-slam/build/"
@@ -25,16 +27,16 @@ def main():
     
     # run g2o tests
     start_time = time.time()
-    runG2O(g2oIterations, xi, kernelWidth, dataInfo)
+    runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen)
     elapsed_time = time.time() - start_time
     print "Total time tests: " + str(elapsed_time) + " [s]"
     
-def runG2O(g2oIterations, xi, kernelWidth, dataInfo):
+def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen):
     
     # paths
     binOptPath = "../../my-scripts/my-slam/build/"
-    #dataPath = "data/Parque OHiggins/ohiggins.g2o"
-    dataPath = "data/Parque OHiggins Test/ohiggins.g2o"
+    dataPath = "data/Parque OHiggins/ohiggins.g2o"
+    #dataPath = "data/Parque OHiggins Test/ohiggins.g2o"
     #dataPath = "data/Victoria Park Felipe/victoria.g2o"
     dataName = os.path.splitext(os.path.basename(dataPath))[0]
     dataDir = os.path.dirname(dataPath) + "/"
@@ -45,9 +47,9 @@ def runG2O(g2oIterations, xi, kernelWidth, dataInfo):
     # generate g2o format data
     print "generating data in g2o format"
     if dataName == "ohiggins":
-        ohigginsRaw2g2o(dataInfo, dataDir)
+        ohigginsRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir)
     else:
-        victoriaRaw2g2o(dataInfo, dataDir)
+        victoriaRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir)
     
     
     # get initial guess
@@ -65,7 +67,7 @@ def runG2O(g2oIterations, xi, kernelWidth, dataInfo):
                     "-o", resPath, guessOutPath])
                      
     # plot results
-    sufix = "_xi_" + str(xi) + "_di_" + str(dataInfo)
+    sufix = "_xi_" + str(xi) + "_p_" + str(infoOdomPos) + "_a_" + str(infoOdomAng) + "_ps_" + str(infoPointSen)
     #makeRealPlots(dataPath, figPath) 
     #makeRealPlots(guessOutPath, figPath, "_odom")
     makeRealPlots(resPath, figPath,sufix)
