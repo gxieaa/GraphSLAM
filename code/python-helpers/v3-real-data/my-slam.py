@@ -70,7 +70,7 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
     sufix = "_xi_" + str(xi) + "_p_" + str(infoOdomPos) + "_a_" + str(infoOdomAng) + "_ps_" + str(infoPointSen)
     #makeRealPlots(dataPath, figPath) 
     #makeRealPlots(guessOutPath, figPath, "_odom")
-    makeRealPlots(resPath, figPath,sufix)
+    makeRealPlots(resPath, figPath, sufix)
      
 if __name__ == '__main__':
     main()
