@@ -38,6 +38,7 @@ int main(int argc, char** argv) {
     bool nonSequential;
     string outputFilename;
     string inputFilename;
+    int poseSkip;
     CommandArgs arg;
 
     arg.param("i", maxIterations, 10, "perform n iterations, if negative consider the gain");
@@ -47,6 +48,7 @@ int main(int argc, char** argv) {
     arg.param("listRobustKernels", listKernelsBool, false, "list the registered robust kernels");
     arg.param("nonSequential", nonSequential, false, "apply the robust kernel only on loop closures and not odometries");
     arg.param("o", outputFilename, "", "output final version of the graph");
+    arg.param("poseSkip", poseSkip, 1, "Optimization step");
     arg.paramLeftOver("graph-input", inputFilename, "", "graph file which will be processed");
     arg.parseArgs(argc, argv);
 
@@ -114,8 +116,10 @@ int main(int argc, char** argv) {
         loadRobustKernel (robustKernel, nonSequential,  huberWidth, optimizer);
 
         // optimize
-        optimizer.initializeOptimization();
-        optimizer.optimize(maxIterations);
+        if (i % poseSkip == 0) {
+            optimizer.initializeOptimization();
+            optimizer.optimize(maxIterations);
+        }
     }
     
     // posterior optimization loop

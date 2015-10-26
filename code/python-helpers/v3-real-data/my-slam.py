@@ -21,6 +21,7 @@ def main():
     infoOdomPos = 100
     infoOdomAng = 1000
     infoPointSen = 100
+    poseSkip = 10
     
     # compile
     buildPath = "../../my-scripts/my-slam/build/"
@@ -28,11 +29,11 @@ def main():
     
     # run g2o tests
     start_time = time.time()
-    runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen)
+    runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen, poseSkip)
     elapsed_time = time.time() - start_time
     print "Total time tests: " + str(elapsed_time) + " [s]"
     
-def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen):
+def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen, poseSkip):
     
     # paths
     binOptPath = "../../my-scripts/my-slam/build/"
@@ -67,10 +68,11 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
                     "-t", str(xi),
                     "-robustKernel", "Huber",
                     "-robustKernelWidth", str(kernelWidth),
+                    "-poseSkip", str(poseSkip),
                     "-o", resPath, guessOutPath])
                      
     # plot results
-    sufix = "_xi_" + str(xi) + "_p_" + str(infoOdomPos) + "_a_" + str(infoOdomAng) + "_ps_" + str(infoPointSen)
+    sufix = "_xi_" + str(xi) + "_op_" + str(infoOdomPos) + "_oa_" + str(infoOdomAng) + "_lp_" + str(infoPointSen) + "_ps_" + str(poseSkip)
     #makeRealPlots(dataPath, figPath) 
     #makeRealPlots(guessOutPath, figPath, "_odom")
     makeRealPlots(resPath, figPath, sufix)
