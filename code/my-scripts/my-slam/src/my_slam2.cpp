@@ -104,11 +104,7 @@ int main(int argc, char** argv) {
         // write output file
         writeDataFile (outputFilename, optimizer);
         
-        // finish test
-        //if (no_more_association) break;
-        
         // read data file and load to optimizer
-        //cout << "\n### iteration " << ++iteration << " ###\n" << endl;
         readDataFile (ifs, outputFilename);
         optimizer.clear();
         optimizer.load(ifs);
