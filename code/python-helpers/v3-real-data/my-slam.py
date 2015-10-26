@@ -5,10 +5,11 @@ import time
 import os
 sys.path.append('../commons')
 sys.path.append('data/Parque OHiggins')
-sys.path.append('data/Parque OHiggins Test')
+sys.path.append('data/Parque OHiggins 2')
 sys.path.append('data/Victoria Park Felipe')
 from slamFunctions import *
 from OHigginsRaw2g2o import *
+from OHiggins2Raw2g2o import *
 from victoriaRaw2g2o import *
 
 def main():
@@ -35,8 +36,8 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
     
     # paths
     binOptPath = "../../my-scripts/my-slam/build/"
-    dataPath = "data/Parque OHiggins/ohiggins.g2o"
-    #dataPath = "data/Parque OHiggins Test/ohiggins.g2o"
+    #dataPath = "data/Parque OHiggins/ohiggins.g2o"
+    dataPath = "data/Parque OHiggins 2/ohiggins2.g2o"
     #dataPath = "data/Victoria Park Felipe/victoria.g2o"
     dataName = os.path.splitext(os.path.basename(dataPath))[0]
     dataDir = os.path.dirname(dataPath) + "/"
@@ -48,7 +49,9 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
     print "generating data in g2o format"
     if dataName == "ohiggins":
         ohigginsRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir)
-    else:
+    if dataName == "ohiggins2":
+        ohiggins2Raw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir)
+    elif dataNme == "victoria":
         victoriaRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir)
     
     
