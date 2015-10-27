@@ -57,21 +57,20 @@ bool dataAssociation2 (SparseOptimizer& optimizer, int poseIndex, double xi, dou
     for (set<HyperGraph::Edge*>::iterator it1 = edgeSetCurr.begin(); it1 != edgeSetCurr.end(); ++it1) {
         // Assume landmarks are second vertex in vertexContainer
         OptimizableGraph::Vertex* v1 = static_cast<OptimizableGraph::Vertex*> ((*it1)->vertices()[1]);
-        //cout << "current pose masurement id: " << v1->id() << endl; 
         if (v1->dimension() == 2) {
+            //cout << "current pose masurement id: " << v1->id() << endl; 
             // for all landmarks of the past
             int i2 = minIndCurrVertex - 1;
             OptimizableGraph::Vertex* v2 = vc[i2];
             while (v2->dimension() == 2) {
                 //cout << "testing association between (v" << v1->id() << ", " << "v" << v2->id() << ") ... " << endl;
                 if (!associated[i2]){
-                    //double varDistance = getMaxVarLandmark(optimizer, v2);
                     if (distantTest(v1, v2, maxDistance)){
                         if (correspondenceTest(optimizer, v1, v2, xi)) {
                             makeAssociation(v1, v2);
                             noAssociation = false;
                             associated[i2] = true;
-                            //break;
+                            break;
                         }
                     }
                 }

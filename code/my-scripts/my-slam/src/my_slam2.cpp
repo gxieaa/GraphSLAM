@@ -116,8 +116,8 @@ int main(int argc, char** argv) {
         loadRobustKernel (robustKernel, nonSequential,  huberWidth, optimizer);
 
         // optimize
-        if (i % poseSkip == 0) {
-            optimizer.initializeOptimization();
+        optimizer.initializeOptimization();
+        if (i % poseSkip == 0) {    
             optimizer.optimize(maxIterations);
         }
     }

@@ -28,7 +28,7 @@ def main():
     subprocess.call(["make", "-C", buildPath]) 
     
     # directory generator
-    makeDirs("res")
+    makeDirs(["res",])
     
     # run g2o tests
     start_time = time.time()
@@ -50,7 +50,7 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
     figPath = "res/res_" + dataName
     
     # generate g2o format data
-    print "generating data in g2o format"
+    print "Generating data in g2o format"
     if dataName == "ohiggins":
         ohigginsRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir)
     if dataName == "ohiggins2":
@@ -64,7 +64,7 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
                      "-o", guessOutPath, dataPath])
                      
     # optimize
-    print "optimize"
+    print "Optimize"
     subprocess.call(["env", "CPUPROFILE=./my_slam2_prof.prof",
                     binOptPath+"./my_slam2", 
                     "-i", str(g2oIterations), 
