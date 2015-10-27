@@ -26,6 +26,9 @@ def main():
     buildPath = "../../my-scripts/my-slam/build/"
     subprocess.call(["make", "-C", buildPath]) 
     
+    # directory generator
+    makeDirs("res")
+    
     # run g2o tests
     start_time = time.time()
     runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen)
