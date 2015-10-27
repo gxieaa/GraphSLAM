@@ -99,25 +99,28 @@ bool dataAssociation3 (SparseOptimizer& optimizer, int poseIndex, double xi, dou
         if (v1->dimension() == 2) {
             //cout << "current pose masurement id: " << v1->id() << endl; 
             // for all landmarks of the past
-            for (i = poseIndex-1; i>=0; --i) {
+            for (int i = poseIndex-1; i>=0; --i) {
                 OptimizableGraph::Vertex* pastPose = vc[i];
                 set<HyperGraph::Edge*> edgeSetPast = pastPose->edges();
                 for (set<HyperGraph::Edge*>::iterator it2 = edgeSetCurr.begin(); it2 != edgeSetCurr.end(); ++it2) {
                     // Assume landmarks are second vertex in vertexContainer
                     OptimizableGraph::Vertex* v2 = static_cast<OptimizableGraph::Vertex*> ((*it2)->vertices()[1]);
                     if (v2->dimension() == 2) {
-                        if (!find(associated.begin(), associated.end(), v2->id())) {
+                        if (find(associated.begin(), associated.end(), v2->id()) == associated.end()) {
                             if (distantTest(v1, v2, maxDistance)) {
                                 if (correspondenceTest(optimizer, v1, v2, xi)) {
                                     makeAssociation(v1, v2);
                                     noAssociation = false;
                                     associated.push_back(v2->id());
+                                    goto nextPastPose;
                                     break;
                                 }
                             }
                         }
                     }
                 }
+                nextPastPose:
+                break;
             }
         }
     }

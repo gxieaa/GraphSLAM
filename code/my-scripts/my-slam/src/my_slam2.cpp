@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
         
         // data association
         cerr << "Testing associations ...";
-        bool no_more_association = dataAssociation2(optimizer, i, xi, maxDistance);
+        bool no_more_association = dataAssociation3(optimizer, i, xi, maxDistance);
         cerr << " done." << endl;
         
         // write output file
