@@ -9,8 +9,8 @@ from associationFunctions import *
 def main():
     # variables
     g2oIterations = 10
-    nlandmarks = 1000
-    simSteps = 1000
+    nlandmarks = 100
+    simSteps = 100
     #infoOdomPos = [500, 100, 50, 10, 5]
     #infoOdomAng = [5000, 1000, 500, 100, 50]
     #infoPointSen = [1000, 500, 100, 50, 10]
@@ -77,6 +77,7 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
                     "-t", str(xi),
                     #"-robustKernel", "Huber",
                     #"-robustKernelWidth", str(1),
+                    "-poseSkip", str(1),
                     "-o", optFilename2, anonOutFilename])
                      
     # plot results

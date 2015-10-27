@@ -104,16 +104,16 @@ int main(int argc, char** argv) {
         cerr << " done." << endl;
         
         // write output file
-        writeDataFile (outputFilename, optimizer);
+        //writeDataFile (outputFilename, optimizer);
         
         // read data file and load to optimizer
-        readDataFile (ifs, outputFilename);
-        optimizer.clear();
-        optimizer.load(ifs);
-        ifs.close();
+        //readDataFile (ifs, outputFilename);
+        //optimizer.clear();
+        //optimizer.load(ifs);
+        //ifs.close();
         
         // load robust kernel
-        loadRobustKernel (robustKernel, nonSequential,  huberWidth, optimizer);
+        //loadRobustKernel (robustKernel, nonSequential,  huberWidth, optimizer);
 
         // optimize
         optimizer.initializeOptimization();
@@ -124,7 +124,7 @@ int main(int argc, char** argv) {
     
     // posterior optimization loop
     cout << "\n### Posterior Optimization ###\n" << endl;
-    while(true) {
+    /*while(true) {
         // data association
         cout << "\n### iteration " << iteration++ << " ###\n" << endl;
         cerr << "Testing associations ...";
@@ -149,7 +149,7 @@ int main(int argc, char** argv) {
         // optimize
         optimizer.initializeOptimization();
         optimizer.optimize(maxIterations);
-    }
+    }*/
 
     // compute time
     clock_t end = clock();
