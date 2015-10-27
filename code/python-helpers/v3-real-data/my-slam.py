@@ -41,8 +41,8 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
     # paths
     binOptPath = "../../my-scripts/my-slam/build/"
     #dataPath = "data/Parque OHiggins/ohiggins.g2o"
-    dataPath = "data/Parque OHiggins 2/ohiggins2.g2o"
-    #dataPath = "data/Victoria Park Felipe/victoria.g2o"
+    #dataPath = "data/Parque OHiggins 2/ohiggins2.g2o"
+    dataPath = "data/Victoria Park Felipe/victoria.g2o"
     dataName = os.path.splitext(os.path.basename(dataPath))[0]
     dataDir = os.path.dirname(dataPath) + "/"
     guessOutPath = "res/guess_out_" + dataName + ".g2o"
@@ -55,7 +55,7 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
         ohigginsRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir)
     if dataName == "ohiggins2":
         ohiggins2Raw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir)
-    elif dataNme == "victoria":
+    elif dataName == "victoria":
         victoriaRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir)
     
     
@@ -64,6 +64,7 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
                      "-o", guessOutPath, dataPath])
                      
     # optimize
+    
     print "Optimize"
     subprocess.call(["env", "CPUPROFILE=./my_slam2_prof.prof",
                     binOptPath+"./my_slam2", 
@@ -73,7 +74,7 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
                     "-robustKernelWidth", str(kernelWidth),
                     "-poseSkip", str(poseSkip),
                     "-o", resPath, guessOutPath])
-                     
+                    
     # plot results
     sufix = "_xi_" + str(xi) + "_op_" + str(infoOdomPos) + "_oa_" + str(infoOdomAng) + "_lp_" + str(infoPointSen) + "_ps_" + str(poseSkip)
     #makeRealPlots(dataPath, figPath) 

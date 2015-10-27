@@ -70,7 +70,7 @@ bool dataAssociation2 (SparseOptimizer& optimizer, int poseIndex, double xi, dou
                             makeAssociation(v1, v2);
                             noAssociation = false;
                             associated[i2] = true;
-                            //break;
+                            break;
                         }
                     }
                 }
