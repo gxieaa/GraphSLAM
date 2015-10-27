@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Eigen/Core>
 #include <limits.h>
+#include <algorithm>
 
 #include "g2o/core/sparse_optimizer.h"
 
@@ -11,6 +12,8 @@ using namespace Eigen;
 bool dataAssociation (SparseOptimizer& optimizer, double xi, double maxDistance);
 
 bool dataAssociation2 (SparseOptimizer& optimizer, int poseIndex, double xi, double maxDistance);
+
+bool dataAssociation3 (SparseOptimizer& optimizer, int poseIndex, double xi, double maxDistance);
 
 int getMinInd (set<HyperGraph::Edge*> &es, OptimizableGraph::VertexContainer &vc);
 

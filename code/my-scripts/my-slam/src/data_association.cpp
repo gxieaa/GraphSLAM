@@ -70,13 +70,54 @@ bool dataAssociation2 (SparseOptimizer& optimizer, int poseIndex, double xi, dou
                             makeAssociation(v1, v2);
                             noAssociation = false;
                             associated[i2] = true;
-                            break;
+                            //break;
                         }
                     }
                 }
                 --i2; 
                 v2 = vc[i2];
-                //break;
+            }
+        }
+    }
+    return noAssociation;
+}
+
+bool dataAssociation3 (SparseOptimizer& optimizer, int poseIndex, double xi, double maxDistance) {
+    // parameters
+    bool noAssociation = true;
+    OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
+    OptimizableGraph::Vertex* currentPose = vc[poseIndex];
+    set<HyperGraph::Edge*> edgeSetCurr = currentPose->edges();
+    vector<int> associated;
+    associated.clear();
+    //cout << "pose id: " << currentPose->id() << endl;
+    
+    // for all landmarks observed in current pose
+    for (set<HyperGraph::Edge*>::iterator it1 = edgeSetCurr.begin(); it1 != edgeSetCurr.end(); ++it1) {
+        // Assume landmarks are second vertex in vertexContainer
+        OptimizableGraph::Vertex* v1 = static_cast<OptimizableGraph::Vertex*> ((*it1)->vertices()[1]);
+        if (v1->dimension() == 2) {
+            //cout << "current pose masurement id: " << v1->id() << endl; 
+            // for all landmarks of the past
+            for (i = poseIndex-1; i>=0; --i) {
+                OptimizableGraph::Vertex* pastPose = vc[i];
+                set<HyperGraph::Edge*> edgeSetPast = pastPose->edges();
+                for (set<HyperGraph::Edge*>::iterator it2 = edgeSetCurr.begin(); it2 != edgeSetCurr.end(); ++it2) {
+                    // Assume landmarks are second vertex in vertexContainer
+                    OptimizableGraph::Vertex* v2 = static_cast<OptimizableGraph::Vertex*> ((*it2)->vertices()[1]);
+                    if (v2->dimension() == 2) {
+                        if (!find(associated.begin(), associated.end(), v2->id())) {
+                            if (distantTest(v1, v2, maxDistance)) {
+                                if (correspondenceTest(optimizer, v1, v2, xi)) {
+                                    makeAssociation(v1, v2);
+                                    noAssociation = false;
+                                    associated.push_back(v2->id());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
