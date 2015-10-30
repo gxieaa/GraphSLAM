@@ -9,15 +9,16 @@ from associationFunctions import *
 def main():
     # variables
     g2oIterations = 10
-    nlandmarks = 100
-    simSteps = 100
+    nlandmarks = 30
+    simSteps = 400
     #infoOdomPos = [500, 100, 50, 10, 5]
     #infoOdomAng = [5000, 1000, 500, 100, 50]
     #infoPointSen = [1000, 500, 100, 50, 10]
-    infoOdomPos = [5000]
-    infoOdomAng = [5000]
-    infoPointSen = [5000]
-    xi = 0.0001
+    infoOdomPos = [100]
+    infoOdomAng = [1000]
+    infoPointSen = [1000]
+    xi = 1e-500
+    interOpt = 100
     
     n = len(infoOdomPos)
     
@@ -32,12 +33,12 @@ def main():
     # run g2o tests
     start_time = time.time()
     for i in range(n):
-        runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos[i], infoOdomAng[i], infoPointSen[i], xi)
+        runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos[i], infoOdomAng[i], infoPointSen[i], xi, interOpt)
         
     elapsed_time = time.time() - start_time
     print "Total time tests: " + str(elapsed_time) + " [s]"
     
-def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen, xi):
+def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen, xi, interOpt):
     
     # paths and filenames
     binSimPath = "../../my-scripts/my-simulator/build/"
@@ -58,7 +59,7 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
                      "-nlandmarks", str(nlandmarks), "-simSteps", str(simSteps),
                      "-infoOdomPos", str(infoOdomPos), "-infoOdomAng", str(infoOdomAng),
                      "-infoPointSen", str(infoPointSen), simFilename])
-    fixNode(simFilename, 1000+simSteps)
+    fixNode(simFilename, 1000+nlandmarks)
     
     # get initial guess
     getInitialGuess(simFilename, guessInFilename)
@@ -78,6 +79,7 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
                     #"-robustKernel", "Huber",
                     #"-robustKernelWidth", str(1),
                     "-poseSkip", str(1),
+                    "-interOpt", str(interOpt),
                     "-o", optFilename2, anonOutFilename])
                      
     # plot results
@@ -90,9 +92,10 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
     subprocess.call(["env", "CPUPROFILE=./my_slam_prof.prof",
                     binOptPath+"./my_slam", 
                     "-i", str(g2oIterations), 
-                    "-t", str(0.001),
+                    "-t", str(xi),
                     #"-robustKernel", "Huber",
                     #"-robustKernelWidth", str(1),
+                    #"-poseSkip", str(1),
                     "-o", optFilename, anonOutFilename])
                      
     # plot results

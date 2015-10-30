@@ -16,12 +16,15 @@ def main():
     
     # variables
     g2oIterations = 10
-    xi = 0.0001
+    xi = 1e-200
     kernelWidth = 1
-    infoOdomPos = 100
-    infoOdomAng = 1000
+    infoOdomPos = 1000000
+    infoOdomAng = 1000000
     infoPointSen = 100
-    poseSkip = 10
+    poseSkip = 1
+    dataSkip = 10
+    interOpt = 50
+    dataSize = 150
     
     # compile
     buildPath = "../../my-scripts/my-slam/build/"
@@ -32,17 +35,17 @@ def main():
     
     # run g2o tests
     start_time = time.time()
-    runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen, poseSkip)
+    runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen, poseSkip, dataSkip, interOpt, dataSize)
     elapsed_time = time.time() - start_time
     print "Total time tests: " + str(elapsed_time) + " [s]"
     
-def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen, poseSkip):
+def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen, poseSkip, dataSkip, interOpt, dataSize):
     
     # paths
     binOptPath = "../../my-scripts/my-slam/build/"
-    #dataPath = "data/Parque OHiggins/ohiggins.g2o"
+    dataPath = "data/Parque OHiggins/ohiggins.g2o"
     #dataPath = "data/Parque OHiggins 2/ohiggins2.g2o"
-    dataPath = "data/Victoria Park Felipe/victoria.g2o"
+    #dataPath = "data/Victoria Park Felipe/victoria.g2o"
     dataName = os.path.splitext(os.path.basename(dataPath))[0]
     dataDir = os.path.dirname(dataPath) + "/"
     guessOutPath = "res/guess_out_" + dataName + ".g2o"
@@ -52,11 +55,11 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
     # generate g2o format data
     print "Generating data in g2o format"
     if dataName == "ohiggins":
-        ohigginsRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir)
+        ohigginsRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir, dataSkip, dataSize)
     if dataName == "ohiggins2":
-        ohiggins2Raw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir)
+        ohiggins2Raw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir, dataSkip, dataSize)
     elif dataName == "victoria":
-        victoriaRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir)
+        victoriaRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir, dataSkip, dataSize)
     
     
     # get initial guess
@@ -73,13 +76,16 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
                     "-robustKernel", "Huber",
                     "-robustKernelWidth", str(kernelWidth),
                     "-poseSkip", str(poseSkip),
+                    "-interOpt", str(interOpt),
                     "-o", resPath, guessOutPath])
-                    
+            
     # plot results
+    #sufix = "_opt"
     sufix = "_xi_" + str(xi) + "_op_" + str(infoOdomPos) + "_oa_" + str(infoOdomAng) + "_lp_" + str(infoPointSen) + "_ps_" + str(poseSkip)
     #makeRealPlots(dataPath, figPath) 
     #makeRealPlots(guessOutPath, figPath, "_odom")
-    makeRealPlots(resPath, figPath, sufix)
+    #makeRealPlots(resPath, figPath, sufix)
+    plotResults(dataDir+"gt.g2o", guessOutPath, resPath, figPath, 0, 0)
      
 if __name__ == '__main__':
     main()

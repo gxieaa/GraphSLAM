@@ -55,7 +55,7 @@ def plotResults(gtFilename, guessFilename, optFilename, figFilename, xlim, ylim)
     plt.savefig(figFilename + ".pdf", bbox_inches='tight')
     
     # plot path error
-    pathPlot(gtData, optData, figFilename)
+    #pathPlot(gtData, optData, figFilename)
     
 def makeSubplot(ax, gtData, slamData, title, useLegend, xlim, ylim):
     lw = 1

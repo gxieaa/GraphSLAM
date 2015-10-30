@@ -15,7 +15,9 @@ bool dataAssociation2 (SparseOptimizer& optimizer, int poseIndex, double xi, dou
 
 bool dataAssociation3 (SparseOptimizer& optimizer, int poseIndex, double xi, double maxDistance);
 
-int getMinInd (set<HyperGraph::Edge*> &es, OptimizableGraph::VertexContainer &vc);
+bool dataAssociation4 (SparseOptimizer& optimizer, int poseIndex, double xi, double maxDistance);
+
+int getMaxInd (set<HyperGraph::Edge*> &es, OptimizableGraph::VertexContainer &vc);
 
 double getMaxVar (SparseOptimizer& optimizer, OptimizableGraph::VertexContainer &vc);
 
@@ -27,4 +29,4 @@ bool sharePose (OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2);
 
 bool distantTest (OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double varDistance);
 
-void makeAssociation (OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2);
+void makeAssociation (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2);

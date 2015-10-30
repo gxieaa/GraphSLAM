@@ -10,6 +10,8 @@
 #include "g2o/core/factory.h"
 #include "g2o/stuff/command_args.h"
 
+#include "g2o/core/sparse_optimizer_terminate_action.h"
+
 #include <typeinfo>
 #include <ctime>
 
@@ -21,6 +23,11 @@
 // we use the 2D and 3D SLAM types here
 G2O_USE_TYPE_GROUP(slam2d);
 G2O_USE_TYPE_GROUP(slam3d);
+
+// functions
+void incrementalOptimization (SparseOptimizer& optimizer, int nPoses, double xi, int maxIterations, double maxDistance, int poseSkip, int interOpt);
+void interOptimization (SparseOptimizer& optimizer, int pose, double xi, int maxIterations, double maxDistance);
+void posteriorOptimization (SparseOptimizer& optimizer, double xi, int maxIterations, double maxDistance);
 
 int main(int argc, char** argv) {
 
@@ -39,6 +46,7 @@ int main(int argc, char** argv) {
     string outputFilename;
     string inputFilename;
     int poseSkip;
+    int interOpt;
     CommandArgs arg;
 
     arg.param("i", maxIterations, 10, "perform n iterations, if negative consider the gain");
@@ -49,6 +57,7 @@ int main(int argc, char** argv) {
     arg.param("nonSequential", nonSequential, false, "apply the robust kernel only on loop closures and not odometries");
     arg.param("o", outputFilename, "", "output final version of the graph");
     arg.param("poseSkip", poseSkip, 1, "Optimization step");
+    arg.param("interOpt", interOpt, 100000, "Inter optimization step");
     arg.paramLeftOver("graph-input", inputFilename, "", "graph file which will be processed");
     arg.parseArgs(argc, argv);
 
@@ -92,70 +101,80 @@ int main(int argc, char** argv) {
    
     // compute max distance
     double maxDistance = getMaxDistance (optimizer, xi);
-     
-    // poses loop
-    //cout << "poses: " << poses.size() << endl; 
-    for (int i=0; i<poses.size(); ++i) {
-        cout << "\n### iteration " << iteration++ << ", pose " << i << " ###" << endl;
-        
-        // data association
-        cerr << "Testing associations ...";
-        bool no_more_association = dataAssociation3(optimizer, i, xi, maxDistance);
-        cerr << " done." << endl;
-        
-        // write output file
-        //writeDataFile (outputFilename, optimizer);
-        
-        // read data file and load to optimizer
-        //readDataFile (ifs, outputFilename);
-        //optimizer.clear();
-        //optimizer.load(ifs);
-        //ifs.close();
-        
-        // load robust kernel
-        //loadRobustKernel (robustKernel, nonSequential,  huberWidth, optimizer);
-
-        // optimize
-        optimizer.initializeOptimization();
-        if (i % poseSkip == 0) {    
-            optimizer.optimize(maxIterations);
-        }
-    }
     
-    // posterior optimization loop
-    cout << "\n### Posterior Optimization ###\n" << endl;
-    /*while(true) {
-        // data association
-        cout << "\n### iteration " << iteration++ << " ###\n" << endl;
-        cerr << "Testing associations ...";
-        bool no_more_association  = dataAssociation(optimizer, xi, maxDistance);
-        cerr << " done." << endl;
-        
-        // write output file
-        writeDataFile (outputFilename, optimizer);
-
-        // finish test
-        if (no_more_association) break;
-
-        // read data file and load to optimizer
-        readDataFile (ifs, outputFilename);
-        optimizer.clear();
-        optimizer.load(ifs);
-        ifs.close();
-
-        // load robust kernel
-        loadRobustKernel (robustKernel, nonSequential,  huberWidth, optimizer);
-
-        // optimize
-        optimizer.initializeOptimization();
-        optimizer.optimize(maxIterations);
-    }*/
-
+    // optimization
+    incrementalOptimization (optimizer, poses.size(), xi, maxIterations, maxDistance, poseSkip, interOpt);
+    posteriorOptimization (optimizer, xi, maxIterations, maxDistance);
+    
+    // write data
+    writeDataFile (outputFilename, optimizer);
+    
     // compute time
     clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     cout << "Elapsed time: " << elapsed_secs << " [s]" << endl;
     ProfilerStop();
-
+    
     return 0;
+}
+    
+void incrementalOptimization (SparseOptimizer& optimizer, int nPoses, double xi, int maxIterations, double maxDistance, int poseSkip, int interOpt){
+    for (int i=0; i<nPoses; ++i) {
+        cout << "\n### iteration pose " << i << " ###" << endl;
+        
+        // data association
+        cerr << "Testing associations ...";
+        bool no_more_association = dataAssociation3(optimizer, i, xi, maxDistance);
+        cerr << " done." << endl;       
+
+        // optimize
+        if (i % poseSkip == 0) { 
+            optimizer.initializeOptimization();
+            optimizer.optimize(maxIterations);
+        }
+        
+        // inter optimize
+        if (i % interOpt == 0) interOptimization (optimizer, i, xi, maxIterations, maxDistance);
+    }
+}
+
+  
+void interOptimization (SparseOptimizer& optimizer, int pose, double xi, int maxIterations, double maxDistance) {   
+    int i = 0;
+    cout << "\n### Inter Optimization ###\n" << endl;
+    while(true) {
+        // data association
+        cout << "\n### iteration " << i++ << " ###\n" << endl;
+        cerr << "Testing associations ...";
+        //bool no_more_association  = dataAssociation(optimizer, xi, maxDistance);
+        bool no_more_association = dataAssociation4(optimizer, pose, xi, maxDistance);
+        cerr << " done." << endl;
+
+        // finish test
+        if (no_more_association) break;
+
+        // optimize
+        optimizer.initializeOptimization();
+        optimizer.optimize(maxIterations);
+    }
+}
+
+void posteriorOptimization (SparseOptimizer& optimizer, double xi, int maxIterations, double maxDistance) {   
+    int i = 0;
+    cout << "\n### Posterior Optimization ###\n" << endl;
+    while(true) {
+        // data association
+        cout << "\n### iteration " << i++ << " ###\n" << endl;
+        cerr << "Testing associations ...";
+        bool no_more_association  = dataAssociation(optimizer, xi, maxDistance);
+        //bool no_more_association = dataAssociation2(optimizer, pose, xi, maxDistance);
+        cerr << " done." << endl;
+
+        // finish test
+        if (no_more_association) break;
+
+        // optimize
+        optimizer.initializeOptimization();
+        optimizer.optimize(maxIterations);
+    }
 }

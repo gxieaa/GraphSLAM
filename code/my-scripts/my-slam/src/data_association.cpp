@@ -28,7 +28,7 @@ bool dataAssociation (SparseOptimizer& optimizer, double xi, double maxDistance)
                     //cout << "testing association between (v" << v1->id() << ", " << "v" << v2->id() << ") ... " << endl;
                     if (correspondenceTest(optimizer, v1, v2, xi)) {
                         // succesful association
-                        makeAssociation(v1, v2);
+                        makeAssociation(optimizer, v1, v2);
                         noAssociation = false;
                         associated[i] = true;
                         associated[j] = true;
@@ -44,38 +44,46 @@ bool dataAssociation (SparseOptimizer& optimizer, double xi, double maxDistance)
 
 bool dataAssociation2 (SparseOptimizer& optimizer, int poseIndex, double xi, double maxDistance) {
     // parameters
-    bool noAssociation = true;
     OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
-    OptimizableGraph::Vertex* currentPose = vc[poseIndex];
-    set<HyperGraph::Edge*> edgeSetCurr = currentPose->edges();
-    int minIndCurrVertex = getMinInd(edgeSetCurr, vc);
-    bool associated[vc.size()];
-    fill_n(associated, vc.size(), false);
-    //cout << "pose id: " << currentPose->id() << endl;
+    bool noAssociation = true;
+    vector<int> associated;
+    associated.clear();
     
-    // for all landmarks observed in current pose
-    for (set<HyperGraph::Edge*>::iterator it1 = edgeSetCurr.begin(); it1 != edgeSetCurr.end(); ++it1) {
-        // Assume landmarks are second vertex in vertexContainer
-        OptimizableGraph::Vertex* v1 = static_cast<OptimizableGraph::Vertex*> ((*it1)->vertices()[1]);
-        if (v1->dimension() == 2) {
-            //cout << "current pose masurement id: " << v1->id() << endl; 
-            // for all landmarks of the past
-            int i2 = minIndCurrVertex - 1;
-            OptimizableGraph::Vertex* v2 = vc[i2];
-            while (v2->dimension() == 2) {
-                //cout << "testing association between (v" << v1->id() << ", " << "v" << v2->id() << ") ... " << endl;
-                if (!associated[i2]){
-                    if (distantTest(v1, v2, maxDistance)){
-                        if (correspondenceTest(optimizer, v1, v2, xi)) {
-                            makeAssociation(v1, v2);
-                            noAssociation = false;
-                            associated[i2] = true;
-                            break;
+    for (int i = poseIndex; i>=0; --i) {
+        OptimizableGraph::Vertex* currentPose = vc[i];
+        set<HyperGraph::Edge*> edgeSetCurr = currentPose->edges();
+        //cout << "pose id: " << currentPose->id() << endl;
+        // for all landmarks observed in current pose
+        for (set<HyperGraph::Edge*>::iterator it1 = edgeSetCurr.begin(); it1 != edgeSetCurr.end(); ++it1) {
+            // Assume landmarks are second vertex in vertexContainer
+            OptimizableGraph::Vertex* v1 = static_cast<OptimizableGraph::Vertex*> ((*it1)->vertices()[1]);
+            if (v1->dimension() == 2) {
+                //cout << "current pose masurement id: " << v1->id() << endl; 
+                // for all landmarks of the past
+                for (int j = i-1; j>=0; --j) {
+                    OptimizableGraph::Vertex* pastPose = vc[j];
+                    set<HyperGraph::Edge*> edgeSetPast = pastPose->edges();
+                    for (set<HyperGraph::Edge*>::iterator it2 = edgeSetPast.begin(); it2 != edgeSetPast.end(); ++it2) {
+                        // Assume landmarks are second vertex in vertexContainer
+                        OptimizableGraph::Vertex* v2 = static_cast<OptimizableGraph::Vertex*> ((*it2)->vertices()[1]);
+                        if (v2->dimension() == 2) {
+                            if (find(associated.begin(), associated.end(), v2->id()) == associated.end()) {
+                                if (distantTest(v1, v2, maxDistance)) {
+                                    if (correspondenceTest(optimizer, v1, v2, xi)) {
+                                        makeAssociation(optimizer, v1, v2);
+                                        noAssociation = false;
+                                        associated.push_back(v2->id());
+                                        //goto nextCurrEdge;
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     }
+                    //break;
                 }
-                --i2; 
-                v2 = vc[i2];
+                nextCurrEdge:
+                (void)0;
             }
         }
     }
@@ -102,46 +110,86 @@ bool dataAssociation3 (SparseOptimizer& optimizer, int poseIndex, double xi, dou
             for (int i = poseIndex-1; i>=0; --i) {
                 OptimizableGraph::Vertex* pastPose = vc[i];
                 set<HyperGraph::Edge*> edgeSetPast = pastPose->edges();
-                for (set<HyperGraph::Edge*>::iterator it2 = edgeSetCurr.begin(); it2 != edgeSetCurr.end(); ++it2) {
+                for (set<HyperGraph::Edge*>::iterator it2 = edgeSetPast.begin(); it2 != edgeSetPast.end(); ++it2) {
                     // Assume landmarks are second vertex in vertexContainer
                     OptimizableGraph::Vertex* v2 = static_cast<OptimizableGraph::Vertex*> ((*it2)->vertices()[1]);
                     if (v2->dimension() == 2) {
                         if (find(associated.begin(), associated.end(), v2->id()) == associated.end()) {
                             if (distantTest(v1, v2, maxDistance)) {
                                 if (correspondenceTest(optimizer, v1, v2, xi)) {
-                                    makeAssociation(v1, v2);
+                                    makeAssociation(optimizer, v1, v2);
                                     noAssociation = false;
                                     associated.push_back(v2->id());
-                                    goto nextPastPose;
+                                    //goto nextCurrEdge;
                                     break;
                                 }
                             }
                         }
                     }
                 }
-                nextPastPose:
-                break;
+                //break;
             }
+            nextCurrEdge:
+            (void)0;
         }
     }
     return noAssociation;
 }
 
-int getMinInd (set<HyperGraph::Edge*> &es, OptimizableGraph::VertexContainer &vc) {
-    int minID = INT_MAX;
+bool dataAssociation4 (SparseOptimizer& optimizer, int poseIndex, double xi, double maxDistance) {
+    // parameters
+    bool noAssociation = true;
+    OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
+    bool associated[vc.size()];
+    fill_n(associated, vc.size(), false);
+    OptimizableGraph::Vertex* currentPose = vc[poseIndex];
+    set<HyperGraph::Edge*> edgeSetCurr = currentPose->edges();
+    int nLandmark = getMaxInd (edgeSetCurr, vc);
+    
+    // loop through all pair of landmark poses
+    for (size_t i=0; i<nLandmark; ++i) {
+        OptimizableGraph::Vertex* v1 = vc[i];
+        // check if vertex is landmark
+        if (v1->dimension() == 2) {
+        //if (v1->dimension() == 2 && !associated[i]) {
+            for (size_t j=i+1; j<vc.size(); ++j){
+                OptimizableGraph::Vertex* v2 = vc[j];
+                // check if vertex is landmark
+                //if (v2->dimension() == 2 && !sharePose(v1,v2)) {
+                if (v2->dimension() == 2 && !sharePose(v1,v2) && distantTest(v1, v2, maxDistance)) {                
+                //if (v2->dimension() == 2 && !sharePose(v1,v2) && !associated[j] && distantTest(v1, v2, maxDistance)) { 
+                    //cout << "testing association between (v" << v1->id() << ", " << "v" << v2->id() << ") ... " << endl;
+                    if (correspondenceTest(optimizer, v1, v2, xi)) {
+                        // succesful association
+                        makeAssociation(optimizer, v1, v2);
+                        noAssociation = false;
+                        associated[i] = true;
+                        associated[j] = true;
+                        //goto leaveAssociation;
+                    }
+                }
+            }
+        }
+    }
+    leaveAssociation:
+    return noAssociation;
+}
+
+int getMaxInd (set<HyperGraph::Edge*> &es, OptimizableGraph::VertexContainer &vc) {
+    int maxID = 0;
     for (set<HyperGraph::Edge*>::iterator it1 = es.begin(); it1 != es.end(); ++it1) {
         // Assume landmarks are second vertex in vertexContainer
         OptimizableGraph::Vertex* v1 = static_cast<OptimizableGraph::Vertex*> ((*it1)->vertices()[1]);
-        if (v1->dimension() == 2 && v1->id() < minID) minID = v1->id();
+        if (v1->dimension() == 2 && v1->id() > maxID) maxID = v1->id();
     }
-    int minInd = 0;
+    int maxInd = 0;
     for (int i=0; i<vc.size(); ++i){
-        if (vc[i]->id() == minID) {
-            minInd = i;
+        if (vc[i]->id() == maxID) {
+            maxInd = i;
             break;
         }
     }
-    return minInd;
+    return maxInd;
 }
 
 double getMaxVar(SparseOptimizer &optimizer, OptimizableGraph::VertexContainer &vc){
@@ -192,6 +240,7 @@ bool correspondenceTest (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v
     marginCovMat.bottomLeftCorner(2, 2) = *(spinv.block(v2->hessianIndex(), v1->hessianIndex()));
     marginCovMat.bottomRightCorner(2, 2) = *(spinv.block(v2->hessianIndex(), v2->hessianIndex()));
     Matrix4d marginInfoMat = marginCovMat.inverse();
+    //cout << "marginInfoMat: " << marginInfoMat << endl;
 
     // get landmark estimate vectors
     std::vector<double> v1EstVec;
@@ -203,7 +252,8 @@ bool correspondenceTest (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v
     
     // get landmark difference estimation vector
     Vector2d diffEstVec = v1Est - v2Est;
-
+    //cout << "diffEstVec: " << diffEstVec << endl;
+ 
     // get landmark difference information matrix
     Matrix<double, 4, 2> diffMat;
     diffMat << Matrix2d::Identity(2,2), -1*Matrix2d::Identity(2,2);
@@ -245,7 +295,8 @@ bool distantTest(OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, dou
     return (v1Est - v2Est).norm() < varDistance;
 }
 
-void makeAssociation (OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2) {
+void makeAssociation (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2) {
     //cout << "Association found between (v" << v1->id() << ", " << "v" << v2->id() << ")" << endl;
-    v2->setId(v1->id());
+    //v2->setId(v1->id());
+    optimizer.mergeVertices(v1, v2, false);
 }
