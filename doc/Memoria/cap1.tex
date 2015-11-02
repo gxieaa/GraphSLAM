@@ -1,44 +1,55 @@
 \chapter{Introduction}
 
-This work is immerse in the context of Mobile Robotics. Mobile
-Robotics is the branch of engineering that study machine that can move in an
-environment, that is, they can change their location over time. Traditionally,
-robots were usually used to do a simple, repetitive task in a fixed location, such
-as robots found in assembly lines. In contrast, mobile robots are more versatile
-and able to do a wider variety of tasks, but at the cost of needing more complex
-models to study and control them.
+%This work is immerse in the context of Mobile Robotics. Mobile
+%Robotics is the branch of engineering that study machine that can move in an
+%environment, that is, they can change their location over time. Traditionally,
+%robots were usually used to do a simple, repetitive task in a fixed location, such
+%as robots found in assembly lines. In contrast, mobile robots are more versatile
+%and able to do a wider variety of tasks, but at the cost of needing more complex
+%models to study and control them.
+%
+%Mobile robots frequently have to work in unknown environments, with high
+%uncertainly. Researches have found that a good way to deal with this uncertainly
+%is to treat the involved variables in the problem as random variables. This way
+%the field of Probabilistic Robotics was born.
+%
+%Two of the main problems to be solved in mobile robotics are localization and
+%mapping. Localization means to find an estimate of the location of a robot that is
+%moving on a scene. Mapping is the problem of constructing a map of an unknown
+%environment. When the agent in charge of constructing the map is a robot moving
+%in the same environment, both localization and mapping must be solve at the same
+%time. In Robotics this problem is called Simultaneous Localization and Mapping
+%(SLAM for short). SLAM is a widely studied problem in the academy, and wide
+%variety of solutions exists, all with their own advantages and disadvantages.
+%One particular solution for solving SLAM is GraphSLAM. GraphSLAM was
+%first developed by Sebastian Thrun and Michael Montemerlo in 2006, and to date
+%is considered one of the most robust solutions, in addition of been simple and
+%of relative low complexity. GraphSLAM represents the necessary information re-
+%garding the robot and the map as nodes of a graph. This provides the algorithm
+%with advantages, such as the ability to store the information efficiently, in sparse
+%matrices.
+%
+%The main objective of this work is to implement the GraphSLAM
+%algorithm. To the author knowledge here is no freely available source code of
+%GraphSLAM, and its implementation is invaluable as a benchmark comparison for
+%newer SLAM algorithms.
+%
+%The contribution of this work is to provide a fully functional SLAM
+%algorithm, which could be used for the navigation of robots in real world scenarios,
+%and for the realization of comparative analysis with other SLAM algorithms.
 
-Mobile robots frequently have to work in unknown environments, with high
-uncertainly. Researches have found that a good way to deal with this uncertainly
-is to treat the involved variables in the problem as random variables. This way
-the field of Probabilistic Robotics was born.
+The study of robotic systems is fundamental to achieve the increasingly demanding goal of automating the processes that occur in every aspect of our lives. Autonomous systems are becoming more ubiquitous by every day, while historically they were first used in manufacturing companies, and industrial process, now they are used in areas like farming, mining, transportation, security, medicine, household maintenance, space exploration, military uses and much more.
 
-Two of the main problems to be solved in mobile robotics are localization and
-mapping. Localization means to find an estimate of the location of a robot that is
-moving on a scene. Mapping is the problem of constructing a map of an unknown
-environment. When the agent in charge of constructing the map is a robot moving
-in the same environment, both localization and mapping must be solve at the same
-time. In Robotics this problem is called Simultaneous Localization and Mapping
-(SLAM for short). SLAM is a widely studied problem in the academy, and wide
-variety of solutions exists, all with their own advantages and disadvantages.
-One particular solution for solving SLAM is GraphSLAM. GraphSLAM was
-first developed by Sebastian Thrun and Michael Montemerlo in 2006, and to date
-is considered one of the most robust solutions, in addition of been simple and
-of relative low complexity. GraphSLAM represents the necessary information re-
-garding the robot and the map as nodes of a graph. This provides the algorithm
-with advantages, such as the ability to store the information efficiently, in sparse
-matrices.
+In particular, mobile robotics is the study of mechanical agent that move in an environment. Their ability to change its positions, make mobile robots capable of doing a much wider range of tasks than stationary robots. However, their motion capability comes with an essential problem that must be addressed: as the robot moves, it must compute its new positions to start doing the task that was assigned to. In robotics, the problem of estimating the robot current position is called \textit{localization}. Sensors are used to gather information about the robot location, however, as any kind of sensors is contaminated with noise, robot position can't be retrieved with absolute certainty, but it must be estimated by means of probabilistic methods.  
 
-The main objective of this work is to implement the GraphSLAM
-algorithm. To the author knowledge here is no freely available source code of
-GraphSLAM, and its implementation is invaluable as a benchmark comparison for
-newer SLAM algorithms.
+Broadly, there are two types of sensors used for localization, motion sensors to measure the displacement of the robot in certain timestep, and position sensors that measure its relative position to certain portions of the environment.
 
-The contribution of this work is to provide a fully functional SLAM
-algorithm, which could be used for the navigation of robots in real world scenarios,
-and for the realization of comparative analysis with other SLAM algorithms.
+In the other hand, if the environment in which the robot is immerse is also unknown, it must be estimated alongside the position. The problem of getting an estimate og the robot environment is called \textit{mapping}. When both localization and mapping must be solved concurrently, the problem is called \textit{Simultaneous Localization and Mapping} (SLAM). SLAM is considered somewhat as the ``Holy Grail'' of mobile robotics, as knowing both, robot location and the environment, are crucial  to every robot to work property. The subfield of robotics that studies the probabilistic method and algorithms to solve problems such as SLAM is usually called Probabilistic Robotics.   
+
 
 \section{General Objectives}
+
+
 
 \section{Specific Objectives}
 

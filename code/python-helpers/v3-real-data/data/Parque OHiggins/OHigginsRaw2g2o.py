@@ -59,8 +59,8 @@ def ohigginsRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir, dataSkip, d
                     py = float(odomWords[3])
                     mr = float(measWords[2])
                     mt = float(measWords[3])
-                    lx = mr*math.cos(mt) + px
-                    ly = mr*math.sin(mt) + py
+                    lx = mr*math.cos(mt)
+                    ly = mr*math.sin(mt)
                     fg2o.write("EDGE_SE2_XY " + str(poseID) + " " + str(landID) + " " + str(lx) +
                         " " + str(ly) + " " + str(infoPointSen) + " 0 " + str(infoPointSen) + "\n")
                     landID = landID + 1

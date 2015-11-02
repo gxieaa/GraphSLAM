@@ -1,4 +1,4 @@
-#imports
+    #imports
 import subprocess
 import sys
 import time
@@ -24,7 +24,7 @@ def main():
     poseSkip = 1
     dataSkip = 10
     interOpt = 50
-    dataSize = 150
+    dataSize = 100
     
     # compile
     buildPath = "../../my-scripts/my-slam/build/"
