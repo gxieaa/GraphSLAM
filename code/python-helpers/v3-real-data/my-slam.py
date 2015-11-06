@@ -18,6 +18,7 @@ def main():
     g2oIterations = 10
     xi = 1e-100
     kernelWidth = 1
+<<<<<<< HEAD
     infoOdomPos = 1000
     infoOdomAng = 1000
     infoPointSen = 1000
@@ -25,6 +26,15 @@ def main():
     dataSkip = 10
     interOpt = 50
     dataSize = 500
+=======
+    infoOdomPos = 100
+    infoOdomAng = 100
+    infoPointSen = 1
+    poseSkip = 1
+    dataSkip = 10
+    interOpt = 50
+    dataSize = 700
+>>>>>>> f88f6f9bd3e39f7d0126d90842da63d13d50808d
     
     # compile
     buildPath = "../../my-scripts/my-slam/build/"
@@ -43,9 +53,9 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
     
     # paths
     binOptPath = "../../my-scripts/my-slam/build/"
-    dataPath = "data/Parque OHiggins/ohiggins.g2o"
+    #dataPath = "data/Parque OHiggins/ohiggins.g2o"
     #dataPath = "data/Parque OHiggins 2/ohiggins2.g2o"
-    #dataPath = "data/Victoria Park Felipe/victoria.g2o"
+    dataPath = "data/Victoria Park Felipe/victoria.g2o"
     dataName = os.path.splitext(os.path.basename(dataPath))[0]
     dataDir = os.path.dirname(dataPath) + "/"
     guessOutPath = "res/guess_out_" + dataName + ".g2o"
@@ -78,14 +88,14 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
                     "-poseSkip", str(poseSkip),
                     "-interOpt", str(interOpt),
                     "-o", resPath, guessOutPath])
-            
+        
     # plot results
     #sufix = "_opt"
     sufix = "_xi_" + str(xi) + "_op_" + str(infoOdomPos) + "_oa_" + str(infoOdomAng) + "_lp_" + str(infoPointSen) + "_ps_" + str(poseSkip)
     #makeRealPlots(dataPath, figPath) 
-    #makeRealPlots(guessOutPath, figPath, "_odom")
-    #makeRealPlots(resPath, figPath, sufix)
-    plotResults(dataDir+"gt.g2o", guessOutPath, resPath, figPath, 0, 0)
+    #makeRealPlots(guessOutPath, guessOutPath, figPath, "_odom")
+    makeRealPlots(guessOutPath, resPath, figPath, "")
+    #plotResults(dataDir+"gt.g2o", guessOutPath, resPath, figPath, 0, 0)
      
 if __name__ == '__main__':
     main()

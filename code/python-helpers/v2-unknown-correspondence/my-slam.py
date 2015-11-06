@@ -16,8 +16,8 @@ def main():
     #infoPointSen = [1000, 500, 100, 50, 10]
     infoOdomPos = [1000]
     infoOdomAng = [1000]
-    infoPointSen = [100]
-    xi = 1e-200
+    infoPointSen = [1000]
+    xi = 1e-100
     interOpt = 50
     
     n = len(infoOdomPos)

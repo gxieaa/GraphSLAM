@@ -27,7 +27,7 @@ G2O_USE_TYPE_GROUP(slam3d);
 // functions
 void incrementalOptimization (SparseOptimizer& optimizer, int nPoses, double xi, int maxIterations, double maxDistance, int poseSkip, int interOpt);
 void interOptimization (SparseOptimizer& optimizer, int pose, double xi, int maxIterations, double maxDistance);
-void posteriorOptimization (SparseOptimizer& optimizer, double xi, int maxIterations, double maxDistance);
+void posteriorOptimization (SparseOptimizer& optimizer, int pose, double xi, int maxIterations, double maxDistance);
 
 int main(int argc, char** argv) {
 
@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
     
     // optimization
     incrementalOptimization (optimizer, poses.size(), xi, maxIterations, maxDistance, poseSkip, interOpt);
-    posteriorOptimization (optimizer, xi, maxIterations, maxDistance);
+    posteriorOptimization (optimizer, xi, poses.size(), maxIterations, maxDistance);
     
     // write data
     writeDataFile (outputFilename, optimizer);
@@ -146,8 +146,8 @@ void interOptimization (SparseOptimizer& optimizer, int pose, double xi, int max
         // data association
         cout << "\n### iteration " << i++ << " ###\n" << endl;
         cerr << "Testing associations ...";
-        //bool no_more_association  = dataAssociation(optimizer, xi, maxDistance);
-        bool no_more_association = dataAssociation4(optimizer, pose, xi, maxDistance);
+        //bool no_more_association  = dataAssociation3(optimizer, pose, xi, maxDistance);
+        bool no_more_association = dataAssociation2(optimizer, pose, xi, maxDistance);
         cerr << " done." << endl;
 
         // finish test
@@ -159,15 +159,15 @@ void interOptimization (SparseOptimizer& optimizer, int pose, double xi, int max
     }
 }
 
-void posteriorOptimization (SparseOptimizer& optimizer, double xi, int maxIterations, double maxDistance) {   
+void posteriorOptimization (SparseOptimizer& optimizer, int pose, double xi, int maxIterations, double maxDistance) {   
     int i = 0;
     cout << "\n### Posterior Optimization ###\n" << endl;
     while(true) {
         // data association
         cout << "\n### iteration " << i++ << " ###\n" << endl;
         cerr << "Testing associations ...";
-        bool no_more_association  = dataAssociation(optimizer, xi, maxDistance);
-        //bool no_more_association = dataAssociation2(optimizer, pose, xi, maxDistance);
+        //bool no_more_association  = dataAssociation(optimizer, xi, maxDistance);
+        bool no_more_association = dataAssociation2(optimizer, pose, xi, maxDistance);
         cerr << " done." << endl;
 
         // finish test

@@ -44,8 +44,8 @@ def plotResults(gtFilename, guessFilename, optFilename, figFilename, xlim, ylim)
     
     # create figure
     f, (ax1, ax2) = plt.subplots(1, 2, sharey=True)
-    makeSubplot(ax1, gtData, guessData, "Initial Guess", False, xlim, ylim)
-    makeSubplot(ax2, gtData, optData, "After Solver", True, xlim, ylim)
+    makeSubplot(ax1, gtData, guessData, "Initial Guess", False)
+    makeSubplot(ax2, gtData, optData, "After Solver", True)
     #plt.show()
     
     # print figure
@@ -57,19 +57,19 @@ def plotResults(gtFilename, guessFilename, optFilename, figFilename, xlim, ylim)
     # plot path error
     #pathPlot(gtData, optData, figFilename)
     
-def makeSubplot(ax, gtData, slamData, title, useLegend, xlim, ylim):
+def makeSubplot(ax, gtData, slamData, title, useLegend):
     lw = 1
     ms = 4
-    gtRobPlt, = ax.plot(gtData.poseX, gtData.poseY, '.-', color = '#bbbbf9', linewidth = lw, markersize = ms, label='GT robot path')
+    if gtData is not None:
+        gtRobPlt, = ax.plot(gtData.poseX, gtData.poseY, '.-', color = '#bbbbf9', linewidth = lw, markersize = ms, label='GT robot path')
     lanPlt, = ax.plot(slamData.landmarkX, slamData.landmarkY, 'r+', linewidth = lw, markersize = ms, label='landmarks')
-    robPlt, = ax.plot(slamData.poseX, slamData.poseY, 'b.-', linewidth = lw, markersize = ms, label='robot path')
-    gtLanPlt, = ax.plot(gtData.landmarkX, gtData.landmarkY, '.', color = '#800000', linewidth = lw, markersize = ms, label='GT landmarks')
+    robPlt, = ax.plot(slamData.poseX, slamData.poseY, 'b-', linewidth = lw, markersize = ms, label='robot path')
+    if gtData is not None:
+        gtLanPlt, = ax.plot(gtData.landmarkX, gtData.landmarkY, '.', color = '#800000', linewidth = lw, markersize = ms, label='GT landmarks')
     ax.grid(True)
     ax.set_title(title)
     ax.relim()
     ax.autoscale_view()
-    #ax.set_xlim(xlim)
-    #ax.set_ylim(ylim)
     if useLegend:
         ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
         
@@ -98,21 +98,25 @@ def pathPlot(gtData, optData, figFilename):
     #plt.savefig(figFilename + "_path.png", bbox_inches='tight')
     #plt.savefig(figFilename + "_path.pdf", bbox_inches='tight')
     
-def makeRealPlots (guessPath, figPath, sufix):
+def makeRealPlots (guessPath, optPath, figPath, sufix):
     # get data from file
     guessData = slamData(guessPath)
-    #optData = slamData(optPath)
+    optData = slamData(optPath)
+    f, (ax1, ax2) = plt.subplots(1, 2, sharey=True)
+    makeSubplot(ax1, None, guessData, "Initial Guess", False)
+    makeSubplot(ax2, None, optData, "After Solver", True)
     
     # make figure
-    lw = 1
-    ms = 4
-    f = plt.figure();
-    plt.plot(guessData.landmarkX, guessData.landmarkY, 'r+', linewidth = lw, markersize = ms, label='Guess landmarks')
-    plt.plot(guessData.poseX, guessData.poseY, 'b-', linewidth = lw, markersize = ms, label='Odometry path')
-    plt.grid(True)
-    ax = plt.gca()
-    ax.relim()
-    ax.autoscale_view()
-    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    #lw = 1
+    #ms = 4
+    #f = plt.figure();
+    #plt.plot(guessData.landmarkX, guessData.landmarkY, 'r+', linewidth = lw, markersize = ms, label='Guess landmarks')
+    #plt.plot(guessData.poseX, guessData.poseY, 'b-', linewidth = lw, markersize = ms, label='Odometry path')
+    #plt.grid(True)
+    #ax = plt.gca()
+    #ax.relim()
+    #ax.autoscale_view()
+    #plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     plt.savefig(figPath + sufix + ".pdf", bbox_inches='tight')
+    #plt.show()
     
