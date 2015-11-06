@@ -20,7 +20,7 @@ def main():
     kernelWidth = 1
     infoOdomPos = 100
     infoOdomAng = 100
-    infoPointSen = 1
+    infoPointSen = 10
     poseSkip = 1
     dataSkip = 10
     interOpt = 50
