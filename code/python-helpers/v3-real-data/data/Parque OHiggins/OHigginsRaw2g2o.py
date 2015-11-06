@@ -5,8 +5,8 @@ import math
 def ohigginsRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir, dataSkip, dataSize):
     
     # filenames
-    inDeadReckon = dataDir + "gtpose.dat"
-    #inDeadReckon = dataDir + "deadReckoning.dat"
+    #inDeadReckon = dataDir + "gtpose.dat"
+    inDeadReckon = dataDir + "deadReckoning.dat"
     inMeasurement = dataDir + "measurement.dat"
     outG2O = dataDir + "ohiggins.g2o"
     fg2o = open(outG2O, 'w')
