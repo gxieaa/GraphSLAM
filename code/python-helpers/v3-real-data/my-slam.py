@@ -16,15 +16,15 @@ def main():
     
     # variables
     g2oIterations = 10
-    xi = 1e-200
+    xi = 1e-100
     kernelWidth = 1
-    infoOdomPos = 1000000
-    infoOdomAng = 1000000
-    infoPointSen = 100
+    infoOdomPos = 1000
+    infoOdomAng = 1000
+    infoPointSen = 1000
     poseSkip = 1
     dataSkip = 10
     interOpt = 50
-    dataSize = 100
+    dataSize = 500
     
     # compile
     buildPath = "../../my-scripts/my-slam/build/"
