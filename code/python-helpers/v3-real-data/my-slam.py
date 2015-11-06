@@ -18,15 +18,6 @@ def main():
     g2oIterations = 10
     xi = 1e-100
     kernelWidth = 1
-<<<<<<< HEAD
-    infoOdomPos = 1000
-    infoOdomAng = 1000
-    infoPointSen = 1000
-    poseSkip = 1
-    dataSkip = 10
-    interOpt = 50
-    dataSize = 500
-=======
     infoOdomPos = 100
     infoOdomAng = 100
     infoPointSen = 1
@@ -34,7 +25,6 @@ def main():
     dataSkip = 10
     interOpt = 50
     dataSize = 700
->>>>>>> f88f6f9bd3e39f7d0126d90842da63d13d50808d
     
     # compile
     buildPath = "../../my-scripts/my-slam/build/"
