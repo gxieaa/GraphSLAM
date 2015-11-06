@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
 
     // create the optimizer to load the data and carry out the optimization
     SparseOptimizer optimizer;
-    optimizer.setVerbose(true);
+    optimizer.setVerbose(false);
     optimizer.setAlgorithm(optimizationAlgorithm);
 
     // read data file and load to optimizer

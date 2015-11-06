@@ -21,8 +21,8 @@ def main():
     infoOdomPos = 100
     infoOdomAng = 100
     infoPointSen = 10
-    poseSkip = 1
-    dataSkip = 10
+    poseSkip = 10
+    dataSkip = 100
     interOpt = 50
     dataSize = 700
     
