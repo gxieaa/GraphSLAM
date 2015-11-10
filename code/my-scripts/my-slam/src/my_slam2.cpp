@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
     
     // optimization
     incrementalOptimization (optimizer, poses.size(), xi, maxIterations, maxDistance, poseSkip, interOpt);
-    posteriorOptimization (optimizer, xi, poses.size(), maxIterations, maxDistance);
+    //posteriorOptimization (optimizer, xi, poses.size(), maxIterations, maxDistance);
     
     // write data
     writeDataFile (outputFilename, optimizer);

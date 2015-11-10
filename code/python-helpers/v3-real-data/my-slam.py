@@ -3,6 +3,7 @@ import subprocess
 import sys
 import time
 import os
+from time import gmtime, strftime
 sys.path.append('../commons')
 sys.path.append('data/Parque OHiggins')
 sys.path.append('data/Parque OHiggins 2')
@@ -18,13 +19,12 @@ def main():
     g2oIterations = 10
     xi = 1e-100
     kernelWidth = 1
-    infoOdomPos = 1000
-    infoOdomAng = 1000
-    infoPointSen = 10
-    poseSkip = 1
-    dataSkip = 10
-    interOpt = 50
-    dataSize = 1500
+    infoOdomPos = 1600
+    infoOdomAng = 1500
+    infoPointSen = 5
+    dataSkip = 5
+    interOpt = 500000
+    dataSize = 6000
     
     # compile
     buildPath = "../../my-scripts/my-slam/build/"
@@ -35,11 +35,11 @@ def main():
     
     # run g2o tests
     start_time = time.time()
-    runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen, poseSkip, dataSkip, interOpt, dataSize)
+    runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen, dataSkip, interOpt, dataSize)
     elapsed_time = time.time() - start_time
     print "Total time tests: " + str(elapsed_time) + " [s]"
     
-def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen, poseSkip, dataSkip, interOpt, dataSize):
+def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen, dataSkip, interOpt, dataSize):
     
     # paths
     binOptPath = "../../my-scripts/my-slam/build/"
@@ -75,16 +75,16 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
                     "-t", str(xi),
                     "-robustKernel", "Huber",
                     "-robustKernelWidth", str(kernelWidth),
-                    "-poseSkip", str(poseSkip),
+                    #"-poseSkip", str(poseSkip),
                     "-interOpt", str(interOpt),
                     "-o", resPath, guessOutPath])
         
     # plot results
-    #sufix = "_opt"
-    sufix = "_xi_" + str(xi) + "_op_" + str(infoOdomPos) + "_oa_" + str(infoOdomAng) + "_lp_" + str(infoPointSen) + "_ps_" + str(poseSkip)
+    currTime = strftime("_%Y-%m-%d %H:%M:%S", gmtime())
+    sufix = "_xi_" + str(xi) + "_op_" + str(infoOdomPos) + "_oa_" + str(infoOdomAng) + "_lp_" + str(infoPointSen) + "_dsk_" + str(dataSkip) + "_ds_" + str(dataSize)
     #makeRealPlots(dataPath, figPath) 
     #makeRealPlots(guessOutPath, guessOutPath, figPath, "_odom")
-    makeRealPlots(guessOutPath, resPath, figPath, "")
+    makeRealPlots(guessOutPath, resPath, figPath, currTime + sufix)
     #plotResults(dataDir+"gt.g2o", guessOutPath, resPath, figPath, 0, 0)
      
 if __name__ == '__main__':
