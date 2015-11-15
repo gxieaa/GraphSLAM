@@ -1,0 +1,3 @@
+[submodule "code/gprof2dot/gprof2dot"]
+	path = code/gprof2dot/gprof2dot
+	url = https://github.com/jrfonseca/gprof2dot.git

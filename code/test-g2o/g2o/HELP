@@ -1,0 +1,43 @@
+Usage: g2o [options] [graph-input]
+
+General options:
+-------------------------------------------
+-help / -h           Displays this help.
+
+Program Options:
+-------------------------------------------
+-computeMarginals             computes the marginal covariances of something. FOR TESTING ONLY
+-gain <double>                the gain used to stop optimization (default = 1e-6) (default: 1e-06)
+-gaugeId <int>                force the gauge (default: -1)
+-gaugeList <vector_int>       set the list of gauges separated by commas without spaces 
+  e.g: 1,2,3,4,5 
+-gnudump <string>             dump to gnuplot data file
+-guess                        initial guess based on spanning tree
+-guessOdometry                initial guess based on odometry
+-guiout                       gui output while running incrementally
+-i <int>                      perform n iterations, if negative consider the gain (default: 5)
+-ig <int>                     Maximum number of iterations with gain enabled (default: inf) (default: 2147483647)
+-inc                          run incremetally
+-listRobustKernels            list the registered robust kernels
+-listSolvers                  list the available solvers
+-listTypes                    list the registered types
+-marginalize                  on or off
+-nonSequential                apply the robust kernel only on loop closures and not odometries
+-o <string>                   output final version of the graph
+-printSolverProperties        print the properties of the solver
+-renameTypes <string>         create a lookup for loading types into other types,
+	 TAG_IN_FILE=INTERNAL_TAG_FOR_TYPE,TAG2=INTERNAL2
+	 e.g., VERTEX_CAM=VERTEX_SE3:EXPMAP
+-robustKernel <string>        use this robust error function
+-robustKernelWidth <double>   width for the robust Kernel (only if robustKernel) (default: -1)
+-solver <string>              specify which solver to use underneat
+	 {gn_var, lm_fix3_2, gn_fix6_3, lm_fix7_3} (default: gn_var)
+-solverProperties <string>    set the internal properties of a solver,
+	e.g., initialLambda=0.0001,maxTrialsAfterFailure=2
+-solverlib <string>           specify a solver library which will be loaded
+-stats <string>               specify a file for the statistics
+-summary <string>             append a summary of this optimization run to the summary file passed as argument
+-typeslib <string>            specify a types library which will be loaded
+-update <int>                 updates after x odometry nodes (default: 10)
+-v                            verbose output of the optimization process
+
