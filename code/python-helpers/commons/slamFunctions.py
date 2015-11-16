@@ -51,8 +51,6 @@ def plotResults(gtFilename, guessFilename, optFilename, figFilename, xlim, ylim)
     #plt.show()
     
     # print figure
-    #plt.xlim(xlim)
-    #plt.ylim(ylim)
     #plt.savefig(figFilename + ".png", bbox_inches='tight')
     plt.savefig(figFilename + ".pdf", bbox_inches='tight')
     

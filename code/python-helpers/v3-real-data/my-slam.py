@@ -20,10 +20,10 @@ def main():
     g2oIterations = 10
     xi = 1e-100
     kernelWidth = 1
-    infoOdomPos = 3200
-    infoOdomAng = 6000
+    infoOdomPos = 1600
+    infoOdomAng = 109375
     infoPointSen = 5
-    dataSkip = 10
+    dataSkip = 5
     interOpt = 500000
     dataSize = 10000
     
@@ -68,7 +68,6 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
                      "-o", guessOutPath, dataPath])
                      
     # optimize
-    
     print "Optimize"
     subprocess.call(["env", "CPUPROFILE=./my_slam2_prof.prof",
                     binOptPath+"./my_slam2", 

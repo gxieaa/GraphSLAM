@@ -1,4 +1,3 @@
-res/
 *.prof
 *.callgrind
 *.dot

@@ -9,86 +9,48 @@ from associationFunctions import *
 def main():
     # variables
     g2oIterations = 10
+    xi = 1e-200
     nlandmarks = 30
     simSteps = 400
-    #infoOdomPos = [500, 100, 50, 10, 5]
-    #infoOdomAng = [5000, 1000, 500, 100, 50]
-    #infoPointSen = [1000, 500, 100, 50, 10]
-    infoOdomPos = [1000]
-    infoOdomAng = [1000]
-    infoPointSen = [1000]
-    xi = 1e-100
+    infoOdomPos = 1000
+    infoOdomAng = 1000
+    infoPointSen = 1000
     interOpt = 50
     
-    n = len(infoOdomPos)
-    
     # compile
-    buildPath = "../../my-scripts/my-slam/build/"
+    buildPath = "../../my-scripts/my-slam-final/build/"
     subprocess.call(["make", "-C", buildPath]) 
-    
-    # directory generator
-    dirNames = ['sim_out', 'guess_in', 'guess_out', 'opt_out', 'figs', 'anon_out']
-    makeDirs(dirNames)
     
     # run g2o tests
     start_time = time.time()
-    for i in range(n):
-        runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos[i], infoOdomAng[i], infoPointSen[i], xi, interOpt)
-        
-    elapsed_time = time.time() - start_time
-    print "Total time tests: " + str(elapsed_time) + " [s]"
-    
-def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen, xi, interOpt):
     
     # paths and filenames
     binSimPath = "../../my-scripts/my-simulator/build/"
-    binOptPath = "../../my-scripts/my-slam/build/"
-    parameters = [g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomAng, infoPointSen]
-    paramNames = ["i", "s", "l", "p", "a", "ps"] 
-    simFilename = genFilename(dirNames[0]+"/sim_out", paramNames, parameters,".g2o")
-    guessInFilename = genFilename(dirNames[1]+"/guess_in", paramNames, parameters,".g2o")
-    guessOutFilename = genFilename(dirNames[2]+"/guess_out", paramNames, parameters,".g2o")
-    anonOutFilename = genFilename(dirNames[5]+"/anon_out", paramNames, parameters,".g2o")
-    optFilename = genFilename(dirNames[3]+"/opt_out", paramNames, parameters,".g2o")
-    optFilename2 = genFilename(dirNames[3]+"/opt_out2", paramNames, parameters,".g2o")
-    figFilename = genFilename(dirNames[4]+"/res", paramNames, parameters,"")
-    figFilename2 = genFilename(dirNames[4]+"/res2", paramNames, parameters,"")
+    binOptPath = "../../my-scripts/my-slam-final/build/"
+    suffix = "_xi_" + str(xi) + "_op_" + str(infoOdomPos) + "_oa_" + str(infoOdomAng) + "_lp_" + str(infoPointSen) + "_ds_" + str(simSteps)
+    simPath = "data/sim_out" + suffix + ".g2o"
+    guessInPath = "data/guess_in" + suffix + ".g2o"
+    guessOutPath = "data/guess_out" + suffix + ".g2o"
+    anonOutPath = "data/anon_out" + suffix + ".g2o"
+    optPath = "res/opt_out" + suffix + ".g2o"
+    figPath = "res/res"+ suffix
 
     # get simulation data
     subprocess.call([binSimPath+"./my_simulator", "-hasOdom", "-hasPointSensor",
                      "-nlandmarks", str(nlandmarks), "-simSteps", str(simSteps),
                      "-infoOdomPos", str(infoOdomPos), "-infoOdomAng", str(infoOdomAng),
-                     "-infoPointSen", str(infoPointSen), simFilename])
-    fixNode(simFilename, 1000+nlandmarks)
+                     "-infoPointSen", str(infoPointSen), simPath])
+    fixNode(simPath, 1000+nlandmarks)
     
     # get initial guess
-    getInitialGuess(simFilename, guessInFilename)
+    getInitialGuess(simPath, guessInPath)
     
     # anonymize landmarks
-    anonymizeLandmarks(guessInFilename, anonOutFilename)
+    anonymizeLandmarks(guessInPath, anonOutPath)
     subprocess.call(["g2o", "-i", "0", "-guessOdometry",
-                     "-o", guessOutFilename, anonOutFilename])
+                     "-o", guessOutPath, anonOutPath])
     
-    ### SLAM 2 ## 
     # make optimization
-    
-    subprocess.call(["env", "CPUPROFILE=./my_slam2_prof.prof",
-                    binOptPath+"./my_slam2", 
-                    "-i", str(g2oIterations), 
-                    "-t", str(xi),
-                    #"-robustKernel", "Huber",
-                    #"-robustKernelWidth", str(1),
-                    "-poseSkip", str(1),
-                    "-interOpt", str(interOpt),
-                    "-o", optFilename2, anonOutFilename])
-                     
-    # plot results
-    plotResults(simFilename, guessOutFilename, optFilename2, figFilename2, [-15, 20], [-20, 20])
-    
-    
-    ### SLAM 1 ## 
-    # make optimization
-    '''
     subprocess.call(["env", "CPUPROFILE=./my_slam_prof.prof",
                     binOptPath+"./my_slam", 
                     "-i", str(g2oIterations), 
@@ -96,11 +58,15 @@ def runG2O(dirNames, g2oIterations, nlandmarks, simSteps, infoOdomPos, infoOdomA
                     #"-robustKernel", "Huber",
                     #"-robustKernelWidth", str(1),
                     #"-poseSkip", str(1),
-                    "-o", optFilename, anonOutFilename])
+                    "-interOpt", str(interOpt),
+                    "-o", optPath, anonOutPath])
                      
     # plot results
-    plotResults(simFilename, guessOutFilename, optFilename, figFilename, [-15, 20], [-20, 20])
-    '''
+    plotResults(simPath, guessOutPath, optPath, figPath, None, None)
+    
+    # compute elapsed time
+    elapsed_time = time.time() - start_time
+    print "Total time tests: " + str(elapsed_time) + " [s]"
     
 if __name__ == '__main__':
     main()
