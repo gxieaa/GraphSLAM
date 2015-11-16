@@ -81,11 +81,10 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
         
     # plot results
     currTime = strftime("_%Y-%m-%d %H:%M:%S", gmtime())
-    sufix = "_xi_" + str(xi) + "_op_" + str(infoOdomPos) + "_oa_" + str(infoOdomAng) + "_lp_" + str(infoPointSen) + "_dsk_" + str(dataSkip) + "_ds_" + str(dataSize)
-    #makeRealPlots(dataPath, figPath) 
+    suffix = "_xi_" + str(xi) + "_op_" + str(infoOdomPos) + "_oa_" + str(infoOdomAng) + "_lp_" + str(infoPointSen) + "_dsk_" + str(dataSkip) + "_ds_" + str(dataSize)
     #makeRealPlots(guessOutPath, guessOutPath, figPath, "_odom")
-    makeRealPlots(guessOutPath, resPath, figPath, currTime + sufix)
-    #plotResults(dataDir+"gt.g2o", guessOutPath, resPath, figPath, 0, 0)
+    makeRealPlots(guessOutPath, resPath, figPath, currTime + suffix)
+    #plotResults(dataDir+"gt.g2o", guessOutPath, resPath, figPath, None, None)
      
 if __name__ == '__main__':
     main()
