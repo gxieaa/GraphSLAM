@@ -44,7 +44,7 @@ def main():
                      "-o", optPath, guessInPath])
                      
     # plot results
-    plotResults(simPath, guessOutPath, optPath, figPath, None, None)
+    plotResults(simPath, guessOutPath, optPath, figPath)
     
 if __name__ == '__main__':
     main()

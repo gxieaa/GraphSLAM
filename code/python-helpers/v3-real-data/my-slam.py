@@ -21,7 +21,7 @@ def main():
     xi = 1e-100
     kernelWidth = 1
     infoOdomPos = 1600
-    infoOdomAng = 109375
+    infoOdomAng = 104500
     infoPointSen = 5
     dataSkip = 5
     interOpt = 500000
@@ -31,19 +31,10 @@ def main():
     buildPath = "../../my-scripts/my-slam/build/"
     subprocess.call(["make", "-C", buildPath]) 
     
-    # directory generator
-    makeDirs(["res",])
-    
     # run g2o tests
     start_time = time.time()
-    runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen, dataSkip, interOpt, dataSize)
-    elapsed_time = time.time() - start_time
-    print "Total time tests: " + str(elapsed_time) + " [s]"
-    
-def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSen, dataSkip, interOpt, dataSize):
     
     # paths
-    binOptPath = "../../my-scripts/my-slam/build/"
     #dataPath = "data/Parque OHiggins/ohiggins.g2o"
     #dataPath = "data/Parque OHiggins 2/ohiggins2.g2o"
     dataPath = "data/Victoria Park Felipe/victoria.g2o"
@@ -69,8 +60,8 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
                      
     # optimize
     print "Optimize"
-    subprocess.call(["env", "CPUPROFILE=./my_slam2_prof.prof",
-                    binOptPath+"./my_slam2", 
+    subprocess.call(["env", "CPUPROFILE=./my_slam_prof.prof",
+                    buildPath+"./my_slam", 
                     "-i", str(g2oIterations), 
                     "-t", str(xi),
                     "-robustKernel", "Huber",
@@ -84,7 +75,11 @@ def runG2O(g2oIterations, xi, kernelWidth, infoOdomPos, infoOdomAng, infoPointSe
     suffix = "_xi_" + str(xi) + "_op_" + str(infoOdomPos) + "_oa_" + str(infoOdomAng) + "_lp_" + str(infoPointSen) + "_dsk_" + str(dataSkip) + "_ds_" + str(dataSize)
     #makeRealPlots(guessOutPath, guessOutPath, figPath, "_odom")
     makeRealPlots(guessOutPath, resPath, figPath, currTime + suffix)
-    #plotResults(dataDir+"gt.g2o", guessOutPath, resPath, figPath, None, None)
+    #plotResults(dataDir+"gt.g2o", guessOutPath, resPath, figPath)
+    
+    # compute elapsed time
+    elapsed_time = time.time() - start_time
+    print "Total time tests: " + str(elapsed_time) + " [s]"
      
 if __name__ == '__main__':
     main()

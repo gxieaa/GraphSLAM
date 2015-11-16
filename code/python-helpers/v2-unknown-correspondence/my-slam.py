@@ -18,7 +18,7 @@ def main():
     interOpt = 50
     
     # compile
-    buildPath = "../../my-scripts/my-slam-final/build/"
+    buildPath = "../../my-scripts/my-slam/build/"
     subprocess.call(["make", "-C", buildPath]) 
     
     # run g2o tests
@@ -26,7 +26,6 @@ def main():
     
     # paths and filenames
     binSimPath = "../../my-scripts/my-simulator/build/"
-    binOptPath = "../../my-scripts/my-slam-final/build/"
     suffix = "_xi_" + str(xi) + "_op_" + str(infoOdomPos) + "_oa_" + str(infoOdomAng) + "_lp_" + str(infoPointSen) + "_ds_" + str(simSteps)
     simPath = "data/sim_out" + suffix + ".g2o"
     guessInPath = "data/guess_in" + suffix + ".g2o"
@@ -52,7 +51,7 @@ def main():
     
     # make optimization
     subprocess.call(["env", "CPUPROFILE=./my_slam_prof.prof",
-                    binOptPath+"./my_slam", 
+                    buildPath+"./my_slam", 
                     "-i", str(g2oIterations), 
                     "-t", str(xi),
                     #"-robustKernel", "Huber",
@@ -62,7 +61,7 @@ def main():
                     "-o", optPath, anonOutPath])
                      
     # plot results
-    plotResults(simPath, guessOutPath, optPath, figPath, None, None)
+    plotResults(simPath, guessOutPath, optPath, figPath)
     
     # compute elapsed time
     elapsed_time = time.time() - start_time

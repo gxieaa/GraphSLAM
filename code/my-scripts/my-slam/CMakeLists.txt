@@ -81,7 +81,3 @@ target_link_libraries(my_slam_lib ${G2O_LIBS} ${GPERFTOOLS_LIBRARIES})
 ADD_EXECUTABLE(my_slam src/my_slam.cpp)
 SET_TARGET_PROPERTIES(my_slam PROPERTIES OUTPUT_NAME my_slam${EXE_POSTFIX})
 TARGET_LINK_LIBRARIES(my_slam my_slam_lib)
-
-ADD_EXECUTABLE(my_slam2 src/my_slam2.cpp)
-SET_TARGET_PROPERTIES(my_slam2 PROPERTIES OUTPUT_NAME my_slam2${EXE_POSTFIX})
-TARGET_LINK_LIBRARIES(my_slam2 my_slam_lib)

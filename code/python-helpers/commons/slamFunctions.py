@@ -8,20 +8,6 @@ import errno
 import math
 
 # functions
-def makeDirs(dirNames):
-    for dirName in dirNames:
-        try:
-            os.makedirs(dirName)
-        except OSError as exception:
-            if exception.errno != errno.EEXIST:
-                raise   
-
-def genFilename(prefix, paramNames, params, sufix):
-    s = prefix
-    for i in range(len(params)):
-        s = s + "_" + str(paramNames[i]) + "_" + str(params[i])
-    return s + sufix
-     
 def fixNode(filename, node):
     f = open(filename, 'a')
     f.write("FIX " + str(node))
@@ -38,7 +24,7 @@ def getInitialGuess(gtFilename, guessFilename):
     fGt.close()
     fGuess.close()
     
-def plotResults(gtFilename, guessFilename, optFilename, figFilename, xlim, ylim):
+def plotResults(gtFilename, guessFilename, optFilename, figFilename):
     # get variables from file
     gtData = slamData(gtFilename)
     guessData = slamData(guessFilename)
@@ -96,7 +82,7 @@ def pathPlot(gtData, optData, figFilename):
     plt.xlim([1, len(pathError)+1])
     plt.ylim([0, max(pathError)])
     #plt.savefig(figFilename + "_path.png", bbox_inches='tight')
-    #plt.savefig(figFilename + "_path.pdf", bbox_inches='tight')
+    plt.savefig(figFilename + "_path.pdf", bbox_inches='tight')
     
 def makeRealPlots (guessPath, optPath, figPath, sufix):
     # get data from file
@@ -107,16 +93,5 @@ def makeRealPlots (guessPath, optPath, figPath, sufix):
     makeSubplot(ax2, None, optData, "After Solver", True)
     
     # make figure
-    #lw = 1
-    #ms = 4
-    #f = plt.figure();
-    #plt.plot(guessData.landmarkX, guessData.landmarkY, 'r+', linewidth = lw, markersize = ms, label='Guess landmarks')
-    #plt.plot(guessData.poseX, guessData.poseY, 'b-', linewidth = lw, markersize = ms, label='Odometry path')
-    #plt.grid(True)
-    #ax = plt.gca()
-    #ax.relim()
-    #ax.autoscale_view()
-    #plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     plt.savefig(figPath + sufix + ".pdf", bbox_inches='tight')
     #plt.show()
-    

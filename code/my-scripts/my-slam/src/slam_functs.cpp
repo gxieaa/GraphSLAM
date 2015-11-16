@@ -63,7 +63,6 @@ void loadRobustKernel (string robustKernel, bool nonSequential, double huberWidt
 void getAllPoses (SparseOptimizer &optimizer, OptimizableGraph::VertexContainer &poses) {
     OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
     for (size_t i=0; i<vc.size(); ++i) {
-        //cout << "v" << vc[i]->id() << endl;
         if (vc[i]->dimension() == 3) {
             poses.push_back(vc[i]);
         }
@@ -83,10 +82,8 @@ double getMaxDistance (SparseOptimizer &optimizer, double xi) {
                 OptimizableGraph::Vertex* v1 = static_cast<OptimizableGraph::Vertex*> ((*it1)->vertices()[1]);
                 if (v1->dimension() == 2) {
                     OptimizableGraph::Edge* e = dynamic_cast<OptimizableGraph::Edge*> (*it1);
-                    Eigen::Map<MatrixXd> info(e->informationData(), e->dimension(), e->dimension());
-                    //cout << "meas info mat: " << info << endl; 
+                    Eigen::Map<MatrixXd> info(e->informationData(), e->dimension(), e->dimension()); 
                     measInfo = info(0,0);
-                    //cout << "meas info: " << measInfo << endl;
                     goto endLoops;
                 }
             }
@@ -97,6 +94,5 @@ double getMaxDistance (SparseOptimizer &optimizer, double xi) {
     // get max distance
     double eta = 1 / ( 2*M_PI*(1/measInfo) );
     double maxDistance = sqrt(log(xi/eta) / (-measInfo));
-    //cout << "max distance: " << maxDistance << endl;
     return maxDistance;
 }
