@@ -23,7 +23,7 @@ def main():
     infoOdomPos = 3200
     infoOdomAng = 6000
     infoPointSen = 5
-    dataSkip = 5
+    dataSkip = 10
     interOpt = 500000
     dataSize = 10000
     
