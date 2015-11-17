@@ -18,10 +18,10 @@ def main():
     
     # variables
     g2oIterations = 10
-    xi = 1e-100
+    xi = 1e-50
     kernelWidth = 1
     infoOdomPos = 1600
-    infoOdomAng = 104500
+    infoOdomAng = 20000
     infoPointSen = 5
     dataSkip = 5
     interOpt = 500000
