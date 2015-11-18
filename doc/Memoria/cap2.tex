@@ -44,6 +44,7 @@ In the core of the probabilistic robotics, it is the assumption that one cannot 
 
 \begin{equation}
 \bs{x}_k = \bs{g}(\bs{u}_k, \bs{x}_{k-1}) + \bs{\delta}_k
+\label{eq:motion-model}
 \end{equation}    
 
 Where $\bs{g}$ is a deterministic function that describes the robot's kinematics. $\bs{u}_k$ is the control input that change the pose form $\bs{x}_{k-1}$ to $\bs{x}_k$. And $\bs{\delta}_k$ is a multivariate random Gaussian variable, with zero mean and covariance matrix $\bs{R}_k$ ($\bs{\delta}_k \sim \Nn(\bs{0},\bs{R}_k)$).
@@ -60,6 +61,7 @@ Similarly, the measurement model depicts how the robot obtains information of th
 
 \begin{equation}
 \bs{z}_k^i = \bs{h}(\bs{x}_k,\bs{m}_j,i) + \bs{\varepsilon}_k^i
+\label{eq:measurement-model}
 \end{equation} 
 
 \noindent
