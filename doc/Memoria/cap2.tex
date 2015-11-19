@@ -52,7 +52,7 @@ Where $\bs{g}$ is a deterministic function that describes the robot's kinematics
 Since the motion model involves the addition of a Gaussian random variable, the model itself can be seen as a Gaussian random process, which represents the probability of the robot to end up in pose $\bs{x}_k$, given previous pose $\bs{x}_{k-1}$ and control input $\bs{u}_k$:
 
 \begin{equation}
-p(\bs{x}_k|\bs{u}_k,\bs{x}_{k-1}) = \det(2\pi \bs{R}_k)^{-\frac{1}{2}}\exp\left\lbrace \frac{1}{2}(\bs{x}_k-\bs{g}(\bs{u}_k,\bs{x}_{k-1}))^T
+p(\bs{x}_k|\bs{u}_k,\bs{x}_{k-1}) = \det(2\pi \bs{R}_k)^{-\frac{1}{2}}\exp\left\lbrace -\frac{1}{2}(\bs{x}_k-\bs{g}(\bs{u}_k,\bs{x}_{k-1}))^T
 \bs{R}_k^{-1}(\bs{x}_k-\bs{g}(\bs{u}_k,\bs{x}_{k-1}))\right\rbrace
 \label{eq:motion-pdf}
 \end{equation}
@@ -70,7 +70,7 @@ Where $\bs{m}_j$ represents the $i$-th detected landmark in measurement $\bs{z}_
 Again, this model can be represented as a random process is given by:
 
 \begin{equation}
-p(\bs{z}_k^i|\bs{x}_k,\bs{m}) = \det(2\pi \bs{Q}_k)^{-\frac{1}{2}}\exp\left\lbrace \frac{1}{2}(\bs{z}_k^i-\bs{h}(\bs{x}_k,\bs{m}_j,i))^T
+p(\bs{z}_k^i|\bs{x}_k,\bs{m}) = \det(2\pi \bs{Q}_k)^{-\frac{1}{2}}\exp\left\lbrace -\frac{1}{2}(\bs{z}_k^i-\bs{h}(\bs{x}_k,\bs{m}_j,i))^T
 \bs{Q}_k^{-1}(\bs{z}_k^i-\bs{h}(\bs{x}_k,\bs{m}_j,i))\right\rbrace 
 \label{eq:measure-pdf}
 \end{equation}

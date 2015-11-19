@@ -7,10 +7,10 @@ from slamFunctions import *
 def main():
     # variables
     g2oIterations = 5
-    nlandmarks = 300
-    simSteps = 300
-    infoOdomPos = 1600
-    infoOdomAng = 5000
+    nlandmarks = 100
+    simSteps = 100
+    infoOdomPos = 100
+    infoOdomAng = 100
     infoPointSen = 100
     
     # paths and filenames
@@ -44,6 +44,7 @@ def main():
                      "-o", optPath, guessInPath])
                      
     # plot results
+    plotGuess(simPath, guessOutPath, "res/guess"+ suffix)
     plotResults(simPath, guessOutPath, optPath, figPath)
     
 if __name__ == '__main__':

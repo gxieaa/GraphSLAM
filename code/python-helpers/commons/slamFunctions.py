@@ -23,6 +23,29 @@ def getInitialGuess(gtFilename, guessFilename):
 
     fGt.close()
     fGuess.close()
+   
+def plotGuess (gtFilename, guessFilename, figFilename):
+    # get variables from file
+    gtData = slamData(gtFilename)
+    guessData = slamData(guessFilename)
+    
+    lw = 1
+    ms = 4
+    
+    if gtData is not None:
+        gtRobPlt, = plt.plot(gtData.poseX, gtData.poseY, '.-', color = '#bbbbf9', linewidth = lw, markersize = ms, label='GT robot path')
+    lanPlt, = plt.plot(guessData.landmarkX, guessData.landmarkY, 'r+', linewidth = lw, markersize = ms, label='landmarks')
+    robPlt, = plt.plot(guessData.poseX, guessData.poseY, 'b-', linewidth = lw, markersize = ms, label='robot path')
+    if gtData is not None:
+        gtLanPlt, = plt.plot(gtData.landmarkX, gtData.landmarkY, '.', color = '#800000', linewidth = lw, markersize = ms, label='GT landmarks')
+    
+    ax = plt.axes()
+    ax.grid(True)
+    ax.set_title("Initial Guess")
+    ax.relim()
+    ax.autoscale_view()
+    ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    plt.savefig(figFilename + ".pdf", bbox_inches='tight')
     
 def plotResults(gtFilename, guessFilename, optFilename, figFilename):
     # get variables from file

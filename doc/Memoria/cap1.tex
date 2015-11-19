@@ -53,14 +53,14 @@ Currently, one of the most widely used algorithms to solve SLAM is GraphSLAM. Gr
 
 \section{General Objectives}
 
-The main objective of this work is to implement a offline version of the GraphSLAM algorithm for solving 2D SLAM. The implementation should be able to handle known and unknown data association, and be robust to non-Gaussian noise, outliers and false alarms\todo{review}.
+The main objective of this work is to implement a offline version of the GraphSLAM algorithm for solving 2D SLAM. The implementation should be able to handle known and unknown data association, and be robust to non-Gaussian noise, outliers and false alarms\todo{review}. The g$^2$o (general graph optimization) framework\footnote{https://github.com/RainerKuemmerle/g2o} will be used as a solver for the algorithm.
 
 The contribution of this work is to provide a fully functional SLAM algorithm, which could be used for the navigation of robots in real world scenarios, and as a benchmark comparison for newer SLAM algorithms.
 
 \section{Specific Objectives}
 
 \begin{enumerate}
-    \item Understand and document the g$^2$o framework. g$^2$o is a framework written in \texttt{C++} for graph optimization.\todo{review}
+    \item Learn how to use the g$^2$o framework.
     \item Implement a data association algorithm to handle landmarks of unknown correspondence.
     \item Test the implementation with simulated and real data. 
 \end{enumerate}
