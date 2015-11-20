@@ -182,6 +182,15 @@ Algorithm~\ref{alg:unknown-correspondence} is inefficient. In particular the cor
 
 \subsubsection{Incremental Optimization}
 
+Incremental optimization is based in the following principle: landmarks measured late in the robot's path are subject to the acumulated unciertantly of all past robot's poses. This fact is can be visualized in the simulation in Figure X. This have as concecuence that equivalent landmarks found late in the trayectory will be merged only when all the previous estimates of the pose has already been corrected by the algorithm, making early correspondence test useless.
+
+A way to deal with this problem is to test association only for landmarks measured in early poses, and then test for late poses when the path is corrected. An extreme version of this is the \emph{incremental optimization} algorithm: at each iteration consider only the current pose. Test landmarks observed in current pose with landmarks from all previous poses, and then run the solver. In the next iteration do the same for the next pose, and repeat until the the last pose. Intuitively, the algorithm is incrementally correcting the path with early measured landmark (which has low unciertantly) until all path is corrected. 
+
+The incremental optimization has a suble flaw, once a correspondence test is run between a current and a past measured landmark, it's never tested again, since only current measurements are tested. 
+If a test failed at some point, but posterior correction change the path so that test pass, this association will be miss. It is expected that this situation doesn't occur often, since one usually have a good estimate of the path up to the current pose with the incremental optimization. Nethertheless, this error is absolutelly possible.
+
+To mitigate this problem, \emph{full optimizations} can be run ocationally along with the incremental optimization. Full correspond in testing correspondence between all possible pair of measured landmarks up to the current pose, in a similar way as it is done in Algorithm X. This way a compromise can be achieved between the algorithm speed and performance. In this implementation the user has the is able to choose how the full optimization are run.
+
 \subsubsection{Distant Test}
 
 \subsubsection{Late Landmark Merging}
