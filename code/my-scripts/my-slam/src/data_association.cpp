@@ -98,12 +98,12 @@ bool correspondenceTest (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v
     return likelihood > xi;
 }
 
-bool distantTest(OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double varDistance) {
+bool distantTest(OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double maxDistance) {
     std::vector<double> v1EstVec;
     v1->getEstimateData(v1EstVec);
     Vector2d v1Est(v1EstVec.data());
     std::vector<double> v2EstVec;
     v2->getEstimateData(v2EstVec);
     Vector2d v2Est(v2EstVec.data());
-    return (v1Est - v2Est).norm() < varDistance;
+    return (v1Est - v2Est).norm() < maxDistance;
 }

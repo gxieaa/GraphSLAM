@@ -96,3 +96,7 @@ double getMaxDistance (SparseOptimizer &optimizer, double xi) {
     double maxDistance = sqrt(log(xi/eta) / (-measInfo));
     return maxDistance;
 }
+
+double getMaxDistance2 (double xi) {
+    return 1/(sqrt(2*M_PI*M_E) * xi);
+}
