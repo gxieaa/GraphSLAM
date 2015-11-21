@@ -1,7 +1,7 @@
 \chapter{Methodology and Implementation}
 \label{chap:implementation}
  
-In this chapter the implementation of the GraphSLAM algorithm is presented and explained. The implementation created is capable of solving the SLAM problem in an offline manner for a 2D scenario, in the cases of known and unknown data association.
+In this chapter the implementation developed for the GraphSLAM algorithm is presented and explained. The implementation is capable of solving the SLAM problem in an offline manner for a 2D scenario, in the cases of known and unknown data association.
 
 The g$^2$o framework used in this work provides of a least squares solver for the optimization of equation~\eqref{eq:minimization}, as well as a protocol to define a graph in the SLAM problem. g$^2$o is well optimized and it has several options for the solver, so the known correspondence version of the GraphSLAM algorithm is relative straightforward to implement.
 
@@ -11,7 +11,7 @@ However, g$^2$o doesn't provide a way to handle unknown data association, so the
 
 The first step to implementing the GraphSLAM algorithm is to define a protocol to store and interpret the data on a graph. g$^2$o already provides such protocol. The stored data comes in two types: data from nodes, and data from edges. 
 
-In SLAM context, nodes itself can be of two types, pose nodes and landmark nodes. Pose nodes represent the pose of the robot, in the 2D case they consists in 3 variables: robot's $x$ and $y$ position, and robot's bearing $\theta$. In g$^2$o a pose node is denoted with the keyword \texttt{VERTEX\_SE2}\footnote{Vertex is synonymous of node. SE2 is the Non-Euclidean space that consists of two spatial dimensions and a angular dimension.}. Landmark nodes represent the 2D position ($x$ and $y$) of a landmark. They are denoted with the keyword \texttt{VERTEX\_XY}.
+In SLAM context, nodes itself can be of two types, pose nodes and landmark nodes. Pose nodes represent the pose of the robot, in the 2D case they consist in 3 variables: robot's $x$ and $y$ position, and robot's bearing $\theta$. In g$^2$o a pose node is denoted with the keyword \texttt{VERTEX\_SE2}\footnote{Vertex is synonymous of node. SE2 is the Non-Euclidean space that consists of two spatial dimensions and a angular dimension.}. Landmark nodes represent the 2D position ($x$ and $y$) of a landmark. They are denoted with the keyword \texttt{VERTEX\_XY}.
 
 Edges represents either robot's odometry (data of robot's change in position), or robot's measurements of landmarks. Odometry is measured as the difference between robot's pose at two consecutive timesteps: $(\Delta x, \Delta y, \Delta \theta)$. On the other hand, robot measurement are given as the $x$ and $y$ distance to the landmark relative to the robot reference frame. Figure~\ref{fig:protocol} illustrates the odometry an measurement of a robot. Keywords \texttt{EDGE\_SE2} and \texttt{EDGE\_SE2\_XY} are use to denote odometry and measurement edges respectively.
 
@@ -22,7 +22,7 @@ Edges represents either robot's odometry (data of robot's change in position), o
     \label{fig:protocol}
 \end{figure}
 
-For GraphSLAM to work correctly, one must also provide to the algorithm of the uncertainty of odometry and measurements. These correspond to the covariance matrices $\bs{R}_k$ and $\bs{Q}_k$ from motion~\eqref{eq:motion-model} and measurement~\eqref{eq:measurement-model} model respectively. Actually g$^2$o works with the inverse of the covariance matrix, known as the information matrix, however, these representation are equivalent in terms of the knowledge of the system. Since covariance matrices (and their inverse) are symmetrical, only the upper diagonal elements are needed. In this work it is assumed that the model's uncertainly are time independent, i.e., all nodes have the same values for the information matrix. The notation of each element of the matrices is shown as follows:
+For GraphSLAM to work correctly, one must also provide to the algorithm of the uncertainty of odometry and measurements. These correspond to the covariance matrices $\bs{R}_k$ and $\bs{Q}_k$ from motion~\eqref{eq:motion-model} and measurement~\eqref{eq:measurement-model} model respectively. Actually g$^2$o works with the inverse of the covariance matrix, known as the information matrix, however, these representation are equivalent in terms of the knowledge of the system. Since covariance matrices (and their inverse) are symmetric, only the upper diagonal elements are needed. In this work it is assumed that the model's uncertainly are time independent, i.e., all nodes have the same values for the information matrix. The notation of each element of the matrices is given by:
 
 \begin{equation}
     \bs{R}^{-1}_k = \begin{pmatrix}
@@ -37,9 +37,9 @@ For GraphSLAM to work correctly, one must also provide to the algorithm of the u
     \label{eq:info-matrices}
 \end{equation}
 
-Finally, nodes must be indexed so they can be distinguishable form other nodes, indicated by an integer \texttt{id}. Ids are used in edges to indicate the two nodes that the edge is connecting.
+Finally, nodes must be indexed so they can be distinguishable form other nodes, indicated by an integer \texttt{id}. Ids are used in edges to indicate which two nodes an edge is connecting.
 
-Table~\ref{tab:protocol} summarize the g$^2$o notation to represent nodes and edges:
+Table~\ref{tab:protocol} summarize the g$^2$o notation to represent nodes and edges.
 
 \begin{table}[htbp!]
     \centering
@@ -57,11 +57,15 @@ Table~\ref{tab:protocol} summarize the g$^2$o notation to represent nodes and ed
     \label{tab:protocol}
 \end{table}
 
-In a SLAM problem one usually have only information about robot odometry and measurement, so only edges data is known. All the data can be written in a plain text, that can be latter uploaded to the g$^2$o framework.
+In this work, it is assumed that the first is known with absolute certainty, and is fixed to $(0,0,0)$. In g$^2$o, this is done by the command \texttt{FIX id}, where the id of the first pose is used. Aside of the first pose, it is assume that only information about robot odometry and measurement is provided, so only data from edges is known. 
+
+To use the data in the framework, it can be written in a plain text, that can be latter uploaded to g$^2$o.
 
 \section{The Known Correspondence Case}
 
-Using g$^2$o solving the known correspondence case is just a matter of loading the data to the framework, set the desired parameters, and running the solver. 
+In the known correspondence case each measurement incorporates the information of the landmark sensed form the map. It's equivalent to know the correct values of \texttt{id1} and \texttt{id2} for every \texttt{EDGE\_SE2\_XY}. In a real world scenario, data association is usually not known, however, the known correspondence case still useful in simulations to check the correctness of the algorithm.
+
+With g$^2$o, solving the known correspondence case is just a matter of loading the data to the framework, set the desired parameters, and running the solver. 
 
 The parameters that can be set in the solver includes: 
 
@@ -75,12 +79,12 @@ For the sparse solver, g$^2$o uses third-parties libraries from which the user c
 
 This work provides of a Python script to easily set the parameters of the framework and run the solver. It also provides of a 2D simulator that generates a robot path, landmarks and measurements. It's a modified version of the g$^2$o simulator that allows the user to set the information parameters from matrices~\eqref{eq:info-matrices} in the simulations. This make possible to test the GraphSLAM algorithm for different noise levels. The simulation also allows to compare the results with the ground truth (the true values of the robot path and landmarks generated by the simulator). 
 
-The Python script is also able to generate an initial guess of the estimate using robot odometry and the first measurement of each landmark. The initial guess is necessary for the optimization algorithm to work. Figure~\ref{fig:simulation} shows an example of the ground truth and the initial guess of a SLAM simulation.
+The Python script is also able to generate an initial guess of the estimate using robot odometry and the first measurement of each landmark. The initial guess is used as a starting point for the optimization algorithm. Figure~\ref{fig:simulation} shows an example of the ground truth and the initial guess of a SLAM simulation.
 
 \begin{figure}[htbp!]
     \centering
     \includegraphics[width=0.8\textwidth]{imagenes/guess_op_100_oa_100_lp_100_ds_100.pdf}
-    \caption{Example of an SLAM simulation. The light blue line is ground truth path, and dark red circles are ground truth landmark. The blue line is odometry path, red cross are initial guess landmarks.}
+    \caption{Example of an SLAM simulation. The light blue line is ground truth path, and dark red circles are ground truth landmark. The blue line is odometry path, and red crosses are the initial guess for landmarks.}
     \label{fig:simulation}
 \end{figure}
 
@@ -114,13 +118,13 @@ In this work a Huber kernel of width 1 is used.
 
 \section{The Unknown Correspondence Case}
 
-In the unknown correspondence case there is no information of which landmark generates each measurement, neither of how many landmarks are in the map. The g$^2$o framework does not provides a way to solve the correspondence problem, so a method must be developed to address de issue. In this work the method implemented is based in the one presented in~\cite{graphslam}, with some differences to take in account the speed,  false alarms\todo{review}. 
+In the unknown correspondence case there is no information of which landmark generates each measurement, neither of how many landmarks are in the map. The g$^2$o framework does not provides a way to solve the correspondence problem, so a method must be developed to address the issue. In this work the method implemented is based in the one presented in~\cite{graphslam}, with some differences to take in account the speed, and false alarms\todo{review}. 
 
 \subsection{The Correspondence Test}
 
 The premise of the method is as follows: a correspondence test is developed to check the likelihood of two landmarks being the same. If the likelihood is high enough, the landmarks are merged into one. 
 
-To justify mathematically the correspondence test the variable $\bs{\Delta}_{j,k}=\bs{m}_j-\bs{m}_k$ is defined as the difference in position of landmark $\bs{m}_j$ and $\bs{m}_k$. The posterior probability of $\bs{\Delta}_{j,k}$ over the measurements and control inputs is given by:
+To justify mathematically this test, the variable $\bs{\Delta}_{j,k}=\bs{m}_j-\bs{m}_k$ is defined as the difference in position of landmark $\bs{m}_j$ and $\bs{m}_k$. The posterior probability of $\bs{\Delta}_{j,k}$ over the measurements and control inputs is given by:
 
 \begin{equation}
 p(\bs{\Delta}_{j,k}|\bs{z}_{1:k},\bs{u}_{1:k})=
@@ -144,13 +148,13 @@ p(\bs{\Delta}_{j,k}=0|\bs{z}_{1:k},\bs{u}_{1:k})=
 \exp\left\lbrace-\frac{1}{2}\bs{\mu}_{\bs{\Delta}_{j,k}}^T\bs{\Sigma}_{\bs{\Delta}_{j,k}}^{-1}\bs{\mu}_{\bs{\Delta}_{j,k}}\right\rbrace
 \end{equation}
 
-Then the correspondence test consist in assert a landmark equivalence when the likelihood $\pi_{j=k}$ is grater that a user defined threshold $\chi$. Intuitively a greater threshold means being more strict in considering a landmark merging.
+The correspondence test consist in assert a landmark equivalence when the likelihood $\pi_{j=k}$ is grater that a user defined threshold $\chi$. Intuitively a greater threshold means being more strict in considering a landmark merging.
 
 \subsection{The Unknown Correspondence Algorithm}
 
 Once the correspondence test is defined, it can be used to implement an GraphSLAM algorithm with unknown data association. 
 
-The algorithm works as follows: first all landmarks are initialized as if each measurement correspond to an individual landmark. The correspondence test is run over every possible pair of landmarks, merging landmarks who pass the test. After the tests are finished, the estimate is updated running the solver in the same way as in the case of known correspondence. Then the correspondence test is run again and the solver is run afterward. Correspondence test and solver are alternated until no more landmark associations are found. 
+The algorithm works as follows: first all landmarks are initialized as if each measurement correspond to an individual landmark. The correspondence test is run over every possible pair of landmarks, merging landmarks who pass the test. After the tests are finished, the estimate is updated running the solver in the same way as in the case of known correspondence. After the solver the correspondence tests are run again, and the solver is run afterward. Correspondence test and solver are alternated until no more landmark associations are found. 
 
 Algorithm~\ref{alg:unknown-correspondence} presents the unknown correspondence algorithm in pseudocode. 
 
@@ -178,18 +182,17 @@ Algorithm~\ref{alg:unknown-correspondence} presents the unknown correspondence a
 
 \subsection{Speeding up the Unknown Correspondence Algorithm}
 
-Algorithm~\ref{alg:unknown-correspondence} is inefficient. In particular the correspondence test is run over every pair of landmarks at each iteration. The possible pairs is quadratic in the number of landmarks, furthermore, even landmarks that are obviously not equivalent, such as landmarks greatly separated, are tested. Empirical testing have shown that the bottleneck of the algorithm is the the correspondence test, in particular, the computation of the marginalized covariance $\bs{\Sigma}_{\bs{\Delta}_{j,k}}$, so is necessary call this function as less as possible. The optimization of the algorithm is essential to run GraphSLAM in large datasets. The next subsections presents the strategies adopted to improve the algorithm performance.
+Algorithm~\ref{alg:unknown-correspondence} is inefficient. In particular the correspondence test is run over every pair of landmarks at each iteration. The possible pairs is quadratic in the number of landmarks, furthermore, even landmarks that are obviously not equivalent, such as landmarks greatly separated, are tested. Empirical testing have shown that the bottleneck of the algorithm is the correspondence test, in particular, the computation of the marginalized covariance $\bs{\Sigma}_{\bs{\Delta}_{j,k}}$, so is necessary call this function as less as possible. The optimization of the algorithm is essential to run GraphSLAM in large datasets. The next subsections presents the strategies adopted to improve the algorithm performance.
 
 \subsubsection{Incremental Optimization}
 
-Incremental optimization is based in the following principle: landmarks measured late in the robot's path are subject to the acumulated unciertantly of all past robot's poses. This fact is can be visualized in the simulation in Figure X. This have as concecuence that equivalent landmarks found late in the trayectory will be merged only when all the previous estimates of the pose has already been corrected by the algorithm, making early correspondence test useless.
+Incremental optimization is based in the following principle: landmarks measured late in the robot's path are subject to the accumulated uncertainty of all past robot's poses. This fact is can be visualized in the simulation in Figure~\ref{fig:simulation}. This has as consequence that equivalent landmarks found late in the trajectory will be merged only when all the previous estimates of the pose has already been corrected by the algorithm. Testing correspondence between these landmarks earlier is pointless, simply because their uncertainty is to high to produce an association. 
 
-A way to deal with this problem is to test association only for landmarks measured in early poses, and then test for late poses when the path is corrected. An extreme version of this is the \emph{incremental optimization} algorithm: at each iteration consider only the current pose. Test landmarks observed in current pose with landmarks from all previous poses, and then run the solver. In the next iteration do the same for the next pose, and repeat until the the last pose. Intuitively, the algorithm is incrementally correcting the path with early measured landmark (which has low unciertantly) until all path is corrected. 
+A way to deal with this problem is to test association only for landmarks measured in early poses, and then test for late poses when the path is corrected. An extreme version of this is the \emph{incremental optimization} algorithm: at each iteration consider only the current pose. Test landmarks observed in current pose with landmarks from all previous poses, and then run the solver. In the next iteration do the same for the next pose, and repeat until the last pose. Intuitively, the algorithm is incrementally correcting the path with early measured landmark, which have low uncertainty, until all path is corrected. 
 
-The incremental optimization has a suble flaw, once a correspondence test is run between a current and a past measured landmark, it's never tested again, since only current measurements are tested. 
-If a test failed at some point, but posterior correction change the path so that test pass, this association will be miss. It is expected that this situation doesn't occur often, since one usually have a good estimate of the path up to the current pose with the incremental optimization. Nethertheless, this error is absolutelly possible.
+The incremental optimization has a subtle flaw, once a correspondence test is run between two landmark, it's never tested again, since only current measurements are tested. If a test failed at some point, but posterior correction make it possible for the test to pass, this association will be miss. It is expected that this situation doesn't occur often, since the incremental optimization algorithm usually gives a good estimate of the path up to the current pose. Nevertheless, this error is absolutely possible.
 
-To mitigate this problem, \emph{full optimizations} can be run ocationally along with the incremental optimization. Full correspond in testing correspondence between all possible pair of measured landmarks up to the current pose, in a similar way as it is done in Algorithm X. This way a compromise can be achieved between the algorithm speed and performance. In this implementation the user has the is able to choose how the full optimization are run.
+To mitigate this problem, \emph{full optimizations} can be run occasionally along with the incremental optimization. Full optimization consists in testing correspondence between all possible pair of measured landmarks up to the current pose, in a similar fashion as it is done in Algorithm~\ref{alg:unknown-correspondence}. This way a compromise can be achieved between the algorithm speed and performance. In this implementation the user has the is able to choose the frequency with which the full optimization are run. It is done by setting the number of incremental optimization performed between two full optimizations.  
 
 \subsubsection{Distant Test}
 
