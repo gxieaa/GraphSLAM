@@ -102,7 +102,7 @@ int main(int argc, char** argv) {
    
     // compute max distance
     double maxDistance;
-    if (disFlag) maxDistance = 3;//getMaxDistance (optimizer, xi);
+    if (disFlag) maxDistance = 7;//getMaxDistance (optimizer, xi);
     else maxDistance = getMaxDistance2 (xi);
     cout << "Max Distance: " << maxDistance << endl;
     
