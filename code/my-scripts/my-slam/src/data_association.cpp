@@ -28,7 +28,7 @@ bool incDataAssociation (SparseOptimizer& optimizer, int poseIndex, double xi, d
                     if (v2->dimension() == 2) {
                         if (find(associated.begin(), associated.end(), v2->id()) == associated.end()) {
                             if (distantTest(v1, v2, maxDistance)) {
-                                if (correspondenceTest(optimizer, v1, v2, xi)) {
+                                if (xi <= 0 || correspondenceTest(optimizer, v1, v2, xi)) {
                                     // association successful
                                     optimizer.mergeVertices(v1, v2, false);
                                     noAssociation = false;

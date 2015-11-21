@@ -21,6 +21,4 @@ void loadRobustKernel (string robustKernel, bool nonSequential, double huberWidt
 
 void getAllPoses (SparseOptimizer &optimizer, OptimizableGraph::VertexContainer &poses);
 
-double getMaxDistance (SparseOptimizer &optimizer, double xi);
-
-double getMaxDistance2 (double xi);
+double getMaxDistance (double xi);

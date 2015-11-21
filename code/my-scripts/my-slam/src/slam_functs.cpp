@@ -69,34 +69,34 @@ void getAllPoses (SparseOptimizer &optimizer, OptimizableGraph::VertexContainer 
     }
 }
 
-double getMaxDistance (SparseOptimizer &optimizer, double xi) {
-    double measInfo = 0;
-    OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
+//double getMaxDistance (SparseOptimizer &optimizer, double xi) {
+//    double measInfo = 0;
+//    OptimizableGraph::VertexContainer vc = optimizer.activeVertices();
     
     // get measurement information
-    for (size_t i=0; i<vc.size(); ++i) {
-        if (vc[i]->dimension() == 3) {
-            set<HyperGraph::Edge*> edgeSet = vc[i]->edges();
-            for (set<HyperGraph::Edge*>::iterator it1 = edgeSet.begin(); it1 != edgeSet.end(); ++it1) {
-                // Assume landmarks are second vertex in vertexContainer
-                OptimizableGraph::Vertex* v1 = static_cast<OptimizableGraph::Vertex*> ((*it1)->vertices()[1]);
-                if (v1->dimension() == 2) {
-                    OptimizableGraph::Edge* e = dynamic_cast<OptimizableGraph::Edge*> (*it1);
-                    Eigen::Map<MatrixXd> info(e->informationData(), e->dimension(), e->dimension()); 
-                    measInfo = info(0,0);
-                    goto endLoops;
-                }
-            }
-        }
-    }
-    endLoops:
+//    for (size_t i=0; i<vc.size(); ++i) {
+//        if (vc[i]->dimension() == 3) {
+//            set<HyperGraph::Edge*> edgeSet = vc[i]->edges();
+//            for (set<HyperGraph::Edge*>::iterator it1 = edgeSet.begin(); it1 != edgeSet.end(); ++it1) {
+//                // Assume landmarks are second vertex in vertexContainer
+//                OptimizableGraph::Vertex* v1 = static_cast<OptimizableGraph::Vertex*> ((*it1)->vertices()[1]);
+//                if (v1->dimension() == 2) {
+//                    OptimizableGraph::Edge* e = dynamic_cast<OptimizableGraph::Edge*> (*it1);
+//                    Eigen::Map<MatrixXd> info(e->informationData(), e->dimension(), e->dimension()); 
+//                    measInfo = info(0,0);
+//                    goto endLoops;
+//                }
+//            }
+//        }
+//    }
+//    endLoops:
     
     // get max distance
-    double eta = 1 / ( 2*M_PI*(1/measInfo) );
-    double maxDistance = sqrt(log(xi/eta) / (-measInfo));
-    return maxDistance;
-}
+//    double eta = 1 / ( 2*M_PI*(1/measInfo) );
+//    double maxDistance = sqrt(log(xi/eta) / (-measInfo));
+//    return maxDistance;
+//}
 
-double getMaxDistance2 (double xi) {
+double getMaxDistance (double xi) {
     return 1/(sqrt(2*M_PI*M_E) * xi);
 }

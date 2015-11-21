@@ -26,8 +26,8 @@ def main():
     infoPointSen = 5
     dataSkip = 5
     interOpt = 500000
-    dataSize = 2000
-    disFlag = 1
+    dataSize = 1000
+    disTest = 7
     
     # compile
     buildPath = "../../my-scripts/my-slam/build/"
@@ -70,7 +70,7 @@ def main():
                     "-robustKernelWidth", str(kernelWidth),
                     #"-poseSkip", str(poseSkip),
                     "-interOpt", str(interOpt),
-                    "-disFlag", str(disFlag),
+                    "-disTest", str(disTest),
                     "-o", resPath, guessOutPath])
         
     # plot results

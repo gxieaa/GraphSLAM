@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
     string inputFilename;
     int poseSkip;
     int interOpt;
-    int disFlag;
+    int disTest;
     CommandArgs arg;
 
     arg.param("i", maxIterations, 10, "perform n iterations, if negative consider the gain");
@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
     arg.param("o", outputFilename, "", "output final version of the graph");
     arg.param("poseSkip", poseSkip, 1, "Optimization step");
     arg.param("interOpt", interOpt, 100000, "Inter optimization step");
-    arg.param("disFlag", disFlag, 1, "disFlag");
+    arg.param("disTest", disTest, 0, "max distant for association, used only if xi <= 0");
     arg.paramLeftOver("graph-input", inputFilename, "", "graph file which will be processed");
     arg.parseArgs(argc, argv);
     
@@ -102,8 +102,8 @@ int main(int argc, char** argv) {
    
     // compute max distance
     double maxDistance;
-    if (disFlag) maxDistance = 7;//getMaxDistance (optimizer, xi);
-    else maxDistance = getMaxDistance2 (xi);
+    if (xi <= 0 && disTest > 0) maxDistance = disTest;
+    else maxDistance = getMaxDistance (xi);
     cout << "Max Distance: " << maxDistance << endl;
     
     // optimization
