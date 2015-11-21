@@ -15,4 +15,4 @@ bool fullDataAssociation (SparseOptimizer& optimizer, int poseIndex, double xi, 
 
 bool correspondenceTest (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double xi);
 
-bool distantTest (OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double varDistance);
+bool distantTest (OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double maxDistance);

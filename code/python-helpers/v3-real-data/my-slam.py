@@ -18,7 +18,8 @@ def main():
     
     # variables
     g2oIterations = 10
-    xi = 1e-50
+    #xi = 1e-100
+    xi = 0.035674
     kernelWidth = 1
     infoOdomPos = 1600
     infoOdomAng = 20000
@@ -26,6 +27,7 @@ def main():
     dataSkip = 5
     interOpt = 500000
     dataSize = 10000
+    disFlag = 0
     
     # compile
     buildPath = "../../my-scripts/my-slam/build/"
@@ -68,6 +70,7 @@ def main():
                     "-robustKernelWidth", str(kernelWidth),
                     #"-poseSkip", str(poseSkip),
                     "-interOpt", str(interOpt),
+                    "-disFlag", str(disFlag),
                     "-o", resPath, guessOutPath])
         
     # plot results

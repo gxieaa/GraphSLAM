@@ -46,6 +46,7 @@ int main(int argc, char** argv) {
     string inputFilename;
     int poseSkip;
     int interOpt;
+    int disFlag;
     CommandArgs arg;
 
     arg.param("i", maxIterations, 10, "perform n iterations, if negative consider the gain");
@@ -57,9 +58,10 @@ int main(int argc, char** argv) {
     arg.param("o", outputFilename, "", "output final version of the graph");
     arg.param("poseSkip", poseSkip, 1, "Optimization step");
     arg.param("interOpt", interOpt, 100000, "Inter optimization step");
+    arg.param("disFlag", disFlag, 1, "disFlag");
     arg.paramLeftOver("graph-input", inputFilename, "", "graph file which will be processed");
     arg.parseArgs(argc, argv);
-
+    
     // list robust kernel
     listRobustKernels (listKernelsBool);
 
@@ -89,7 +91,7 @@ int main(int argc, char** argv) {
 
     // load robust kernel
     loadRobustKernel (robustKernel, nonSequential,  huberWidth, optimizer);
-
+    
     // initial guess
     optimizer.initializeOptimization();
     optimizer.optimize(maxIterations);
@@ -99,7 +101,10 @@ int main(int argc, char** argv) {
     getAllPoses (optimizer, poses);
    
     // compute max distance
-    double maxDistance = getMaxDistance (optimizer, xi);
+    double maxDistance;
+    if (disFlag) maxDistance = getMaxDistance (optimizer, xi);
+    else maxDistance = getMaxDistance2 (xi);
+    cout << "Max Distance: " << maxDistance << endl;
     
     // optimization
     incrementalOptimization (optimizer, poses.size(), xi, maxIterations, maxDistance, poseSkip, interOpt);
