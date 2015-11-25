@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
     arg.param("o", outputFilename, "", "output final version of the graph");
     arg.param("poseSkip", poseSkip, 1, "Optimization step");
     arg.param("interOpt", interOpt, 100000, "Inter optimization step");
-    arg.param("disTest", disTest, 0, "max distant for association, used only if xi <= 0");
+    arg.param("disTest", disTest, 0, "max distant for association, used only if distTest > 0");
     arg.paramLeftOver("graph-input", inputFilename, "", "graph file which will be processed");
     arg.parseArgs(argc, argv);
     
@@ -102,7 +102,7 @@ int main(int argc, char** argv) {
    
     // compute max distance
     double maxDistance;
-    if (xi <= 0 && disTest > 0) maxDistance = disTest;
+    if (disTest > 0) maxDistance = disTest;
     else maxDistance = getMaxDistance (xi);
     cout << "Max Distance: " << maxDistance << endl;
     
@@ -124,15 +124,15 @@ int main(int argc, char** argv) {
     
 void incrementalOptimization (SparseOptimizer& optimizer, int nPoses, double xi, int maxIterations, double maxDistance, int poseSkip, int interOpt){
     for (int i=0; i<nPoses; ++i) {
-        cout << "\n### iteration pose " << i << " ###" << endl;
+        cout << "\n### iteration pose " << i << " (incremental) ###" << endl;
         
         // data association
         cerr << "Testing associations ...";
-        bool no_more_association = incDataAssociation(optimizer, i, xi, maxDistance);
-        cerr << " done." << endl;       
+        bool no_association = incDataAssociation(optimizer, i, xi, maxDistance);
+        cerr << " done." << endl;
 
         // optimize
-        if (i % poseSkip == 0) { 
+        if (i % poseSkip == 0 && !no_association) {
             optimizer.initializeOptimization();
             optimizer.optimize(maxIterations);
         }
@@ -143,12 +143,12 @@ void incrementalOptimization (SparseOptimizer& optimizer, int nPoses, double xi,
 }
 
   
-void fullOptimization (SparseOptimizer& optimizer, int pose, double xi, int maxIterations, double maxDistance) {   
+void fullOptimization (SparseOptimizer& optimizer, int pose, double xi, int maxIterations, double maxDistance) {
     int i = 0;
     cout << "\n### Full Optimization ###\n" << endl;
     while(true) {
         // data association
-        cout << "\n### iteration " << i++ << " ###\n" << endl;
+        cout << "\n### iteration " << i++ << " (full) ###\n" << endl;
         cerr << "Testing associations ...";
         bool no_more_association = fullDataAssociation(optimizer, pose, xi, maxDistance);
         cerr << " done." << endl;
