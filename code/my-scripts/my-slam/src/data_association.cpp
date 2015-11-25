@@ -20,17 +20,18 @@ bool incDataAssociation (SparseOptimizer& optimizer, int poseIndex, double xi, d
         if (v1->dimension() == 2) {
             // for all landmarks of the past
             for (int i = poseIndex-1; i>=0; --i) {
-                OptimizableGraph::Vertex* pastPose = vc[i];
+		OptimizableGraph::Vertex* pastPose = vc[i];
                 set<HyperGraph::Edge*> edgeSetPast = pastPose->edges();
                 for (set<HyperGraph::Edge*>::iterator it2 = edgeSetPast.begin(); it2 != edgeSetPast.end(); ++it2) {
                     // Assume landmarks are second vertex in vertexContainer
                     OptimizableGraph::Vertex* v2 = static_cast<OptimizableGraph::Vertex*> ((*it2)->vertices()[1]);
-                    if (v2->dimension() == 2) {
+                    if (v2->dimension() == 2 && v2->id() != v1->id()) {
                         if (find(associated.begin(), associated.end(), v2->id()) == associated.end()) {
                             if (distantTest(v1, v2, maxDistance)) {
                                 if (xi <= 0 || correspondenceTest(optimizer, v1, v2, xi)) {
                                     // association successful
-                                    optimizer.mergeVertices(v1, v2, false);
+                                    //cout << "asso: " << v1->id() << ", " << v2->id() << endl;
+				    optimizer.mergeVertices(v1, v2, false);
                                     noAssociation = false;
                                     associated.push_back(v2->id());
                                     break;
@@ -47,12 +48,13 @@ bool incDataAssociation (SparseOptimizer& optimizer, int poseIndex, double xi, d
 
 bool fullDataAssociation (SparseOptimizer& optimizer, int poseIndex, double xi, double maxDistance) {
     // parameters
-    bool noAssociation = false;
+    bool noAssociation = true;
     
     // for all past poses
     for (int i = poseIndex; i>=0; --i) {
-        // test association
-        noAssociation = noAssociation || incDataAssociation (optimizer, i, xi, maxDistance);
+        //cout << "pose : " << i << endl;
+	// test association
+        noAssociation = noAssociation && incDataAssociation (optimizer, i, xi, maxDistance);
     }
     return noAssociation;
 }

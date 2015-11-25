@@ -1,5 +1,5 @@
 
-    #imports
+#imports
 import subprocess
 import sys
 import time
@@ -17,17 +17,16 @@ from victoriaRaw2g2o import *
 def main():
     
     # variables
-    g2oIterations = 10
-    #xi = 1e-100
+    g2oIterations = 15
     xi = 0
-    kernelWidth = 1
-    infoOdomPos = 1600
-    infoOdomAng = 1600
+    infoOdomPos = 8000
+    infoOdomAng = 100000
     infoPointSen = 5
-    dataSkip = 5
-    interOpt = 500000
-    dataSize = 1000
-    disTest = 7
+    dataSkip = 1
+    interOpt = 500
+    dataSize = 62000
+    disTest = 5
+    #kernelWidth = 1
     
     # compile
     buildPath = "../../my-scripts/my-slam/build/"
@@ -66,8 +65,8 @@ def main():
                     buildPath+"./my_slam", 
                     "-i", str(g2oIterations), 
                     "-t", str(xi),
-                    "-robustKernel", "Huber",
-                    "-robustKernelWidth", str(kernelWidth),
+                    #"-robustKernel", "Huber",
+                    #"-robustKernelWidth", str(kernelWidth),
                     #"-poseSkip", str(poseSkip),
                     "-interOpt", str(interOpt),
                     "-disTest", str(disTest),
@@ -75,7 +74,7 @@ def main():
         
     # plot results
     currTime = strftime("_%Y-%m-%d %H:%M:%S", gmtime())
-    suffix = "_xi_" + str(xi) + "_op_" + str(infoOdomPos) + "_oa_" + str(infoOdomAng) + "_lp_" + str(infoPointSen) + "_dsk_" + str(dataSkip) + "_ds_" + str(dataSize)
+    suffix = "_it_" + str(g2oIterations)  + "_xi_" + str(xi) + "_op_" + str(infoOdomPos) + "_oa_" + str(infoOdomAng) + "_lp_" + str(infoPointSen) + "_dsk_" + str(dataSkip) + "_io_"  + str(interOpt) + "_ds_" + str(dataSize) + "_dt_" + str(disTest)
     #makeRealPlots(guessOutPath, guessOutPath, figPath, "_odom")
     makeRealPlots(guessOutPath, resPath, figPath, currTime + suffix)
     #plotResults(dataDir+"gt.g2o", guessOutPath, resPath, figPath)
