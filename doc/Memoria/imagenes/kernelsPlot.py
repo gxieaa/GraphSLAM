@@ -33,6 +33,8 @@ plt.plot(x, pseudo, linewidth=lw, label='Pseudo Huber', color = '#800000')
 plt.xlim([-xl, xl])
 plt.ylim([0, 10])
 plt.grid(True)
+plt.xlabel('$x$')
+plt.ylabel('$f(x)$')
 
 ax = plt.subplot(111)
 box = ax.get_position()
