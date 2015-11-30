@@ -17,16 +17,17 @@ from victoriaRaw2g2o import *
 def main():
     
     # variables
-    g2oIterations = 15
-    xi = 0
-    infoOdomPos = 8000
-    infoOdomAng = 100000
+    g2oIterations = 20
+    xi = 0.001
+    infoOdomPos = 1600
+    infoOdomAng = 20000
     infoPointSen = 5
-    dataSkip = 1
+    dataSkip = 5
     interOpt = 500
-    dataSize = 62000
-    disTest = 5
-    #kernelWidth = 1
+    dataSize = 2000
+    disTest = 0
+    kernelWidth = 1
+    poseSkip = 1
     
     # compile
     buildPath = "../../my-scripts/my-slam/build/"
@@ -65,16 +66,16 @@ def main():
                     buildPath+"./my_slam", 
                     "-i", str(g2oIterations), 
                     "-t", str(xi),
-                    #"-robustKernel", "Huber",
-                    #"-robustKernelWidth", str(kernelWidth),
-                    #"-poseSkip", str(poseSkip),
+                    "-robustKernel", "Huber",
+                    "-robustKernelWidth", str(kernelWidth),
+                    "-poseSkip", str(poseSkip),
                     "-interOpt", str(interOpt),
                     "-disTest", str(disTest),
                     "-o", resPath, guessOutPath])
         
     # plot results
     currTime = strftime("_%Y-%m-%d %H:%M:%S", gmtime())
-    suffix = "_it_" + str(g2oIterations)  + "_xi_" + str(xi) + "_op_" + str(infoOdomPos) + "_oa_" + str(infoOdomAng) + "_lp_" + str(infoPointSen) + "_dsk_" + str(dataSkip) + "_io_"  + str(interOpt) + "_ds_" + str(dataSize) + "_dt_" + str(disTest)
+    suffix = "_it_" + str(g2oIterations)  + "_xi_" + str(xi) + "_op_" + str(infoOdomPos) + "_oa_" + str(infoOdomAng) + "_lp_" + str(infoPointSen) + "_dsk_" + str(dataSkip) + "_io_"  + str(interOpt) + "_ds_" + str(dataSize) + "_dt_" + str(disTest) + "_kw_" + str(kernelWidth) + "_ps_" + str(poseSkip)
     #makeRealPlots(guessOutPath, guessOutPath, figPath, "_odom")
     makeRealPlots(guessOutPath, resPath, figPath, currTime + suffix)
     #plotResults(dataDir+"gt.g2o", guessOutPath, resPath, figPath)
