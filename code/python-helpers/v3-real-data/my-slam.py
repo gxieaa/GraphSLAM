@@ -5,24 +5,24 @@ import time
 import os
 from time import gmtime, strftime
 sys.path.append('../commons')
+sys.path.append('data/ROS')
 sys.path.append('data/Parque OHiggins')
-sys.path.append('data/Parque OHiggins 2')
-sys.path.append('data/Victoria Park Felipe')
+sys.path.append('data/Victoria Park')
 from slamFunctions import *
+from ROSRaw2g2o import *
 from OHigginsRaw2g2o import *
-from OHiggins2Raw2g2o import *
 from victoriaRaw2g2o import *
     
 # variables
 g2oIterations = 20
-xi = 0.001
-infoOdomPos = 1600
-infoOdomAng = 20000
-infoPointSen = 5
-dataSkip = 5
+xi = 0
+infoOdomPos = 10000
+infoOdomAng = 10000
+infoPointSen = 100
+dataSkip = 10
 interOpt = 500
-dataSize = 2000
-disTest = 0
+dataSize = 100000
+disTest = 5
 kernelWidth = 1
 poseSkip = 1
 
@@ -35,8 +35,8 @@ start_time = time.time()
 
 # paths
 #dataPath = "data/ROS/ROS.g2o"
-#dataPath = "data/Parque OHiggins/ohiggins.g2o"
-dataPath = "data/Victoria Park/victoria.g2o"
+dataPath = "data/Parque OHiggins/ohiggins.g2o"
+#dataPath = "data/Victoria Park/victoria.g2o"
 dataName = os.path.splitext(os.path.basename(dataPath))[0]
 dataDir = os.path.dirname(dataPath) + "/"
 guessOutPath = "res/guess_out_" + dataName + ".g2o"

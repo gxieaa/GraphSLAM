@@ -8,7 +8,7 @@ def ROSRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir, dataSkip, dataSi
     #inDeadReckon = dataDir + "gtpose.dat"
     inDeadReckon = dataDir + "deadReckoning.dat"
     inMeasurement = dataDir + "measurement.dat"
-    outG2O = dataDir + "ohiggins.g2o"
+    outG2O = dataDir + "ROS.g2o"
     fg2o = open(outG2O, 'w')
     
     odometry = [line.rstrip('\n') for line in open(inDeadReckon)]

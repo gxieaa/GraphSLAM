@@ -7,7 +7,7 @@ def ohigginsRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir, dataSkip, d
     # filenames
     inDeadReckon = dataDir + "deadReckoning.dat"
     inMeasurement = dataDir + "measurement.dat"
-    outG2O = dataDir + "ohiggins2.g2o"
+    outG2O = dataDir + "ohiggins.g2o"
     fg2o = open(outG2O, 'w')
     
     odometry = [line.rstrip('\n') for line in open(inDeadReckon)]
