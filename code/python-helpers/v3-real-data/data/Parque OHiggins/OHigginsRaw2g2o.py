@@ -1,14 +1,13 @@
 # imports
 import shlex
 import math
-    
+
 def ohigginsRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir, dataSkip, dataSize):
     
     # filenames
-    #inDeadReckon = dataDir + "gtpose.dat"
     inDeadReckon = dataDir + "deadReckoning.dat"
     inMeasurement = dataDir + "measurement.dat"
-    outG2O = dataDir + "ohiggins.g2o"
+    outG2O = dataDir + "ohiggins2.g2o"
     fg2o = open(outG2O, 'w')
     
     odometry = [line.rstrip('\n') for line in open(inDeadReckon)]
@@ -30,7 +29,6 @@ def ohigginsRaw2g2o(infoOdomPos, infoOdomAng, infoPointSen, dataDir, dataSkip, d
             if i+dataSkip < len(odometry):
                 # odometry
                 nextWords = shlex.split(odometry[i+dataSkip])
-                currentPose = [float(odomWords[2]), float(odomWords[3]), float(odomWords[4])]
                 x1 = float(odomWords[2])
                 y1 = float(odomWords[3])
                 a1 = float(odomWords[4])

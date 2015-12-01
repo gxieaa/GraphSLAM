@@ -2,7 +2,7 @@
 import shlex
 import string
 
-# clam data class
+# slam data class
 class slamData():
  
     def __init__(self, dataFilename):
