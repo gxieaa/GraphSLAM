@@ -14,8 +14,7 @@ g2o framework ([link](https://github.com/RainerKuemmerle/g2o)) installed is requ
 ### Directories:
 - code:
     - my-scripts: C++ scripts that performs SLAM magic
-    - python-helpers: Python scripts that make easy to make GraphSLAM test
-    - g2o-tests: Various g2o tests
+    - python-helpers: Python scripts that make easy to run GraphSLAM test
+    - gprof2dot: Module to generate profiler graph (for performace test)
 - doc:
     - Memoria: Memoria (tesis) document explaining the work
-    - memoria guide: just some documents explaning how to write a Memoria 

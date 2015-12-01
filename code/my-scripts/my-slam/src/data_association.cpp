@@ -52,8 +52,7 @@ bool fullDataAssociation (SparseOptimizer& optimizer, int poseIndex, double xi, 
     
     // for all past poses
     for (int i = poseIndex; i>=0; --i) {
-        //cout << "pose : " << i << endl;
-	// test association
+	    // test association
         noAssociation = noAssociation && incDataAssociation (optimizer, i, xi, maxDistance);
     }
     return noAssociation;
