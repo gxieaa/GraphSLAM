@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
     string inputFilename;
     int poseSkip;
     int interOpt;
-    int disTest;
+    double disTest;
     CommandArgs arg;
 
     arg.param("i", maxIterations, 10, "perform n iterations, if negative consider the gain");

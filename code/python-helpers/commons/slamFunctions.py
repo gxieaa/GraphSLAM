@@ -47,7 +47,7 @@ def plotGuess (gtFilename, guessFilename, figFilename):
     ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     plt.savefig(figFilename + ".pdf", bbox_inches='tight')
     
-def plotResults(gtFilename, guessFilename, optFilename, figFilename):
+def plotResults(gtFilename, guessFilename, optFilename, figFilename, suffix):
     # get variables from file
     gtData = slamData(gtFilename)
     guessData = slamData(guessFilename)
@@ -61,7 +61,7 @@ def plotResults(gtFilename, guessFilename, optFilename, figFilename):
     
     # print figure
     #plt.savefig(figFilename + ".png", bbox_inches='tight')
-    plt.savefig(figFilename + ".pdf", bbox_inches='tight')
+    plt.savefig(figFilename + suffix + ".pdf", bbox_inches='tight')
     
     # plot path error
     #pathPlot(gtData, optData, figFilename)
@@ -107,7 +107,7 @@ def pathPlot(gtData, optData, figFilename):
     #plt.savefig(figFilename + "_path.png", bbox_inches='tight')
     plt.savefig(figFilename + "_path.pdf", bbox_inches='tight')
     
-def makeRealPlots (guessPath, optPath, figPath, sufix):
+def makeRealPlots (guessPath, optPath, figPath, suffix):
     # get data from file
     guessData = slamData(guessPath)
     optData = slamData(optPath)
@@ -116,5 +116,5 @@ def makeRealPlots (guessPath, optPath, figPath, sufix):
     makeSubplot(ax2, None, optData, "After Solver", True)
     
     # make figure
-    plt.savefig(figPath + sufix + ".pdf", bbox_inches='tight')
+    plt.savefig(figPath + suffix + ".pdf", bbox_inches='tight')
     #plt.show()

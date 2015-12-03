@@ -16,14 +16,14 @@ from victoriaRaw2g2o import *
 # variables
 g2oIterations = 20
 xi = 0
-infoOdomPos = 10000
-infoOdomAng = 10000
-infoPointSen = 100
+infoOdomPos = 1000
+infoOdomAng = 1000
+infoPointSen = 1000
 dataSkip = 10
-interOpt = 500
+interOpt = 100
 dataSize = 100000
-disTest = 5
-kernelWidth = 1
+disTest = 1
+kernelWidth = 100
 poseSkip = 1
 
 # compile
@@ -34,8 +34,8 @@ subprocess.call(["make", "-C", buildPath])
 start_time = time.time()
 
 # paths
-#dataPath = "data/ROS/ROS.g2o"
-dataPath = "data/Parque OHiggins/ohiggins.g2o"
+dataPath = "data/ROS/ROS.g2o"
+#dataPath = "data/Parque OHiggins/ohiggins.g2o"
 #dataPath = "data/Victoria Park/victoria.g2o"
 dataName = os.path.splitext(os.path.basename(dataPath))[0]
 dataDir = os.path.dirname(dataPath) + "/"
@@ -74,8 +74,8 @@ subprocess.call(["env", "CPUPROFILE=./my_slam_prof.prof",
 currTime = strftime("_%Y-%m-%d %H:%M:%S", gmtime())
 suffix = "_it_" + str(g2oIterations)  + "_xi_" + str(xi) + "_op_" + str(infoOdomPos) + "_oa_" + str(infoOdomAng) + "_lp_" + str(infoPointSen) + "_dsk_" + str(dataSkip) + "_io_"  + str(interOpt) + "_ds_" + str(dataSize) + "_dt_" + str(disTest) + "_kw_" + str(kernelWidth) + "_ps_" + str(poseSkip)
 #makeRealPlots(guessOutPath, guessOutPath, figPath, "_odom")
-makeRealPlots(guessOutPath, resPath, figPath, currTime + suffix)
-#plotResults(dataDir+"gt.g2o", guessOutPath, resPath, figPath)
+#makeRealPlots(guessOutPath, resPath, figPath, currTime + suffix)
+plotResults(dataDir+"gt.g2o", guessOutPath, resPath, figPath, currTime + suffix)
 
 # compute elapsed time
 elapsed_time = time.time() - start_time
