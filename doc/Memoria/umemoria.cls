@@ -34,15 +34,15 @@
 %% Packages necesarios
 \RequirePackage[top=2cm, left=3cm, bottom=2cm, right=2cm, paper=letterpaper]{geometry} % Margenes
 \RequirePackage{amsmath, amssymb, amsthm, graphicx} % Varios
-\RequirePackage[spanish, es-nolists, es-lcroman]{babel} % Lenguaje
+%\RequirePackage[spanish, es-nolists, es-lcroman]{babel} % Lenguaje
 \RequirePackage[pdfpagelabels]{hyperref} % Links y numeracion del PDF
 \RequirePackage{listings} % Codigo Fuente
 
 %% Lenguaje
-\addto\captionsspanish{\renewcommand\tablename{Tabla}}
-\addto\captionsspanish{\renewcommand\contentsname{Tabla de Contenidos}}
-\addto\captionsspanish{\renewcommand\listtablename{Índice de Tablas}}
-\addto\captionsspanish{\renewcommand\listfigurename{Índice de Ilustraciones}}
+%\addto\captionsspanish{\renewcommand\tablename{Tabla}}
+%\addto\captionsspanish{\renewcommand\contentsname{Tabla de Contenidos}}
+%\addto\captionsspanish{\renewcommand\listtablename{Índice de Tablas}}
+%\addto\captionsspanish{\renewcommand\listfigurename{Índice de Ilustraciones}}
 
 %% Interlineado
 \RequirePackage{parskip}
@@ -79,7 +79,7 @@ PROF. GUÍA: SR. \MakeUppercase\@guia \\
 \let\thanks\undefined
 \newenvironment{thanks}{\cleardoublepage\chapter*{Agradecimientos}}{\vfill\null}
 \newenvironment{intro}{\addcontentsline{toc}{chapter}{\protect\numberline{}Introducción}\chapter*{Introducción}}{\vfill\null}
-\newenvironment{conclusion}{\addcontentsline{toc}{chapter}{\protect\numberline{}Conclusión}\chapter*{Conclusión}}{\vfill\null}
+\newenvironment{conclusion}{\addcontentsline{toc}{chapter}{\protect\numberline{}Conclusion}\chapter*{Conclusion}}{\vfill\null}
 
 %% Teoremas, proofs, etc
 \renewenvironment{proof}[1][\proofname] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\scshape\footnotesize#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse}

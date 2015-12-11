@@ -22,6 +22,6 @@
 \end{scope}
 
 % nodes for image correction
-\node [name=n1] at (0,-1) {};
-\node [name=n2] at (10,0) {};
+%\node [name=n1] at (0,-1) {};
+%\node [name=n2] at (10,0) {};
 \end{tikzpicture}

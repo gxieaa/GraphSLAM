@@ -3,7 +3,7 @@
 
 This chapter presents the theoretical framework in which this work is developed. It has the purpose to introduce readers unfamiliar with the topic of robotics, and give a theoretical foundation to the work done.
 
-Section~\ref{sec:basic-concepts} describes the basic concepts of stochastic state estimation in mobile robotics, needed to understand the rest of the work. Section~\ref{sec:slam-description} defines the problem of SLAM in a mathematical way. Finally, in section~\ref{sec:graphslam-description} GraphSLAM algorithm is presented and discussed in detail.
+Section~\ref{sec:basic-concepts} describes the basic concepts of stochastic state estimation in mobile robotics, needed to understand the rest of the work. Section~\ref{sec:slam-description} defines the problem of SLAM in a mathematical way. The GraphSLAM algorithm is presented and discussed in detail in Section~\ref{sec:graphslam-description}. Finally, a brief review of the state of the art in SLAM is given in~\ref{sec:state-of-the-art}.
 
 \section{Basic Concepts in Probabilistic Robotics} 
 \label{sec:basic-concepts}
@@ -16,11 +16,11 @@ Robotics is the science of perceiving and manipulating the physical world throug
 
 A robot can interact with the environment in two ways, it can influence the environment using its actuators, and it can gather information of the state through its sensors. 
 
-Usually, a robot's actuators are activated through a control input. These controls inputs could be given by a human using a controller device, or an algorithm implemented in a computer seeking a specific objective. It is useful to keep a record of all the control inputs that has been applied over time. We denote a single control input at time $k$ as $\bs{u}_k$, where the control $\bs{u}_k$ changes the state from  time $k-1$ to $k$. The sequence of control data from time $k_1$ to $k_2$ is denoted as $\bs{u}_{k_1:k_2}= \bs{u}_{k_1},\bs{u}_{k_1+1}\dots,\bs{u}_{k_2}$.
+Usually, a robot's actuators are activated through a \it{control input}. These controls inputs could be given by a human using a controller device, or an algorithm implemented in a computer. It is useful to keep a record of all the control inputs that has been applied over time. A single control input at time $k$ is denoted as $\bs{u}_k$, where the control $\bs{u}_k$ changes the state from  time $k-1$ to $k$. The sequence of control data from time $k_1$ to $k_2$ is denoted as $\bs{u}_{k_1:k_2}= \bs{u}_{k_1},\bs{u}_{k_1+1}\dots,\bs{u}_{k_2}$.
 
-Sensors are used to take measurements of the environment. As the robot acquire information of its surroundings, it can generate a map of the environment. Formally, a map $\bs{m}$ is a list of objects in the environment: $\bs{m}=\bs{m}_1,\bs{m}_2,\dots,\bs{m}_N$. Here $N$ is the total number of objects in the environment, and each $\bs{m}_j$ is a vector of properties. In this work it's assumed that the map is static, i.e., it doesn't change over time, hence $\bs{m}$ doesn't have a time index.
+Sensors are used to take measurements of nearby objects. As the robot acquire information of its surroundings, it can generate a \it{map} of the environment. Formally, a map $\bs{m}$ is a list of objects: $\bs{m}=\bs{m}_1,\bs{m}_2,\dots,\bs{m}_j,\dots,\bs{m}_N$. Here $N$ is the total number of objects in the environment, and each $\bs{m}_j$ is a vector of properties. In this work it's assumed that the map is static, i.e., it doesn't change over time, hence $\bs{m}$ doesn't have a time index.
 
-In this work use a \it{feature-based} map. In feature-based maps, each element of the map correspond to a distinct object, called \it{landmarks} or \it{features}, with an unique set of properties. Typically, these properties are the position of the landmark, plus a distinct signature, such as the color of the landmark. Hence, in a 2 dimensional scenario, the vector $\bs{m}_j$ would look like:
+A \it{feature-based} map is used in this work. In feature-based maps, each element of the map correspond to a distinct object, called \it{landmarks} or \it{features}, with an unique set of properties. Typically, these properties are the position of the landmark, plus a distinct signature, such as the color of the landmark. Hence, in a 2 dimensional scenario, the vector $\bs{m}_j$ would look like:
 
 \begin{equation}
 \bs{m}_j = \begin{bmatrix}
@@ -32,13 +32,13 @@ m_{j,y}\\
 
 Being $m_{j,x}$ and $m_{j,y}$, the horizontal and vertical position of the landmark $j$ respectively, and $\bs{m}_{j,s}$ its signature vector.
 
-It is assumed that each sensors produces at most one measurement per landmark at every instance of time. The set of measurements produced at time $k$ is denoted as $\bs{z}_k$. To distinguish each feature measured, $\bs{z}_k^i$ denotes the $i$-th feature detected at time $k$. Note that the measurement $\bs{z}_k^i$ is a vector, since several properties can be sensed from a single landmark (e.g., distance and relative angle from robot). The list of measurements taken form time $k_1$ to $k_2$ is denoted as $\bs{z}_{k_1:k_2}$.
+It is assumed that each sensors produces at most one measurement per landmark at every instance of time. The \it{set of measurements} produced at time $k$ is denoted as $\bs{z}_k$. To distinguish each feature measured, $\bs{z}_k^i$ denotes the $i$-th feature detected at time $k$. Note that the measurement $\bs{z}_k^i$ is a vector, since several properties can be sensed from a single landmark (e.g., distance and relative angle from robot). The list of measurements taken form time $k_1$ to $k_2$ is denoted as $\bs{z}_{k_1:k_2}$.
 
 \subsection{Motion and Measurement Models}
 
-To tackle any problem in robotics, the mathematical models that describes the behavior of the robot must be defined. The \it{pose} of the robot defines the state variables that depend only on the robot (e.g., position, bearing, etc.). The pose at time $k$ is denoted as $\bs{x}_k$. 
+To tackle any problem in robotics, the mathematical models that describes the behavior of the robot must be defined. The \it{pose} of the robot defines the state variables that depend only on the robot (usually robot's position and orientation). The pose at time $k$ is denoted as $\bs{x}_k$. 
 
-The robot motion model describes how the robot pose changes from one timestep to the next, given a control input. This model is called the forward kinematics equations of the robot.
+The robot motion model describes how the the control input changes the robot pose from one timestep to the next. This model is called the forward kinematics equations of the robot.
 
 In the core of the probabilistic robotics, it is the assumption that one cannot have a deterministic description of the world, that is, there is always amount of uncertainly in it. Therefore, it is advantageous to use probabilistic models that take in account this uncertainly. The simplest probabilistic assumption is that models are contaminated with zero-mean white Gaussian noise. Using this probabilistic approach, a generic motion model is:
 
@@ -52,12 +52,14 @@ Where $\bs{g}$ is a deterministic function that describes the robot's kinematics
 Since the motion model involves the addition of a Gaussian random variable, the model itself can be seen as a Gaussian random process, which represents the probability of the robot to end up in pose $\bs{x}_k$, given previous pose $\bs{x}_{k-1}$ and control input $\bs{u}_k$:
 
 \begin{equation}
-p(\bs{x}_k|\bs{u}_k,\bs{x}_{k-1}) = \det(2\pi \bs{R}_k)^{-\frac{1}{2}}\exp\left\lbrace -\frac{1}{2}(\bs{x}_k-\bs{g}(\bs{u}_k,\bs{x}_{k-1}))^T
+p(\bs{x}_k|\bs{x}_{k-1},\bs{u}_k) = \det(2\pi \bs{R}_k)^{-\frac{1}{2}}\exp\left\lbrace -\frac{1}{2}(\bs{x}_k-\bs{g}(\bs{u}_k,\bs{x}_{k-1}))^T
 \bs{R}_k^{-1}(\bs{x}_k-\bs{g}(\bs{u}_k,\bs{x}_{k-1}))\right\rbrace
 \label{eq:motion-pdf}
 \end{equation}
 
-Similarly, the measurement model depicts how the robot obtains information of the environment. In other words, it describes mathematically the acquisition of a measurement $\bs{z}_k$. Just as the motion model, independent Gaussian noise is assumed for the measurements. A generic measurement model is:
+Most robots incorporate an internal sensor to measure the change of position between two timesteps. This way it can be verified if the control input actually produced the desired result. An example of this kind of sensors are the rotary encoders found in robot's wheels to count the number of turns it have made. The method of estimating the robot motion using these sensors is called \it{odometry}. 
+
+Similarly, the measurement model depicts how the robot obtains information of the environment. In other words, it describes mathematically the acquisition of measurements $\bs{z}_k$. Just as the motion model, independent Gaussian noise is assumed for the measurements. A generic measurement model is:
 
 \begin{equation}
 \bs{z}_k^i = \bs{h}(\bs{x}_k,\bs{m}_j,i) + \bs{\varepsilon}_k^i
@@ -65,7 +67,7 @@ Similarly, the measurement model depicts how the robot obtains information of th
 \end{equation} 
 
 \noindent
-Where $\bs{m}_j$ represents the $i$-th detected landmark in measurement $\bs{z}_k$, and $\bs{x}_k$ the pose in which the measurement was made. $\bs{\varepsilon}$ is an Gaussian random variable, with zero mean and $\bs{Q}_k$ covariance matrix ($\bs{\varepsilon} \sim \Nn(\bs{0},\bs{Q}_k)$).
+Where $\bs{m}_j$ represents the $i$-th measured landmark in measurement $\bs{z}_k^i$, and $\bs{x}_k$ the pose in which the measurements were made. $\bs{\varepsilon}$ is an Gaussian random variable, with zero mean and $\bs{Q}_k$ covariance matrix ($\bs{\varepsilon} \sim \Nn(\bs{0},\bs{Q}_k)$).
 
 Again, this model can be represented as a random process is given by:
 
@@ -75,11 +77,11 @@ p(\bs{z}_k^i|\bs{x}_k,\bs{m}) = \det(2\pi \bs{Q}_k)^{-\frac{1}{2}}\exp\left\lbra
 \label{eq:measure-pdf}
 \end{equation}
 
-In principle there is no error-free method to associate the detection number $i$ with the landmark number $j$. A good simplification is to assume that the association is automatically given by a special function $j=c_k^i$, called the \it{correspondence function}. The function $c_k^i$ indicates deterministically which feature $j$ correspond to each detection $i$, at every time $k$.
+In principle there is no error-free method to associate the detection number $i$ with the landmark number $j$. A possible solution is to assume that the association is automatically given by a special function $j=c_k^i$, called the \it{correspondence function}. The function $c_k^i$ indicates deterministically which feature $j$ correspond to each detection $i$, at every time $k$.
 
 \subsection{Localization and Mapping}
 
-Two of the main problems of interest in the field of probabilistic robotics are \it{localization} and \it{mapping}. In essence these two problems correspond to the estimation of a particular subset of the state of an environment, given another subset of the same state. In this scenario, the state variables can be partitioned into the robot's internal state, given by the pose $\bs{x}_k$, and states external to the robot, that can be measured by its sensor, given by the map $\bs{m}$.
+Two of the main problems of interest in the field of probabilistic robotics are \it{localization} and \it{mapping}. In essence these two problems correspond to the estimation of a particular subset of the state of the environment, given another subset of the same state. In this scenario, the state variables can be partitioned into the robot's internal state, given by the pose $\bs{x}_k$, and external states that can be measured by its sensor, given by the map $\bs{m}$.
 
 In the localization problem, it is assumed that the map is known with absolute certainly, while the robot pose is unknown. The problem is then to estimate the robot pose over time as it moves around the environment and takes measurements from the map. Aside form the map, control inputs and measurements are available. Mathematically, the problem is to calculate the Probability Density Function (PDF):
 
@@ -93,7 +95,7 @@ Conversely, in the mapping problem, it's assumed that the location of the robot 
 p(\bs{m}|\bs{x}_{0:k},\bs{z}_{1:k})
 \end{equation} 
 
-Where $\bs{x}_{0:k}$ denote the sequence of robot poses from time $0$ to $k$. These two problems are just a particular case of an estimation problem, and classical filtering techniques, such as Extended Kalman Filter (EKF), have been applied successfully to find a solution to them~\cite{probabilistic}.  
+Where $\bs{x}_{0:k}$ denote the sequence of robot poses from time $0$ to $k$, also known as the robot's trajectory or path. These two problems are just a particular case of an estimation problem, and classical filtering techniques, such as Extended Kalman Filter (EKF), have been applied successfully solve them~\cite{probabilistic}.  
 
 \section{Description of the SLAM Problem}
 \label{sec:slam-description}
@@ -110,7 +112,7 @@ p(\bs{x}_k,\bs{m}|\bs{z}_{1:k},\bs{u}_{1:k})
 \end{equation} 
 
 \noindent
-Note that both, robot's pose and the map are estimated given the control input and the measurements. Also, note that according to~\eqref{eq:online-slam}, only the current pose of the robot is being estimated, i.e. only at time $k$. This is called the \it{online SLAM} problem. In some application is useful to estimate the robot pose at every instant of time since the robot start its motion, that is, the robot trajectory. In this case the SLAM problem is stated within a sightly different way:
+Note that both, robot's pose and the map are estimated given the control input and the measurements. Also, note that according to~\eqref{eq:online-slam}, only the current pose of the robot is being estimated. This is called the \it{online SLAM} problem. In some applications is useful to estimate the whole robot trajectory. In this case the SLAM problem is stated sightly differently:
 
 \begin{equation}
 p(\bs{x}_{0:k},\bs{m}|\bs{z}_{1:k},\bs{u}_{1:k})
@@ -128,20 +130,20 @@ p(\bs{x}_{1:k},\bs{m}|\bs{z}_{1:k},\bs{u}_{1:k}) d\bs{x}_1 d\bs{x}_2 \dots d\bs{
 
 \subsection{Correspondence Problem in SLAM}
 
-Until now is is being assumed that when the robot makes a measurement $\bs{z}_k$, it can successfully associate the $i$-th detection with the corresponding feature detected $j$, by means of the correspondence function $c_k^i$. This is called the correspondence problem, and in reality is a non-trivial one. This is because, in the presence of noise, measurements may be incorrectly associated. 
+Until now is being assumed that when the robot takes a set measurement $\bs{z}_k$, it can successfully associate the $i$-th measurement with the corresponding feature detected $j$, by means of the correspondence function $c_k^i$. This is called the correspondence problem, and in reality is a non-trivial one. This is because, in the presence of noise, measurements may be incorrectly associated. 
 
 The correspondence problem is of great importance in SLAM. A single wrong association of features could lead to divergences in the estimation. Also, once the wrong association is done, it may be impossible to recover from the mistake if the algorithm is not robust enough, or if the necessary information is no longer available.
 
-In special cases, like simulations and when features can be distinguished correctly by measurement, it can be assumed that data association is known, i.e., one has access to $c_k^i$. 
+In special cases, like simulations and when features can be distinguished correctly by measurements, it can be assumed that data association is known, i.e., one has access to $c_k^i$. 
 
 Most commonly, data association is not given and must be estimated by the algorithm. There exist different techniques to deal with this problem, one of the most popular is \it{maximum likelihood correspondence}.
 
-In this work deals with both cases, in which the correspondence is known, and when it is unknown.
+This work deals with both cases, in which the correspondence is known, and when it is unknown.
 
-\subsection{The GraphSLAM Algorithm}
+\section{The GraphSLAM Algorithm}
 \label{sec:graphslam-description}
 
-GraphSLAM is an algorithm for solving SLAM. It was first presented in~\cite{graphslam}. It transforms the SLAM posterior~\eqref{eq:full-slam} in a graphical network, called \it{graph}, that represents the log-likelihood of the data. It then transforms the graph into a least square minimization problem, that can be solved with conventional optimization techniques.
+GraphSLAM is an algorithm for solving SLAM. It was first presented in~\cite{graphslam}. It transforms the SLAM posterior~\eqref{eq:full-slam} in a graphical network, called \it{graph}, that represents the likelihood of the data. It then transforms the graph into a least square minimization problem, that can be solved with conventional optimization techniques.
 
 \subsubsection{SLAM Representation in Graphs}
 
@@ -155,7 +157,7 @@ A graph is a mathematical concept that is compose of two types of entities, \it{
     \label{fig:graph}
 \end{figure}  
 
-In the GraphSLAM context, nodes and edges represents specifics variables of the state. Nodes represents two types of state variables: it could be either the pose of the robot a certain time $\bs{x}_k$, or the position of a landmark $\bs{m}_j$. There is also two types of edges in the graph, the first ones are edges connecting two consecutive robot poses $\bs{x}_k$ and $\bs{x}_{k+1}$, this correspond to the translation that the robot realize between $k$ and $k+1$ produced by the control input $\bs{u}_{k+1}$. The second ones are edges connecting the robot pose $\bs{x}_k$ and the landmark $\bs{m}_j$ sensed in the measurement $\bs{z}_k^i$. Figure~\ref{fig:graphslam} illustrates the graph generated by a robot, as it moves in a map and take measurement of landmarks.
+In the GraphSLAM context, nodes and edges represents specifics variables of the state. Nodes represents two types of state variables: it could be either the pose of the robot $\bs{x}_k$ a certain time $k$, or the position of a landmark $\bs{m}_j$. There is also two types of edges in the graph, the first ones are edges connecting two consecutive robot poses $\bs{x}_k$ and $\bs{x}_{k+1}$, this correspond to the translation that the robot realize between $k$ and $k+1$ produced by the control input $\bs{u}_{k+1}$. The second ones are edges connecting the robot pose $\bs{x}_k$ and the landmark $\bs{m}_j$ sensed in the measurement $\bs{z}_k^i$. Figure~\ref{fig:graphslam} illustrates the graph generated by a robot, as it moves in a map and take measurement of landmarks.
 
 \begin{figure}[htbp!]
     \centering
@@ -172,16 +174,57 @@ In the graph, the set of all nodes actually constitute all the state variables, 
 
 In SLAM, one usually wants to find a mathematical expression of the posterior probability~\eqref{eq:full-slam}, and then find the state that more likely to agree with the data.
 
-Using classical probability theory one can find a close form for~\eqref{eq:full-slam}, given by~\cite{graphslam}: % \todo[inline]{shoud I put the whole derivation?}
+%Using classical probability theory one can find a close form for~\eqref{eq:full-slam}, given by~\cite{graphslam}: % \todo[inline]{shoud I put the whole derivation?}
 
+In order to make the problem tractable, several assumption must be made about the random behavior of the state variables. The must important of these assumption is that the states correspond to a \it{Markov process}. In Markov processes, future states are conditionally independent of past states given the current state.
+
+Using Bayes theorem and the Markov assumption, the posterior~\eqref{eq:full-slam} can be rewritten as:
+
+\begin{align}
+p(\bs{x}_{0:k},\bs{m}|\bs{z}_{1:k},\bs{u}_{1:k}) &= 
+\eta\,p(\bs{z}_{k}|\bs{x}_{0:k},\bs{m},\bs{z}_{1:k-1},\bs{u}_{1:k})\; p(\bs{x}_{0:k},\bs{m}|\bs{z}_{1:k-1},\bs{u}_{1:k})
+\label{eq:bayes}\\
+&= \eta\,p(\bs{z}_{k}|\bs{x}_{k},\bs{m})\; p(\bs{x}_{0:k},\bs{m}|\bs{z}_{1:k-1},\bs{u}_{1:k})\label{eq:markov-1}
+\end{align}
+
+Where in~\eqref{eq:bayes} the Bayes theorem is applied for the the measurements $\bs{z}_k$, $\eta$ is the normalizing factor from Bayes. In~\eqref{eq:markov-1} it is assumed that current measurements $\bs{z}_k$ are conditionally independent of past measurements, poses and control inputs, given the current pose $\bs{x}_k$ and map $\bs{m}$.
+
+The last term of~\eqref{eq:markov-1} can also be expanded using the definition of conditional probability:
+
+\begin{align}
+p(\bs{x}_{0:k},\bs{m}|\bs{z}_{1:k-1},\bs{u}_{1:k}) &=
+p(\bs{x}_{k}|\bs{x}_{0:k-1},\bs{m},\bs{z}_{1:k-1},\bs{u}_{1:k})\; p(\bs{x}_{0:k-1},\bs{m}|\bs{z}_{1:k-1},\bs{u}_{1:k})\\
+&= p(\bs{x}_{k}|\bs{x}_{k-1},\bs{u}_{k})\; p(\bs{x}_{0:k-1},\bs{m}|\bs{z}_{1:k-1},\bs{u}_{1:k}) \label{eq:markov-2}
+\end{align}
+
+Where again the Markov assumption is applied, this time to pose $\bs{x}_k$. 
+
+Plugging~\eqref{eq:markov-2} into~\eqref{eq:markov-1} gives:
+
+\begin{equation}
+p(\bs{x}_{0:k},\bs{m}|\bs{z}_{1:k},\bs{u}_{1:k}) = 
+\eta\,p(\bs{z}_{k}|\bs{x}_{k},\bs{m})\;
+p(\bs{x}_{k}|\bs{x}_{k-1},\bs{u}_{k})\; p(\bs{x}_{0:k-1},\bs{m}|\bs{z}_{1:k-1},\bs{u}_{1:k})
+\label{eq:recursive}
+\end{equation}
+
+Note that equation~\eqref{eq:recursive} simply states that the likelihood of the state at time $k$ is proportional to the same likelihood at time $k-1$, multiplied by the motion and measurements probabilities. Applying~\eqref{eq:recursive} recursively yields:
+  
+\begin{equation}
+p(\bs{x}_{0:k},\bs{m}|\bs{z}_{1:k},\bs{u}_{1:k}) = 
+\eta\, p(\bs{x}_0) \prod_{k} p(\bs{x}_k|\bs{x}_{k-1},\bs{u}_k)\;p(\bs{z}_k|\bs{x}_k,\bs{m})
+\end{equation}
+
+Where $p(\bs{x}_0)$ is the initial knowledge of the robot pose. The final assumption to be made is that every individual measurement $\bs{z}_k^i$ is conditionally independent between each other, given the pose and map, i.e., $p(\bs{z}_k^i,\bs{z}_k^j|\bs{x}_k,\bs{m}) = p(\bs{z}_k^i|\bs{x}_k,\bs{m})\; p(\bs{z}_k^j|\bs{x}_k,\bs{m})$. Then, the final form of the posterior is: 
+  
 \begin{equation}
 p(\bs{x}_{0:k},\bs{m}|\bs{z}_{1:k},\bs{u}_{1:k}) = 
 \eta\, p(\bs{x}_0) \prod_{k}\left[ p(\bs{x}_k|\bs{x}_{k-1},\bs{u}_k)\prod_{i}p(\bs{z}_k^i|\bs{x}_k,\bs{m})\right] 
 \label{eq:posterior}
 \end{equation} 
 
-\noindent
-Where $\eta$ is a normalization factor, and $p(\bs{x}_0)$ is the initial knowledge of the robot pose. For this derivation the Markov assumption (next state is independent of past states given current state), the assumption of conditional independence between robot pose and map given control inputs and measurements, and conditional independence of measurement given robot pose and map is used. For mathematical proposes, it is convenient to work with the negative log-likelihood of the posterior:
+\noindent 
+For mathematical proposes, it is convenient to work with the negative log-likelihood of the posterior:
 
 \begin{equation}
 \begin{split}
@@ -221,7 +264,7 @@ For notation simplification, the state vector $\bs{y}$ that contains the variabl
 \end{bmatrix}
 \end{equation}
 
-Furthermore every term in~\eqref{eq:quadratic} can be encapsulated into a single notation called the \it{error function}: $\bs{e}_{ij}(\bs{y})$. Every pair of indexes $i$, $j$ in the error function corresponds to a node in the graph, that is, a robot pose or a landmark position. Then $\bs{e}_{ij}(\bs{y})$ is given by either by $\bs{x}_k-\bs{g}(\bs{u}_k,\bs{x}_{k-1})$, if both indexes correspond to consecutive poses, by $\bs{z}_k^i-\bs{h}(\bs{x}_k,\bs{m}_i)$, if indexes correspond to one pose and one landmark, or $\bs{x}_0$ if $i=j=0$. The error function can be seen as difference between the expected and actual odometry or measurement. 
+Furthermore every term in~\eqref{eq:quadratic} can be encapsulated into a single notation called the \it{error function}: $\bs{e}_{ij}(\bs{y})$. Every index $i$, $j$ in the error function corresponds to a node in the graph, that is, a robot pose or a landmark position. Then $\bs{e}_{ij}(\bs{y})$ is given by either by $\bs{x}_k-\bs{g}(\bs{u}_k,\bs{x}_{k-1})$, if both indexes correspond to consecutive poses, by $\bs{z}_k^i-\bs{h}(\bs{x}_k,\bs{m}_i)$, if indexes correspond to one pose and one landmark, or $\bs{x}_0$ if $i=j=0$. The error function can be seen as difference between the expected and actual odometry or measurement. 
 
 Similarly, the information matrix $\bs{\Omega}_{ij}$ between nodes $i$ and $j$ can be defined as $\bs{R}_k^{-1}$, $\bs{Q}_k^{-1}$, or $\bs{\Omega}_0$ given by the same conditions as above. Given this,\eqref{eq:quadratic} can be written as:
 
@@ -231,7 +274,7 @@ F(\bs{y}) \defi -\log(p(\bs{y}|\bs{z}_{1:k},\bs{u}_{1:k})) = \sum_{\left<i,j\rig
 \end{equation}
 
 \noindent
-Where the constant $c$ is removes, as it is unnecessary. Finally, the most probable state for the map and the poses is determined by solving the following minimization problem: 
+Where the constant $c$ is removed, as it is unnecessary. Finally, the most probable state for the map and the poses is determined by solving the following minimization problem: 
 
 \begin{equation}
 \bs{y}^* = \underset{\bs{y}}{\arg\min} \;F(\bs{y})
@@ -249,19 +292,19 @@ The terms in~\eqref{eq:quadratic} are quadratic in the functions $\bs{g}$ and $\
 Where $\breve{\bs{y}}$ an initial estimate of the state, and $\bs{J}_{ij}$ is the Jacobian of $\bs{e}_{ij}$ computed at $\breve{\bs{y}}$. Then, a local approximation of $F$ can be obtained:
 
 \begin{align}
-F(\breve{\bs{y}}+\bs{\Delta y}) &= \sum_{\left<i,j\right>\in\C}
+F(\breve{\bs{y}}+\bs{\Delta y}) &= \sum_{\left<i,j\right>\in\Cc}
 \bs{e}_{ij}(\bs{y}+\bs{\Delta y})^T\bs{\Omega}_{ij} 
 \bs{e}_{ij}(\bs{y}+\bs{\Delta y}) \notag \\
-& \approx \sum_{\left<i,j\right>\in\C} 
+& \approx \sum_{\left<i,j\right>\in\Cc} 
 (\bs{e}_{ij}(\breve{\bs{y}}) + \bs{J}_{ij}\bs{\Delta y})^T \bs{\Omega}_{ij}
 (\bs{e}_{ij}(\breve{\bs{y}}) + \bs{J}_{ij}\bs{\Delta y})\notag \\
-&= \sum_{\left<i,j\right>\in\C}
+&= \sum_{\left<i,j\right>\in\Cc}
 \underbrace{\bs{e}_{ij}(\breve{\bs{y}})^T\bs{\Omega}_{ij}\bs{e}_{ij}(\breve{\bs{y}})}_{\defi k_{ij}}
 +2\underbrace{\bs{e}_{ij}(\breve{\bs{y}})^T\bs{\Omega}_{ij}\bs{J}_{ij}}_{ \defi \bs{b}_{ij}}\bs{\Delta y}
 +\bs{\Delta y}^T
 \underbrace{\bs{J}_{ij}^T\bs{\Omega}_{ij}\bs{J}_{ij}}_{\defi \bs{H}_{ij}}
 \bs{\Delta y} \notag \\
-&= \sum_{\left<i,j\right>\in\C} k_{ij} + 2\bs{b}_{ij}\bs{\Delta y} + \bs{\Delta y}^T \bs{H}_{ij} \bs{\Delta y} \notag \\
+&= \sum_{\left<i,j\right>\in\Cc} k_{ij} + 2\bs{b}_{ij}\bs{\Delta y} + \bs{\Delta y}^T \bs{H}_{ij} \bs{\Delta y} \notag \\
 &= k + 2\bs{b} \bs{\Delta y} + \bs{\Delta y}^T \bs{H} \bs{\Delta y}
 \label{eq:linearized}
 \end{align}
@@ -284,7 +327,7 @@ The popular Gauss-Newton algorithm iterates several times between the steps of l
 
 \subsubsection{Structure of the Linearized System}
 
-Of all steps of the Gauss-Newton algorithm, the linear system solving in~\eqref{eq:linear-system} is the most computational expensive, because it involves a matrix inversion (in practice or efficient methods are used, such as QR decomposition), and it's also the more prone to numerical errors. In some cases, the number of landmarks and the path of the robot is so large, that the inversion of $\bs{H}$ becomes intractable. We'll see that actually, the information matrix $\bs{H}$ has and underlying structure that make the solving of the system~\eqref{eq:linear-system}, more efficient and precise.
+Of all steps of the Gauss-Newton algorithm, the linear system solving in~\eqref{eq:linear-system} is the most computational expensive, because it involves a matrix inversion (in practice or efficient methods are used, such as QR decomposition), and it's also the more prone to numerical errors. In some cases, the number of landmarks and the path of the robot is so large, that the inversion of $\bs{H}$ becomes intractable. It'll be shown actually, that the information matrix $\bs{H}$ has and underlying structure that make the solving of the system~\eqref{eq:linear-system}, more efficient and precise.
 
 %Looking at the Jacobian $\bs{J}_{ij}$ if the error function $\bs{e}_{ij}(\bs{y})$,  
 
@@ -314,7 +357,7 @@ Where $\bs{A}_{ij}$ and $\bs{B}_{ij}$ are the matrices of the derivatives of the
 
 Where all the zero entries are omitted. The off-diagonal block represent the relative information given by the edge $\left\langle i,j\right\rangle$. Therefore, every term $\bs{H}_{ij}$ adds 4 blocks to the information matrix $\bs{H}$.
 
-However, for the SLAM problem, not every combination of block (i.e. edges) is possible. This fact is represented in figure~\ref{fig:information-matrix}. This figure shows how the information matrix get filled as the robot moves in the environment and takes measurements. Every colored square correspond to a block from~\eqref{eq:matrix-terms}. 
+However, for the SLAM problem, not every combination of blocks (i.e. edges) are possible. This fact is represented in Figure~\ref{fig:information-matrix}. This figure shows how the information matrix get filled as the robot moves in the environment and takes measurements. Every colored square correspond to a block from~\eqref{eq:matrix-terms}. 
 
 \begin{figure}[htbp!]
     \newcommand{\figScale}{0.8}
@@ -322,19 +365,19 @@ However, for the SLAM problem, not every combination of block (i.e. edges) is po
     \begin{subfigure}[htbp!]{\textwidth}
         \centering
         \includegraphics[width=\figScale\textwidth]{tikz/matrix1.pdf}
-        \caption{Block addition to the information matrix after a landmark measurement.}
+        \caption{Block addition to the information matrix $\bs{H}$ after a landmark measurement.}
         \label{fig:matrix1}
     \end{subfigure}
     \begin{subfigure}[htbp!]{\textwidth}
         \centering
         \includegraphics[width=\figScale\textwidth]{tikz/matrix2.pdf}
-        \caption{Block addition to the information matrix after a robot movement.}
+        \caption{Block addition to the information matrix $\bs{H}$ after a robot movement.}
         \label{fig:matrix2}
     \end{subfigure}
     \begin{subfigure}[htbp!]{\textwidth}
         \centering
-        \includegraphics[width=\figScale\textwidth]{tikz/matrix3-cropped.pdf}
-        \caption{Shows the block structure of the information matrix after 3 robot movements and 7 measurement.}
+        \includegraphics[width=\figScale\textwidth]{tikz/matrix3.pdf}
+        \caption{Shows the block structure of the information matrix $\bs{H}$ after 3 robot movements and 7 measurements.}
         \label{fig:matrix3}
     \end{subfigure}
     \caption[Information matrix structure]{Progressing filling of the information matrix $\bs{H}$ as the robot moves and takes measurements. Blue: pose-pose block. Purple: pose-landmark block. Red: landmark-landmark block.}
@@ -342,11 +385,11 @@ However, for the SLAM problem, not every combination of block (i.e. edges) is po
 \end{figure}
 
 The information matrix can be divided in four submatrices. The top-left matrix (filled with blue squares) has the relative information between to pair of poses. Since the information acquired is only relative to two consecutive poses, 
-this submatrix has a band diagonal structure, leaving all the other elements in zero. The top-right and bottom-left submatrices are equivalent, and contains the relative information between a pose and a measured landmark. The number of block in these matrices depends on the number of landmarks measured, but is often in SLAM that only spatially close landmarks are measured at every pose, leaving these matrices, again, with much of their elements in zero. Finally, the bottom-right submatrix regards information about pair of landmarks. Since there are not direct measurement between two landmarks, this submatrix is leaved as a block diagonal matrix.
+this submatrix has a band diagonal structure, leaving all the other elements in zero. The top-right and bottom-left submatrices are equivalent, and contain the relative information between a pose and a measured landmark. The number of block in these matrices depends on the number of landmarks measured, but is often in SLAM that only spatially close landmarks are measured at every pose, leaving these matrices, again, with much of their elements in zero. Finally, the bottom-right submatrix regards information about pair of landmarks. Since there are not direct measurement between two landmarks, this submatrix is leaved as a block diagonal matrix.
 
 Therefore it's shown that the number of non-zero elements in $\bs{H}$ is proportional to the number of edges in the graph, leading to a matrix with a large number of zero elements. This kind of matrices are called \it{sparse matrices}. Fast and efficient algorithm exist to solve~\eqref{eq:linear-system} for sparse matrices, such as Cholesky decomposition and Preconditioned Conjugate Gradient (PCG). These algorithms are already implemented in the g$^2$o framework that will be used.
 
-\subsection{Review of the State of the Art in SLAM}
+\section{Review of the State of the Art in SLAM}
 \label{sec:state-of-the-art}
 
 SLAM as a probabilistic problem has its beginning in the 1986 IEEE Robotics and Automation Conference held in San Francisco, California~\cite{tutorial}. One of the first papers to give a solution to SLAM was \cite{ekfslam} using the Extended Kalman Filter technique. This solution is now known EKF SLAM.
@@ -355,7 +398,7 @@ One of the first papers to state SLAM as an optimization over a graph is~\cite{f
 
 The GraphSLAM algorithm as stated in this work was first presented in~\cite{graphslam} by Thrun and Montemerlo. In this paper the SLAM negative likelihood posterior is derived for solving the full SLAM problem, and the optimization problem is stated in a similar way as in section~\ref{sec:graphslam-description}. However, it not specify the way of solving the optimization in~\eqref{eq:minimization}. 
 
-From there, several improvement have been made to the general idea of the GraphSLAM algorithm. In~\cite{sqrtsam} a similar graph representation is used to solve SLAM, called $\sqrt{\text{SAM}}$, but it used a \it{smoothing} approach, meaning that the entire robot trajectory up to the current time is estimated. They implement a batch and incremental algorithm for SLAM solving, and use either QR or Cholesky factorization of the linear equation solving, with variable ordering for complexity improvement. 
+From there, several improvement have been made to the general idea of the GraphSLAM algorithm. In~\cite{sqrtsam} a similar graph representation is used to solve SLAM, called $\sqrt{\text{SAM}}$, but it used a \it{smoothing} approach, meaning that the entire robot trajectory up to the current time is estimated\todo{review smoothing definition}. They implement a batch and incremental algorithm for SLAM solving, and use either QR or Cholesky factorization of the linear equation solving, with variable ordering for complexity improvement. 
 
 An updated version of $\sqrt{\text{SAM}}$, called iSAM, is presented in~\cite{isam}. It improves the performance in the incremental version, by directly updating the square root information matrix with new measurement as they arrive. It also avoids unnecessary fill-in in the information matrix generated by trajectory loop, by doing periodic variable reordering. It solves online data association using maximum likelihood and nearest neighbor matching.
 

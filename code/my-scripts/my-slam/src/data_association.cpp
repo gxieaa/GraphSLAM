@@ -17,24 +17,32 @@ bool incDataAssociation (SparseOptimizer& optimizer, int poseIndex, double xi, d
     for (set<HyperGraph::Edge*>::iterator it1 = edgeSetCurr.begin(); it1 != edgeSetCurr.end(); ++it1) {
         // Assume landmarks are second vertex in vertexContainer
         OptimizableGraph::Vertex* v1 = static_cast<OptimizableGraph::Vertex*> ((*it1)->vertices()[1]);
+        // tested array
+        vector<int> tested;
+        tested.clear();
         if (v1->dimension() == 2) {
             // for all landmarks of the past
             for (int i = poseIndex-1; i>=0; --i) {
-		OptimizableGraph::Vertex* pastPose = vc[i];
+                OptimizableGraph::Vertex* pastPose = vc[i];
                 set<HyperGraph::Edge*> edgeSetPast = pastPose->edges();
                 for (set<HyperGraph::Edge*>::iterator it2 = edgeSetPast.begin(); it2 != edgeSetPast.end(); ++it2) {
                     // Assume landmarks are second vertex in vertexContainer
                     OptimizableGraph::Vertex* v2 = static_cast<OptimizableGraph::Vertex*> ((*it2)->vertices()[1]);
+                    // v2 is landmark different from v1
                     if (v2->dimension() == 2 && v2->id() != v1->id()) {
-                        if (find(associated.begin(), associated.end(), v2->id()) == associated.end()) {
-                            if (distantTest(v1, v2, maxDistance)) {
-                                if (xi <= 0 || correspondenceTest(optimizer, v1, v2, xi)) {
-                                    // association successful
-                                    //cout << "asso: " << v1->id() << ", " << v2->id() << endl;
-				    optimizer.mergeVertices(v1, v2, false);
-                                    noAssociation = false;
-                                    associated.push_back(v2->id());
-                                    break;
+                        // if v2 hasn't been tested
+                        if (find(tested.begin(), tested.end(), v2->id()) == tested.end()) {
+                            tested.push_back(v2->id());
+                            // if v2 hasn't been associated
+                            if (find(associated.begin(), associated.end(), v2->id()) == associated.end()) {
+                                if (distantTest(v1, v2, maxDistance)) {
+                                    if (xi <= 0 || correspondenceTest(optimizer, v1, v2, xi)) {
+                                        // association successful
+                                        optimizer.mergeVertices(v1, v2, false);
+                                        noAssociation = false;
+                                        associated.push_back(v2->id());
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -59,7 +67,7 @@ bool fullDataAssociation (SparseOptimizer& optimizer, int poseIndex, double xi, 
 }
 
 bool correspondenceTest (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double xi) {
-    // computer marginal values from optimizer
+    // compute marginal values from optimizer
     std::vector<std::pair<int, int> > blockIndices;
     blockIndices.push_back(make_pair(v1->hessianIndex(), v1->hessianIndex()));
     blockIndices.push_back(make_pair(v1->hessianIndex(), v2->hessianIndex()));

@@ -91,6 +91,6 @@
 \draw [matrixline] (odom1) .. controls (3,5) and (10,3) .. (12.5,4.5);
 
 % nodes for image correction
-\node [name=n1] at (0,-3) {};
-\node [name=n1] at (21,0) {};
+%\node [name=n1] at (0,-3) {};
+%\node [name=n1] at (21,0) {};
 \end{tikzpicture}

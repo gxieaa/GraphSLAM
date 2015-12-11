@@ -20,7 +20,8 @@ welsch = (c**2/2)*(1-np.exp(-(x/c)**2))
 pseudo = 2*w**2*(np.sqrt(1+(x/w)**2)-1)
 
 # plot
-lw = 1.5
+lw = 3
+lfs = 20
 plt.plot(x, quad, linewidth=lw, label='Quadratic')
 plt.plot(x, huber, linewidth=lw, label='Huber')
 plt.plot(x, fair, linewidth=lw, label='Fair')
@@ -33,8 +34,8 @@ plt.plot(x, pseudo, linewidth=lw, label='Pseudo Huber', color = '#800000')
 plt.xlim([-xl, xl])
 plt.ylim([0, 10])
 plt.grid(True)
-plt.xlabel('$x$')
-plt.ylabel('$f(x)$')
+plt.xlabel('$x$', fontsize=lfs)
+plt.ylabel('$f(x)$', fontsize=lfs)
 
 ax = plt.subplot(111)
 box = ax.get_position()

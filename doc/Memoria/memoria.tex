@@ -1,7 +1,7 @@
 \documentclass[upright, contnum]{umemoria}
 \depto{DEPARTAMENTO DE INGENIERÍA ELÉCTRICA}
 \author{FRANCO ANDREAS CUROTTO MOLINA}
-\title{IMPLEMENTACIÓN DEL ALGORITMO GRAPHSLAM PARA LA RESOLUCIÓN DEL PROBLEMA DE SLAM}
+\title{GRAPHSLAM ALGORITHM IMPLEMENTATION FOR sOLVING THE PROBLEM OF SLAM}
 \auspicio{}
 \date{DICIEMBRE 2015}
 \guia{MARTIN ADAMS}
@@ -15,6 +15,10 @@
 \usepackage[T1]{fontenc}
 
 \input{packages.tex}
+\newcounter{test}
+%\setcounter{test}{1}
+\newenvironment{test}[1][]{\refstepcounter{test}\par\medskip
+    \textbf{Test~\Roman{test}. #1} \rmfamily}{\medskip}
 
 \begin{document}
 

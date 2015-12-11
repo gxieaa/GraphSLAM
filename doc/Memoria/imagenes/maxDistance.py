@@ -26,22 +26,23 @@ d2 = disFunct(x, m2, s2)
 d3 = disFunct(x, m3, s3)
 
 # plot
-lw = 1.5
+lw = 3
+lfs = 28
 plt.plot([m3-scale*s3, m3+scale*s3+1], [1, 1],'k', linewidth=lw, label='$\chi$')
-plt.plot(x, d1, 'b', linewidth=lw, label='$\sigma_{|{\Delta}_{j,k}|}^2 = 0.01$')
-plt.plot(x, d2, 'g', linewidth=lw, label='$\sigma_{|{\Delta}_{j,k}|}^2 = 0.0585$')
-plt.plot(x, d3, 'r', linewidth=lw, label='$\sigma_{|{\Delta}_{j,k}|}^2 = 0.15$')
+plt.plot(x, d1, 'b', linewidth=lw, label='$\sigma_{|{\Delta}_{i,j}|}^2 = 0.01$')
+plt.plot(x, d2, 'g', linewidth=lw, label='$\sigma_{|{\Delta}_{i,j}|}^2 = 0.0585$')
+plt.plot(x, d3, 'r', linewidth=lw, label='$\sigma_{|{\Delta}_{i,j}|}^2 = 0.15$')
 plt.plot([m1, m1], [0, 4],'b--')
 plt.plot([m2, m2], [0, 4],'g--')
 plt.plot([m3, m3], [0, 4],'r--')
 plt.grid(True)
 ax = plt.axis()
 plt.axes().set_xlim([x[0], x[-1]])
-plt.xlabel('${\mu}_{|{\Delta}_{j,k}|}$')
-plt.ylabel('$d_{j=k}$')
+plt.xlabel('${\mu}_{|{\Delta}_{i,j}|}$', fontsize=lfs)
+plt.ylabel('$d_{i=j}$', fontsize =lfs)
 
 ax = plt.subplot(111)
 box = ax.get_position()
-plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0)
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0, prop={'size':lfs})
 plt.savefig("maxDistance.pdf", bbox_inches='tight')
 #plt.show()

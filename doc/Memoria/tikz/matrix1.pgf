@@ -93,6 +93,6 @@
 %\draw [matrixline] (meas1) -- (12.5,1.5);
 
 % nodes for image correction
-\node [name=n1] at (0,-3) {};
-\node [name=n1] at (21,0) {};
+%\node [name=n1] at (0,-3) {};
+%\node [name=n1] at (21,0) {};
 \end{tikzpicture}
