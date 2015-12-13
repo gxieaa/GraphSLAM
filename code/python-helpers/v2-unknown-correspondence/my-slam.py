@@ -8,21 +8,21 @@ from associationFunctions import *
 
 # variables
 g2oIterations = 20
-xi = 1e-5
+xi = 0
 nlandmarks = 30
 infoOdomPos = 1000
-infoOdomAng = 1000
+infoOdomAng = 10000
 infoPointSen = 1000
 dataSkip = 1
-interOpt = 50
-simSteps = 300
-disTest = 0
+interOpt = 400
+simSteps = 400
+disTest = 1
 kernelWidth = 1
-poseSkip = 1
+poseSkip = 400
 
 # compile
 buildPath = "../../my-scripts/my-slam/build/"
-subprocess.call(["make", "-C", buildPath]) 
+subprocess.call(["make", "-C", buildPath])
 
 # run g2o tests
 start_time = time.time()
@@ -35,7 +35,7 @@ guessInPath = "data/guess_in" + suffix + ".g2o"
 guessOutPath = "data/guess_out" + suffix + ".g2o"
 anonOutPath = "data/anon_out" + suffix + ".g2o"
 optPath = "res/opt_out" + suffix + ".g2o"
-figPath = "res/res"+ suffix
+figPath = "res/res"
 
 # get simulation data
 subprocess.call([binSimPath+"./my_simulator", "-hasOdom", "-hasPointSensor",
@@ -54,8 +54,8 @@ subprocess.call(["g2o", "-i", "0", "-guessOdometry",
 
 # make optimization
 subprocess.call(["env", "CPUPROFILE=./my_slam_prof.prof",
-                buildPath+"./my_slam", 
-                "-i", str(g2oIterations), 
+                buildPath+"./my_slam",
+                "-i", str(g2oIterations),
                 "-t", str(xi),
                 "-robustKernel", "Huber",
                 "-robustKernelWidth", str(kernelWidth),
@@ -63,7 +63,7 @@ subprocess.call(["env", "CPUPROFILE=./my_slam_prof.prof",
                 "-interOpt", str(interOpt),
                 "-disTest", str(disTest),
                 "-o", optPath, anonOutPath])
-                 
+
 # plot results
 plotResults(simPath, guessOutPath, optPath, figPath, suffix)
 

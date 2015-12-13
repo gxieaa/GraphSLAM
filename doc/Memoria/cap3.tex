@@ -212,11 +212,17 @@ A way to deal with this problem is to test association only for landmarks measur
 \end{figure}    
 The incremental optimization has a subtle flaw, once a correspondence test is run between two landmark, it's never tested again, since only current measurements are tested. If a test failed at some point, but posterior correction make it possible for the test to pass, this association will be miss. It is expected that this situation doesn't occur often, since the incremental optimization algorithm usually gives a good estimate of the path up to the current pose. Nevertheless, this error is absolutely possible.
 
-To mitigate this problem, \emph{full optimizations} can be run occasionally along with the incremental optimization. Full optimization consists in testing correspondence between all possible pair of measured landmarks up to the current pose, in a similar fashion as it is done in Algorithm~\ref{alg:unknown-correspondence}. This way a compromise can be achieved between the algorithm speed and performance. In this implementation the user is able to choose the frequency with which the full optimization are run. It is done by setting the number of incremental optimization performed between two full optimizations.  
+To mitigate this problem, \emph{full optimizations} can be run occasionally along with the incremental optimization. Full optimization consists in testing correspondence between all possible pair of measured landmarks up to the current pose, in a similar fashion as it is done in Algorithm~\ref{alg:unknown-correspondence}. This way a compromise can be achieved between the algorithm speed and performance. In this implementation the user is able to choose the frequency with which the full optimization are run It is done by setting the parameter $io$ (inter full optimizations), which is the number of incremental optimization performed between two full optimizations. 
 
-\subsubsection{Distant Test}
+\subsubsection{Pose Skipping}
 
-Even with incremental optimization, there are still a lot of landmarks that are unnecessarily tested. The distant test strategy attempts to avoid testing landmarks that are widely separated, and thus are obviously not equivalent. To do this, a distance threshold is defined, with which, every pair of landmarks separated by a greater distance automatically fail the test. 
+The incremental optimization algorithm described above run the solver and produce an optimization every time after a new pose is analyzed. In some cases the solver optimization becomes the bottleneck rather than the data association. In these cases it is convenient to  test association between several consecutive poses after running the solver.
+
+this strategy is named \it{pose skipping}, where a parameter $ps$ is introduced to control the number poses to be skipped after the next optimization. If $ps=n$ it indicated that the next optimization will be executed $n$ poses after the current pose. By default $ps=0$ (no skipping is made).    
+
+\subsubsection{Distance Test}
+
+Even with incremental optimization, there are still a lot of landmarks that are unnecessarily tested. The distance test strategy attempts to avoid testing landmarks that are widely separated, and thus are obviously not equivalent. To do this, a distance threshold is defined, with which, every pair of landmarks separated by a greater distance automatically fail the test. 
 
 Defining a value for the threshold is non trivial. Two method are implemented. The first one is by user defined input. If the user has prior knowledge of the robot or the map, he/she could make a good estimate of the maximum distance between measurements from the same landmark. Then the user can set the distance threshold to this value.
 
@@ -267,6 +273,75 @@ So the maximum distance for an association is given by~\eqref{eq:max-distance-ex
 \end{figure}
 
 Using differential calculus it can be found maximum of $\bs{\mu}_{\bs{\delta}_{i,j}}$ for $\sigma_{\bs{\delta}_{i,j}}^2$ is achieved in $\sigma_{\bs{\delta}_{i,j}}^2 = \frac{1}{2\pi e\chi}$, which yields a value of $\bs{\mu}_{\bs{\delta}_{i,j}} = \frac{1}{\sqrt{2\pi e}\chi}$.  
-This value can be used as a distant threshold that only depends on $\chi$. The disadvantage of this method is that the threshold computed tend to be large relative to the problem, so the amount of correspondence tests avoided is limited.
+This value can be used as a  distance threshold that only depends on $\chi$. The disadvantage of this method is that the threshold computed tend to be large relative to the problem, so the amount of correspondence tests avoided is limited.
 
-\todo[inline]{Final algorithm section}
+%\todo[inline]{Final algorithm section}
+
+\section{The Final Algorithm}
+
+The final version of the implemented GraphSLAM algorithm solves the SLAM problem for unknown correspondence, it incorporates the incremental optimization, pose skipping and  distance test strategies to speed up the algorithm.
+
+The algorithm of the final version of GraphSLAM is presented in Algorithm~\ref{alg:final}. $ps$ and $io$ correspond to the parameters for pose skipping and inter full optimization. To check if it is the right time to use either of the strategies, the module ($\%$) operator is used between the pose number and the parameter. 
+
+\begin{algorithm}[htbp!]
+    \caption{GraphSLAM Final Version}
+    \label{alg:final}
+    \begin{algorithmic}[1]
+        \Require optimizer, data
+        \State optimizer.setParameters(parameters)
+        \State optimizer.loadData(data)
+        \State optimizer.genInitialGuess()
+        \State
+        \ForAll{poses $p$}
+        \State \Call{incrementalDataAssociation}{p}
+        \If{$p~\%~ps = 0$}
+        \State optimizer.solve(numberIterations)
+        \EndIf
+        \If {$p~\%~io = 0$}
+        \State \Call {fullOptimization}{p}
+        \EndIf
+        \EndFor
+        \State
+        \State optimizer.writeData()
+    \end{algorithmic}
+\end{algorithm}
+
+The GraphSLAM algorithm calls to functions, \texttt{intremental\-Data\-Association} and \texttt{full\-Optiomization}. The \texttt{intrementalDataAssociation} function tries to associate the landmarks observed in the current pose, with the previous landmarks. Its pseudocode is shown in Algorithm~\ref{alg:incremental-data-association}. The distance test is performed in line~\ref{line:distance-test}, where $dt$ is the maximum distance accepted for an association. \texttt{full\-Optimization} function search associations between all previous poses up to the current pose, and then run the solver. It can be done bt calling \texttt{intremental\-Data\-Association} iteratively, as shown in~\ref{alg:full-optimization}.
+
+\begin{algorithm}[htbp!]
+    \caption{Incremental Data Association Function}
+    \label{alg:incremental-data-association}
+    \begin{algorithmic}[1]
+        \Function{incrementalDataAssociation}{$p$}
+        \ForAll {landmarks $l_p$ observed in $p$}
+        \ForAll {previous poses $q$ up to $p$}
+        \ForAll {landmarks $l_q$ observed in $q$}
+        \If {distance($l_p$,$l_q$) < $dt$} \label{line:distance-test}
+        \If{correspondenceTest($i$,$j$) $\geq \chi$} 
+        \State optimizer.merge($i$,$j$) 
+        \EndIf
+        \EndIf
+        \EndFor
+        \EndFor
+        \EndFor
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[htbp!]
+    \caption{Full Optimization Function}
+    \label{alg:full-optimization}
+    \begin{algorithmic}[1]
+        \Function{fullOptimization}{$p$}
+        \While{association found} 
+        \ForAll {previous poses $q$ up to $p$} 
+        \State \Call{IncrementalDataAssociation}{$q$}
+        \EndFor
+        \State optimizer.solve(numberIterations)
+        \EndWhile
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+ 
+ 

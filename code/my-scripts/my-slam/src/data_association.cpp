@@ -35,7 +35,7 @@ bool incDataAssociation (SparseOptimizer& optimizer, int poseIndex, double xi, d
                             tested.push_back(v2->id());
                             // if v2 hasn't been associated
                             if (find(associated.begin(), associated.end(), v2->id()) == associated.end()) {
-                                if (distantTest(v1, v2, maxDistance)) {
+                                if (distanceTest(v1, v2, maxDistance)) {
                                     if (xi <= 0 || correspondenceTest(optimizer, v1, v2, xi)) {
                                         // association successful
                                         optimizer.mergeVertices(v1, v2, false);
@@ -107,7 +107,7 @@ bool correspondenceTest (SparseOptimizer& optimizer, OptimizableGraph::Vertex* v
     return likelihood > xi;
 }
 
-bool distantTest(OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double maxDistance) {
+bool distanceTest(OptimizableGraph::Vertex* v1, OptimizableGraph::Vertex* v2, double maxDistance) {
     std::vector<double> v1EstVec;
     v1->getEstimateData(v1EstVec);
     Vector2d v1Est(v1EstVec.data());

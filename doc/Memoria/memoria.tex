@@ -15,10 +15,9 @@
 \usepackage[T1]{fontenc}
 
 \input{packages.tex}
-\newcounter{test}
-%\setcounter{test}{1}
-\newenvironment{test}[1][]{\refstepcounter{test}\par\medskip
-    \textbf{Test~\Roman{test}. #1} \rmfamily}{\medskip}
+\newcommand{\estWidth}{0.8}
+\newcommand{\errorWidth}{0.5}
+
 
 \begin{document}
 
