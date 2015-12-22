@@ -9,10 +9,10 @@ from slamFunctions import *
 g2oIterations = 20
 nlandmarks = 30
 simSteps = 400
-infoOdomPos = 1
-infoOdomAng = 10
-infoPointSen = 1
-kernelWidth = 1
+infoOdomPos = 1000
+infoOdomAng = 10000
+infoPointSen = 1000
+kernelWidth = 0.00001
 
 # run g2o tests
 start_time = time.time()

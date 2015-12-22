@@ -57,9 +57,41 @@ Table~\ref{tab:protocol} summarize the g$^2$o notation to represent nodes and ed
     \label{tab:protocol}
 \end{table}
 
-In this work, it is assumed that the first pose is known with absolute certainty, and is fixed to $(0,0,0)$. In g$^2$o, this is done by the command \texttt{FIX id}, where the id of the first pose is used. Aside of the first pose, it is assume that only information about robot odometry and measurement is provided, so only data from edges is known. 
+In this work, it is assumed that the first pose is known with absolute certainty, and is fixed to $(0,0,0)$. In g$^2$o, this is done by the command \texttt{FIX id}, where the id of the first pose is used. To use the data in the framework, it can be written in a plain text, which is then uploaded to g$^2$o.
 
-To use the data in the framework, it can be written in a plain text, which is then uploaded to g$^2$o.\todo{example protocol}
+The next code present a simple example of the g$^2$o protocol, its graphical equivalence is shown in Figure~\ref{fig:protocol-example}. In practice, when solving SLAM, only odometry and measurements are known, then only edges must be specified in the file:
+ 
+\begin{lstlisting}[caption = g$^2$o protocol example, captionpos=b, basicstyle=\small]
+VERTEX_SE2 0 0 0    0
+FIX 0
+VERTEX_SE2 1 4 0    0
+VERTEX_SE2 2 4 4 1.57
+VERTEX_SE2 3 0 4 3.14
+
+VERTEX_XY 11 2 2
+VERTEX_XY 12 6 2
+VERTEX_XY 13 2 6
+
+EDGE_SE2 0 1 4 0 1.57 1 0 0 1 0 1
+EDGE_SE2 1 2 4 0 1.57 1 0 0 1 0 1
+EDGE_SE2 2 3 4 0    0 1 0 0 1 0 1
+
+EDGE_SE2_XY 0 11  2  2 1 0 1
+EDGE_SE2_XY 1 11  2  2 1 0 1
+EDGE_SE2_XY 1 12  2 -2 1 0 1
+EDGE_SE2_XY 2 11  2  2 1 0 1
+EDGE_SE2_XY 2 12 -2  2 1 0 1
+EDGE_SE2_XY 2 13  2 -2 1 0 1
+EDGE_SE2_XY 3 11 -2  2 1 0 1
+EDGE_SE2_XY 3 13 -2 -2 1 0 1
+\end{lstlisting}
+
+\begin{figure}[htbp!]
+    \centering
+    \includegraphics[width=0.5\textwidth]{tikz/protocol-example.pdf}
+    \caption{Graphical representation of g$^2$o protocol example.}
+    \label{fig:protocol-example}
+\end{figure}
 
 \section{The Known Correspondence Case}
 \label{sec:known-asso-imp}
@@ -123,7 +155,33 @@ In the unknown correspondence case there is no information of which landmark gen
 
 The premise of the method is as follows: a correspondence test is developed to check the likelihood of two landmarks being the same. If the likelihood is high enough, the landmarks are merged into one. 
 
-To justify mathematically this test, the variable $\bs{\Delta}_{i,j}=\bs{m}_i-\bs{m}_j$ is defined as the difference in position of landmark $\bs{m}_i$ and $\bs{m}_j$. The posterior probability of $\bs{\Delta}_{i,j}$ over the measurements and control inputs is given by:
+To justify mathematically this test, the variable $\bs{m}_{i,j}=(\bs{m}_i~ \bs{m}_j)^T$ is defined as de concatenation of landmarks $i$ and $j$. The posterior probability of $\bs{m}_{i,j}$ over the measurements and control inputs is given by:
+
+\begin{equation}
+p(\bs{m}_{i,j}|\bs{z}_{1:k},\bs{u}_{1:k})=
+\det(2\pi\bs{\Sigma}_{\bs{m}_{i,j}})^{-\frac{1}{2}}\exp\left\lbrace -\frac{1}{2}(\bs{m}_{i,j}-\bs{\mu}_{\bs{m}_{i,j}})^T
+\bs{\Sigma}_{\bs{m}_{i,j}}^{-1}(\bs{m}_{i,j}-\bs{\mu}_{\bs{m}_{i,j}})\right\rbrace
+\label{eq:concatenate}
+\end{equation}
+
+Where $\bs{\mu}_{\bs{m}_{i,j}}=(\bs{\mu}_{\bs{m}_i}~ \bs{\mu}_{\bs{m}_j})^T$ is the current estimate of the landmarks $i$ and $j$. Matrix $\bs{\Sigma}_{\bs{m}_{i,j}}$ is the covariance matrix marginalized over landmarks $i$ and $j$. Since it has been assumed a normal distribution for the estimate, this covariance can be computed using the marginalization lemma~\cite{graphslam}. In practice, g$^2$o provides a function to compute $\bs{\Sigma}_{\bs{m}_{i,j}}$.
+
+Then, to compare $\bs{m}_i$ and $\bs{m}_j$ another variable is defined as the difference between the two landmarks: $\bs{\Delta}_{i,j}=\bs{m}_i-\bs{m}_j$, or alternatively, using the difference matrix:
+
+\begin{align}
+D &= \begin{pmatrix}
+1 & 0\\
+0 & 1\\
+-1 & 0\\
+0 & -1
+\end{pmatrix}\\
+\Rightarrow 
+\bs{\Delta}_{i,j}&=\bs{m}_i-\bs{m}_j = D^T\bs{m}_{i,j}
+\end{align}
+
+It can be proven that $\bs{\Delta}_{i,j}$ is distributed as $\Nn(D^T\bs{\mu}_{\bs{m}_{i,j}}, D^T \bs{\Sigma}_{\bs{m}_{i,j}} D)\defi \Nn(\bs{\mu}_{\bs{\Delta}_{i,j}}, \bs{\Sigma}_{\bs{\Delta}_{i,j}})$. Then its PDF is given by:
+
+%To justify mathematically this test, the variable $\bs{\Delta}_{i,j}=\bs{m}_i-\bs{m}_j$ is defined as the difference in position of landmark $\bs{m}_i$ and $\bs{m}_j$. The posterior probability of $\bs{\Delta}_{i,j}$ over the measurements and control inputs is given by:
 
 \begin{equation}
 p(\bs{\Delta}_{i,j}|\bs{z}_{1:k},\bs{u}_{1:k})=
@@ -132,13 +190,13 @@ p(\bs{\Delta}_{i,j}|\bs{z}_{1:k},\bs{u}_{1:k})=
 \label{eq:correspondence-test}
 \end{equation}
 
-Where $\bs{\mu}_{\bs{\Delta}_{i,j}}$ is the current estimate of the landmark's difference. It can be easily computed as $\bs{\mu}_{\bs{m}_i}-\bs{\mu}_{\bs{m}_j}$, where $\bs{\mu}_{\bs{m}_i}$ and $\bs{\mu}_{\bs{m}_j}$ are the current estimate of both landmarks.
+%Where $\bs{\mu}_{\bs{\Delta}_{i,j}}$ is the current estimate of the landmark's difference. It can be easily computed as $\bs{\mu}_{\bs{m}_i}-\bs{\mu}_{\bs{m}_j}$, where $\bs{\mu}_{\bs{m}_i}$ and $\bs{\mu}_{\bs{m}_j}$ are the current estimate of both landmarks.
 
-Matrix $\bs{\Sigma}_{\bs{\Delta}_{i,j}}$ is the covariance matrix marginalized over landmarks $i$ and $j$. Since it has been assumed a normal distribution for the estimate, $\bs{\Sigma}_{\bs{\Delta}_{i,j}}$ can be computed using the marginalization lemma~\cite{graphslam}. In practice, g$^2$o provides a function to compute $\bs{\Sigma}_{\bs{\Delta}_{i,j}}$.
+%Matrix $\bs{\Sigma}_{\bs{\Delta}_{i,j}}$ is the covariance matrix marginalized over landmarks $i$ and $j$. Since it has been assumed a normal distribution for the estimate, $\bs{\Sigma}_{\bs{\Delta}_{i,j}}$ can be computed using the marginalization lemma~\cite{graphslam}. In practice, g$^2$o provides a function to compute $\bs{\Sigma}_{\bs{\Delta}_{i,j}}$.
 
-\todo[inline]{explain marginal cov equation?}
+%\todo[inline]{explain marginal cov equation?}
 
-When two landmarks are equivalent it is expected that their position is the same, hence $\Delta_{i,j}=0$. Evaluating this in the posterior probability~\eqref{eq:correspondence-test} gives the likelihood of landmark equivalence:
+When two landmarks are equivalent it is expected that their position is the same, hence $\bs{\Delta}_{i,j}=0$. Evaluating this in the posterior probability~\eqref{eq:correspondence-test} gives the likelihood of landmark equivalence:
 
 \begin{equation}
 \pi_{j=k} \defi
